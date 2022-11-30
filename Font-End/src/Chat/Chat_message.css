@@ -1,0 +1,41 @@
+.message_Box-from_one,
+.message_Box-from_two
+{
+  /* wait */
+}
+.message_Box-from_one
+{
+  display: flex;
+  justify-content: flex-end;
+}
+.message_Box-from_two
+{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.message_class
+{
+  padding: 1.2rem;
+  font-size: 1.1rem;
+  border-radius: 20px;
+  word-break: break-all;
+  max-width: 40vw;
+  white-space: wrap;
+}
+.from_one
+{
+  border-top-right-radius: 0;
+  background-color: rgba(40,30,70,.9);
+  text-align: right;
+  word-break: break-all;
+  margin-right: .3rem;
+  
+}
+.from_two
+{
+  text-align: left;
+  border-top-left-radius: 0;
+  background-color: rgba(80,90,170,.9);
+  margin-left: .3rem;
+}

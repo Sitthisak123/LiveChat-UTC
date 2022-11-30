@@ -1,0 +1,51 @@
+.Chat_friend-card
+{
+  display: flex;
+  align-items: center;
+ /* max-width: 35vw;*/
+  max-width: 35vw;
+  padding-right: .3rem;
+  cursor: pointer;
+}
+.Chat_friend-card:hover
+{
+  background-color: rgba(0,0,0,.1); /* test */
+}
+.Chat_friend-name
+{
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+.Chat_friend-last-msg
+{
+  display: -webkit-box;
+    max-width: 200px;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: grey; /* test color*/
+}
+.Chat_friend-img
+{
+  position: relative;
+}
+
+.Chat_friend-img img
+{
+  border: 1px solid black; /* test */
+  height: 4rem;
+  width: 4rem;
+  scale: .9;
+  border-radius: 60%;
+}
+.Chat_friend-status
+{
+  position: absolute;
+  width: .75rem;
+  height: .75rem;
+  background-color: rgb(75,75,75);
+  border-radius: 60%;
+  left: 74%;
+  bottom: 15%;
+  
+}

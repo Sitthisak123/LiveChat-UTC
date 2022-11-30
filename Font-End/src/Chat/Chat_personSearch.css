@@ -1,0 +1,31 @@
+.input_box
+{
+  display: flex;
+  padding: .3rem;
+  border-radius: 1.5rem;
+  width: 30%;
+  background-color: white;
+  align-items: center;
+  
+  
+}
+.input_box > .input_icon
+{
+  z-index: 1;
+}
+.input_text
+{
+  padding: .7rem;
+  border-radius: 45px;
+  margin-left: -0.2rem;
+  border: none;
+  font-size: 1.2rem;
+  outline: none;
+  width: 100%;
+}
+.input_text::placeholder
+{
+  font-size: 1.2rem;
+  font-weight: bolder;
+  
+}

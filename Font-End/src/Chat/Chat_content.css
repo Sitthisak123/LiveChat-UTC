@@ -1,0 +1,16 @@
+.Chat_content-section
+{
+  border: 1px solid yellow; /* test */
+  display: flex;
+  flex-flow: nowrap;
+}
+.Chat_conversation
+{
+  position: relative;
+  border: 1px solid red; /* test */
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  row-gap: .15rem;
+}
