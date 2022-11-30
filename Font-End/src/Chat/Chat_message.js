@@ -6,8 +6,8 @@ const Chat_message = (props) => {
   const {id, from_id, message, timest} = props
   
   return(
-    <div className={`message_Box-${ from_id == "one" ? from_one_class:from_two_class }`}>
-      <div className={`message_class ${ from_id == "one" ? from_one_class:from_two_class }`}>
+    <div className={`message_Box-${ from_id === "one" ? from_one_class:from_two_class }`}>
+      <div className={`message_class ${ from_id === "one" ? from_one_class:from_two_class }`}>
       { ` ${message} ${from_id}`}
       </div>
     </div>
