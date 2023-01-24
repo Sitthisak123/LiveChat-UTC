@@ -1,41 +1,14 @@
-const express = require('express');
-const cors = require('cors');
-const mysql = require('mysql');
-const app = express();
+const app = require('./app.js');
 
-app.use(cors());
-app.use(express.json());
+const http = require('http');
+const server = http.createServer(app);
 
-const db = mysql.createConnection({
-  user: 'root',
-  host: 'localhost',
-  password: '',
-  database: 'online-chat_db'
-})
+require('dotenv').config(); 
 
-app.listen('9000', () => {
-  console.log(`O.K. server is running on port 9000\n`)
-  /*
-  db.query("SELECT * FROM user", (err, result) => {
-    if(err){
-      console.log(err)
-    }else{
-      console.log(result)
-    }
-  })
-  */
-})
-app.get("/getalluser",(req,res) => {
-  db.query("SELECT * FROM user", (err, result) => {
-    if(err){
-      console.log(err)
-    }else{
-      console.log(`->Get all User -> ${Date.now()}`)
-      res.send(result)
-    }
-  })
-})
-app.post("/uploadfile",(req,res) => {
-  console.log('->: uploadFile\n')
-  res.send('<h1>hello</h1>')
-})
+
+///-> SetUp <-///
+ const PORT = process.env.API_PORT;
+/////////////////
+server.listen(PORT, () => {
+  console.log(`O.K. server is running on port ${PORT}\n`)
+}) 

@@ -1,16 +1,51 @@
-.Chat_content-section
-{
+.Chat_content-section {
   border: 1px solid yellow; /* test */
   display: flex;
   flex-flow: nowrap;
 }
-.Chat_conversation
-{
+
+.Chat_friends {
+  max-height: calc(100vh - 160px);
+  overflow-y: scroll;
+
+}
+.Chat-section{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  max-height: calc(100vh - 160px);
+}
+.Chat_conversation {
   position: relative;
   border: 1px solid red; /* test */
   display: flex;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+
   flex-direction: column;
   row-gap: .15rem;
+  overflow-y: scroll;
+}
+.ta-frame {
+  display: flex;
+}
+.ta-frame > textarea{
+  overflow-y: scroll;
+  outline: 0;
+  width: 100%;
+  font-size: 1.2rem;
+  resize: none;
+}
+.ta-frame > .Chat_msg-send-btn > span{
+  color: white;
+}
+.Chat_msg-send-btn{
+  display: flex;
+  padding: 10px 20px;
+  background-color: cornflowerblue;
+  width: 20px;
+  height: 10px;
+  justify-content: center;
+  align-items: center;
 }
