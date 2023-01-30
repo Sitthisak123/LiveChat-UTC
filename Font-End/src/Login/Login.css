@@ -38,9 +38,12 @@
   border-top-left-radius: 25px;
   border-bottom-left-radius: 25px;
 }
+.Form-login,
+.email_or_google{
+  background-color: #12130f;
+}
 .Form-login{
   width: 40vw;
-  background-color: #12130f;
   padding: 25px 40px;
   overflow: auto;
   min-width: 335px;
@@ -112,28 +115,31 @@
 }
 
 label.email_or_google{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
   color: white;
   font-size: 1.3rem;
   font-weight: 400;
-  padding: 0 .1rem;
-  text-align: center;
+  padding: 0.1rem;
   margin: 10px 0;
+  width: 10%;
 }
 label.email_or_google::after,
 label.email_or_google::before{
   content: "";
-  width: 330%;
+  width: 180%;
   border-bottom: .3px solid yellow;
   position: absolute;
 }
 
 label.email_or_google::after{
-  left: 1.5rem;
+  left: 2.5rem;
   top: 1rem;
 }
 label.email_or_google::before{
-  right: 1.5rem;
+  right: 2.5rem;
   top: 1rem;
 }
 

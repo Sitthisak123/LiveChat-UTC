@@ -1,94 +1,113 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const app = express();
-const db = require('./_config/dataBase.js');
+const { PrismaClient } = require('@prisma/client');
+const jwt = require('jsonwebtoken');
+const app = express();;
+const prisma = new PrismaClient()
+const verify_TOKEY = require('./middleware/Auth.js');
 app.use(cors());
 app.use(express.json());
-
-///-> Test Data <-///
-const USER_ID = 1;
-////////////////ฝ
-
-
-
-app.get("/getalluser", (req, res) => {
-    db.query("SELECT * FROM user", (err, result) => {
-        if (err) {
-            console.log(err)
-        } else {
-            //console.log(`->Get all User -> ${Date.now()}`)
-            console.log(result.length)
-            res.send(result)
-        }
-    })
-})
-
-app.get("/API/user/chat/chat_all", (req, res) => {
-    db.query(`SELECT * FROM chat_user WHERE chat_user_one = ${USER_ID}`, (err, result) => {
-        if (err) {
-            console.log(err)
-        } else {
-            console.log(result.length)
-            res.send(result)
-        }
-    })
-})
-
+const PRIVATE_TOKEN_KEY = process.env.PRIVATE_TOKEN_KEY;
 
 //// USER REGISTER ////
-app.post("/API/user/register", (req, res) => {
+app.post("/API/user/register", async (req, res) => {
     try {
+        console.log(req.body);
+        req.body.Email = req.body.Email.toLowercase;
         const { Username, Password, Email } = req.body;
         if (!(Username && Password && Email)) {
             return res.status(400).send(`All input is required!!!`);
         }
-        db.query(`SELECT * FROM user WHERE user_username = '${Username}' OR user_email = '${Email}'`, (err, result) => {
-            try {
-                if (err) {
-                    throw err;
-                }
-                if (result.length) {
-                    res.status(409).send("User already exist.");
-                } else {
-                    db.query(`INSERT INTO user (user_username, user_email, user_password) VALUE('${Username}', '${Email}', '${Password}')`, (err, result) => {
-                        if (err) throw err;
-                        console.log(`Inserted ${result.affectedRows} row(s) | use: ${Username}`);
-                        res.status(201).send("Register Success!!");
-                    })
-                }
-            } catch (err) {
-                console.log(err);
+        const existingUser = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { user_username: Username },
+                    { user_email: Email }
+                ]
             }
         })
+        if (existingUser) {
+            res.status(409).send("User already exist.")
+        } else {
+            const newUser = await prisma.user.create({
+                data: {
+                    user_username: Username,
+                    user_email: Email,
+                    user_password: Password,
+                    user_email: 'Test',
+                    user_phone: 'Test',
+                    user_name: 'Test',
+                    google_id: null,
+                    user_profile_img: ''
+                },
+                select: {
+                    user_id: true
+                }
+            });
+            const Token = jwt.sign(
+                { user_id: newUser.user_id, Email },
+                PRIVATE_TOKEN_KEY,
+                { expiresIn: "5h" }
+            );
+            newUser.User_TOKEN = Token;
+            console.log(`Inserted ${newUser.user_id} row(s) | use: ${Username}`);
+            res.status(201).send("Register Success!!");
+        }
+
     } catch (err) {
-        console.log(err);
+        return console.log(err);
     }
 })
 
-
 //// USER Login ////
-app.post("/API/user/login", (req, res) => {
+app.post("/API/user/login", async (req, res) => {
     try {
         const { Username, Password } = req.body;
         if (!(Username && Password)) {
             return res.status(400).send(`All input is required!!!`);
         }
-        db.query(`SELECT * FROM user WHERE (user_username = '${Username}' OR user_email = '${Username}') AND user_password = '${Password}'`, (err, result) => {
-            try {
-                if (err) {
-                    throw err;
-                }
-                if (result.length) {
-                    res.status(201).send("Login Success!!");
-                } else {
-                    res.status(409).send("User not found.");
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        })
+        const findUser = await prisma.user.findFirst({
+            where: {
+                AND: [
+                    { user_password: Password },
+                    {
+                        OR: [
+                            { user_email: Username },
+                            { user_username: Username }
+                        ]
+                    }
+                ]
+            }, select:
+            {
+                user_id: true,
+                google_id: true,
+                user_username: true,
+                user_password: false,
+                user_email: true,
+                user_phone: true,
+                user_name: true,
+                user_profile_img: true}
+        });
+        if (findUser) {
+            const { user_id, user_email } = findUser;
+            const Token = jwt.sign(
+                { user_id: user_id, user_email },
+                PRIVATE_TOKEN_KEY,
+                { expiresIn: "5h" }
+            );
+            findUser.User_TOKEN = Token;
+            res.status(200).send(findUser);
+        } else {
+            res.status(409).send("User not found.");
+        }
     } catch (err) {
         console.log(err);
     }
 })
+
+app.post("/API/token/test", verify_TOKEY, (req, res) => {
+    res.status(201).send('TOKEN is work! congratulations!!');
+})
+
 module.exports = app;

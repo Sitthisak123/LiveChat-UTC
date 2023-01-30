@@ -1,11 +1,17 @@
+// eslint-disable-next-line no-unused-vars
 import { Link } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
+// eslint-disable-next-line no-unused-vars
 import { gapi } from 'gapi-script';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-
+import { USERContext, AppDataContext } from '../../_data_provider/Chat.js';
 const Signup = () => {
   const [useFormdata, setFormdata] = useState({});
+  // eslint-disable-next-line no-unused-vars
+  const USER_data = useContext(USERContext);
+  // eslint-disable-next-line no-unused-vars
+  const App_Data= useContext(AppDataContext);
 
   function handleChange(event) {
     if(event.target.type === 'checkbox'){
@@ -22,7 +28,7 @@ const Signup = () => {
 
   function onSubmit(event) {
     event.preventDefault();
-    axios.post(`http://localhost:9001/API/user/login`, { ...useFormdata }).then(response => {
+    axios.post(`http://localhost:9001/API/user/register`, { ...useFormdata }).then(response => {
       alert(response.data);
     }).catch(error => {
       console.log(error.response.data);
