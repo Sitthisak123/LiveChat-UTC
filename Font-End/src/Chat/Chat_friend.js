@@ -1,5 +1,5 @@
 import './Chat_friend.css';
-import logo from '../_assets/img/logo192.png';
+import logo from '../_assets/logo192.png';
 import { forwardRef } from 'react';
 
 const Chat_friend = forwardRef((props, ref) => {

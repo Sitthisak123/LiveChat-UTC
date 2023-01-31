@@ -1,19 +1,15 @@
 import { Outlet } from 'react-router-dom';
-import Navbar from '../Navbar/Navbar.js';
-import './Home.css';
-import Axios from 'axios';
 
+import React from "react";
+import Sidebar from "./Sidebar/Sidebar.js";
+import { SLayout, SMain } from "./styles.js";
 
 const Home = () => {
   return (
-    <>
-      <div className="App">
-        <Navbar />
-        <div className="App-content">
-          <Outlet />
-        </div>
-      </div>
-    </>
+    <SLayout>
+      <Sidebar />
+      <SMain>{<Outlet />}</SMain>
+    </SLayout>
   )
 }
 export default Home;
