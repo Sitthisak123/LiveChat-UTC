@@ -1,24 +1,44 @@
 .Chat_content-section {
-  border: 1px solid yellow; /* test */
+  /* border: 1px solid yellow; */
   display: flex;
   flex-flow: nowrap;
-}
-
-.Chat_friends {
-  max-height: calc(100vh - 160px);
-  overflow-y: scroll;
 
 }
-.Chat-section{
+
+/* .Chat_friends {
+  --scrollbarBG: #CFD8DC;
+  --thumbBG: #000000;
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  min-width: 14vw;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.Chat_friends::-webkit-scrollbar {
+  width: .6vw;
+}
+
+.Chat_friends::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+.Chat_friends::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG) ;
+  border-radius: 6px;
+  border: .15vw solid var(--scrollbarBG);
+} */
+
+.Chat-section {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 80vw;
-  max-height: calc(100vh - 160px);
+  width: 100vw;
+  max-height: 100vh;
 }
+
 .Chat_conversation {
   position: relative;
-  border: 1px solid red; /* test */
+  /* test */
   display: flex;
   width: 100%;
   height: 100%;
@@ -27,20 +47,24 @@
   row-gap: .15rem;
   overflow-y: scroll;
 }
+
 .ta-frame {
   display: flex;
 }
-.ta-frame > textarea{
+
+.ta-frame>textarea {
   overflow-y: scroll;
   outline: 0;
   width: 100%;
   font-size: 1.2rem;
   resize: none;
 }
-.ta-frame > .Chat_msg-send-btn > span{
+
+.ta-frame>.Chat_msg-send-btn>span {
   color: white;
 }
-.Chat_msg-send-btn{
+
+.Chat_msg-send-btn {
   display: flex;
   padding: 10px 20px;
   background-color: cornflowerblue;

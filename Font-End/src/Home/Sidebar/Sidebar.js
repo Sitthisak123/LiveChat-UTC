@@ -30,7 +30,9 @@ import AddIcon from '@mui/icons-material/Add'; //Test //
 
 
 
-import { ThemeContext } from "../../App";
+import { ThemeContext } from "../../App.js";
+
+
 import { useLocation } from "react-router-dom";
 
 const Sidebar = () => {
@@ -115,19 +117,19 @@ const linksArray = [
     {
         label: "Home",
         icon: <HomeIcon />,
-        to: "/Home/1",
+        to: "/Home/profile",
         notification: 0,
     },
     {
         label: "Chat",
         icon: <ModeCommentIcon />,
-        to: "/Home/2",
+        to: "/Home/chat",
         notification: 3,
     },
     {
         label: "Friend",
         icon: <PeopleAltIcon />,
-        to: "/Home/3",
+        to: "/Home/friends",
         notification: 0,
     },
     {

@@ -4,11 +4,11 @@ import styled from "styled-components";
 import { btnReset, v } from "../../styles/variables";
 
 export const SSidebar = styled.div`
-    width: ${({ isOpen }) => (!isOpen ? `auto` : v.sidebarWidth)};
+    min-width: ${({ isOpen }) => (!isOpen ? `auto` : v.sidebarWidth)};
     background: ${({ theme }) => theme.bg};
     height: 100vh;
-    padding: ${v.smSpacing};
-
+    padding: ${v.mnSpacing};
+    max-width: 15vw;
     position: relative;
 `;
 
@@ -16,10 +16,10 @@ export const SSidebarButton = styled.button`
     ${btnReset};
     position: absolute;
     top: ${v.xxlSpacing};
-    right: ${({ isOpen }) => (isOpen ? `-16px` : `-40px`)};
+    right: ${({ isOpen }) => (isOpen ? `-16px` : `-25px`)};
     width: 32px;
     height: 32px;
-    border-radius: 50%;
+    border-radius: 10%;
     background: ${({ theme }) => theme.bg};
     box-shadow: 0 0 4px ${({ theme }) => theme.bg3}, 0 0 7px ${({ theme }) => theme.bg};
     display: flex;
@@ -120,7 +120,7 @@ export const SLinkNotification = styled.div`
     background: ${({ theme }) => theme.primary};
     color: white;
 
-    margin-right: ${v.mdSpacing};
+    margin-right: ${v.mnSpacing};
 `;
 
 export const STheme = styled.div`

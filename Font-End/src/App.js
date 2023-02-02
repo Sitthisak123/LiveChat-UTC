@@ -3,28 +3,33 @@ import { Helmet } from "react-helmet";
 import Profile from './Profile/Profile.js';
 import Chat from './Chat/Chat.js';
 import Friends from './Friends/Friends.js';
-import Settings from './Settings/Settings.js';
+import Setting1 from './Settings/Settings.js';
 import Home from './Home/Home.js';
 import Login from './Login/Login.js';
 import Signin from './Login/pages/Signin.js';
 import Signup from './Login/pages/Signup.js';
-import { useState, createContext } from 'react';
-import { USERContext, AppDataContext } from './_data_provider/Chat.js';
+import { useState, createContext, useReducer } from 'react';
 import Redirect from './_methods/Redirect.js';
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/globalStyles";
 import { darkTheme, lightTheme } from "./styles/theme";
+import { UserReducer } from './_methods/Reducers.js';
 
 export const ThemeContext = createContext(null);
+export const USERContext = createContext(null);
+export const AppDataContext = createContext(null);
+
 
 function App() {
   const [theme, setTheme] = useState("light");
   const themeStyle = theme === "light" ? lightTheme : darkTheme;
 
-  const [useUserData, setUserData] = useState({});
-  const [useAppData, setAppData] = useState({});
+  const [userCont, userContDispatch] = useReducer(UserReducer, [{ data: 'allUser return' }]);
+  const [useAppData, setAppData] = useState(null);
+
+
   return (
-    <USERContext.Provider value={{ useUserData, setUserData }}>
+    <USERContext.Provider value={{ userCont, userContDispatch }}>
       <AppDataContext.Provider value={{ useAppData, setAppData }}>
         <ThemeContext.Provider value={{ setTheme, theme }}>
           <ThemeProvider theme={themeStyle}>
@@ -41,12 +46,12 @@ function App() {
                 <Route path="1" element={<h1>1 Home Page</h1>} />
                 <Route path="2" element={<h1>2 Statistics Page</h1>} />
                 <Route path="3" element={<h1>3 Customers Page</h1>} />
-                <Route path="4" element={<h1>4 Diagrams Page</h1>} />
+                <Route path="4" element={<h1>4 Add Page</h1>} />
 
                 <Route path="profile" element={<Profile />} />
                 <Route path="chat" element={<Chat />} />
                 <Route path="friends" element={<Friends />} />
-                <Route path="settings" element={<Settings />} />
+                <Route path="settings" element={<Setting1 />} />
                 <Route path="*" element={<Redirect value={"profile"} />} />
               </Route>
               <Route path="Login/*" element={<Login />} >

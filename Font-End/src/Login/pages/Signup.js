@@ -5,7 +5,7 @@ import { GoogleLogin } from 'react-google-login';
 import { gapi } from 'gapi-script';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { USERContext, AppDataContext } from '../../_data_provider/Chat.js';
+import { USERContext, AppDataContext } from '../../App.js';
 const Signup = () => {
   const [useFormdata, setFormdata] = useState({});
   // eslint-disable-next-line no-unused-vars

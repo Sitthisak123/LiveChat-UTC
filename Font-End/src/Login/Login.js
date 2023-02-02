@@ -2,7 +2,7 @@ import './Login.css';
 import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useContext } from 'react';
-import { USERContext, AppDataContext } from '../_data_provider/Chat.js';
+import { USERContext, AppDataContext } from '../App.js';
 
 const Login = () => {
   const activeLink = "header-login-item-active";
@@ -16,7 +16,7 @@ const Login = () => {
   const [userData, setUserData] = useState({});
   // eslint-disable-next-line no-unused-vars
   const handleLogin = (data, token) => {
-    setUserData(data);
+    // setUserData(data);
     localStorage.setItem('userData', JSON.stringify(data));
   }
   return (

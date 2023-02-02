@@ -7,8 +7,8 @@ export const SLayout = styled.div`
 `;
 
 export const SMain = styled.main`
-    padding: calc(${v.mnSpacing} * 2);
-
+    border-left: .1rem solid ${({theme}) =>  theme.border};
+    background-color: ${({theme}) =>  theme.bg3};
     h1 {
         font-size: 14px;
     }
