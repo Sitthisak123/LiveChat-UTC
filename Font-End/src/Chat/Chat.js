@@ -3,9 +3,9 @@ import Chat_content from './Chat_content.js';
 const Profile = () => {
   return (
     <>
-    <div className="chat_optionbar">
+    {/* <div className="chat_optionbar">
     <Chat_optionBar />
-    </div>
+    </div> */}
     <Chat_content />
     </>
     )

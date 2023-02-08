@@ -11,7 +11,7 @@ const Chat_friend = forwardRef((props, ref) => {
     props.onClick(uid);
   }
   return (
-    <StyledCard>
+    <StyledCard onClick={handleClick}>
       <StyledCardHeader
         avatar={
           <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">

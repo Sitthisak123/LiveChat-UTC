@@ -14,20 +14,23 @@ export const SSidebar = styled.div`
 
 export const SSidebarButton = styled.button`
     ${btnReset};
-    position: absolute;
-    top: ${v.xxlSpacing};
+    /* position: absolute; */
+    /* top: ${v.xxlSpacing}; */
     right: ${({ isOpen }) => (isOpen ? `-16px` : `-25px`)};
     width: 32px;
     height: 32px;
-    border-radius: 10%;
+    border-radius: 25%;
     background: ${({ theme }) => theme.bg};
     box-shadow: 0 0 4px ${({ theme }) => theme.bg3}, 0 0 7px ${({ theme }) => theme.bg};
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    z-index: 2;
 
     transform: ${({ isOpen }) => (!isOpen ? `rotate(180deg)` : `initial`)};
+
+    margin: ${({ isOpen }) => (isOpen ? `1rem 0 1rem calc(100% - 2rem)` : `1rem auto`)};
 `;
 
 export const SLogo = styled.div`

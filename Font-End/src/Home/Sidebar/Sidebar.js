@@ -57,10 +57,10 @@ const Sidebar = () => {
                     <ArrowBackIosNewOutlinedIcon />
                 </SSidebarButton>
             </>
-            <SLogo>
+            {/* <SLogo>
                 <img src={logoSVG} alt="logo" />
-            </SLogo>
-            <SSearch
+            </SLogo> */}
+            {/* <SSearch
                 onClick={searchClickHandler}
                 style={!sidebarOpen ? { width: `fit-content` } : {}}
             >
@@ -72,7 +72,7 @@ const Sidebar = () => {
                     placeholder="Search"
                     style={!sidebarOpen ? { width: 0, padding: 0 } : {}}
                 />
-            </SSearch>
+            </SSearch> */}
             <SDivider />
             {linksArray.map(({ icon, label, notification, to }) => (
                 <SLinkContainer key={label} isActive={pathname === to}>

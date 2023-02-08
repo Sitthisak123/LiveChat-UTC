@@ -1,8 +1,8 @@
-.message_Box-from_one,
+/* .message_Box-from_one,
 .message_Box-from_two
-{
-  /* wait */
-}
+{ */
+  /* wait *
+/* }
 .message_Box-from_one
 {
   display: flex;
@@ -38,4 +38,8 @@
   border-top-left-radius: 0;
   background-color: rgba(80,90,170,.9);
   margin-left: .3rem;
+} */
+.Chat_message_list{
+  display: flex;
+  justify-content: flex-end;
 }

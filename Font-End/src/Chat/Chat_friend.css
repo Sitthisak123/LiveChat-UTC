@@ -5,6 +5,7 @@
   cursor: pointer;
   border: 1px solid red;
   margin-bottom: 1vh;
+  max-height: 5%;
 }
 .Chat_friend-card:hover
 {

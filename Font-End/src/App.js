@@ -27,7 +27,6 @@ function App() {
   const [userCont, userContDispatch] = useReducer(UserReducer, [{ data: 'allUser return' }]);
   const [useAppData, setAppData] = useState(null);
 
-
   return (
     <USERContext.Provider value={{ userCont, userContDispatch }}>
       <AppDataContext.Provider value={{ useAppData, setAppData }}>
