@@ -10,8 +10,8 @@ export const BoxCards = styled.div`
     --scrollbarBG: #CFD8DC;
     scrollbar-width: thin;
     scrollbar-color: var(--thumbBG) var(--scrollbarBG);
-    min-width: 16rem;
-    max-width: 16rem;
+    min-width: 22rem;
+    max-width: 22rem;
     height: 100vh;
     overflow-y: auto;
     background-color: ${({ theme }) => theme.bg2};
@@ -50,7 +50,11 @@ export const StyledCardHeader = styled(CardHeader)`
       border-radius: .8rem;
 `;
 export const StyledCardHeaderOptionbar = styled(StyledCardHeader)`
-      background-color: rgba(0,0,0,.1) !important;
+      background-color: ${({ theme }) => theme.bgAlpha2};
+      backdrop-filter: blur(1px);
+      box-shadow: 0px 4px 8px ${({ theme }) => theme.bgAlpha};
+      border-bottom: .1px solid black;
+      max-width: 100%;
 `;
 
 
@@ -87,14 +91,14 @@ export const StyledTextField = styled(TextField)`
   width: 100%;
 `;
 
-export const StyledChatConversation = styled.ul`
-  /* list-style-type: none;
-  border: 1px solid yellow;
-  width: 100%;
-  overflow-y: auto;
-  flex-grow: 1;
-  height: auto; */
-
+export const StyledChatConversation = styled.div`
   grid-area: Chat;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 1rem;
+  overflow: hidden;
+  overflow-y: auto;
 `;
 
