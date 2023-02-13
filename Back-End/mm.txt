@@ -1,0 +1,20 @@
+*SoftWare
+    -Visual Studio Code
+    -Nodejs
+    -Git
+
+*FontEnd
+    -Reactjs
+    -Styled Component
+    -MUI
+
+*BackEnd
+    -Server
+        -Express (Express is a web application framework for Node.js)
+        -jsonwebtoken
+        -bcryptjs
+
+    -DataBase
+        -MYSQL
+        -Redis (Caching Database)
+        -Prisma (ORM)

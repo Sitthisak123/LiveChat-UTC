@@ -3,42 +3,46 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 // eslint-disable-next-line no-unused-vars
 import { gapi } from 'gapi-script';
-import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { USERContext, AppDataContext } from '../../App.js';
-
-
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { CREATE_USER } from '../../_stores/Slices/user.js';
+import { API_Login } from '../../_APIs/user.js';
 const Signin = () => {
-  // eslint-disable-next-line no-unused-vars
-  const Navigate = useNavigate();
-  const [useFormdata, setFormdata] = useState({});
-  // eslint-disable-next-line no-unused-vars
-  const { useUserData, setUserData } = useContext(USERContext);
-  // eslint-disable-next-line no-unused-vars
-  const { useAppData, setAppData } = useContext(AppDataContext);
 
+  const Navigate = useNavigate();
+  const [useFormdata, setFormdata] = useState();
+
+  const user1 = useSelector((state) => state.value)
+  const dispatch = useDispatch()
+
+  // const { useAppData, setAppData } = useContext(AppDataContext);
   function handleChange(event) {
     setFormdata({
       ...useFormdata,
       [event.target.id]: event.target.value
     })
   }
-  function onSubmit(event) {
+  async function onSubmit(event) {
     event.preventDefault();
-    axios.post(`http://localhost:9001/API/user/login`, { ...useFormdata }).then(response => {
-      //Login SUccess
-      setUserData(response.data);
-      //console.log(useUserData);
-      //console.log(response.data);
-      localStorage.setItem("user", JSON.stringify(""));
-      //Navigate('/Home')
-    }).catch(error => {
-      alert(error.response.data);
-    });
+    try {
+      const response = await API_Login.post('',{ ...useFormdata });
+      dispatch(CREATE_USER(response.data));
+      localStorage.setItem("user", JSON.stringify(response.data));
+      Navigate('/Home');
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data);
+      } else {
+        console.log(error);
+      }
+    }
   }
+
+  ///////// Debug ////////////
   useEffect(() => {
     console.log(useFormdata);
   }, [useFormdata]);
+  /////////////////////////////
 
   return (
     <>

@@ -41,6 +41,7 @@
 .Form-login,
 .email_or_google{
   background-color: #12130f;
+  border-radius: 10px;
 }
 .Form-login{
   width: 40vw;

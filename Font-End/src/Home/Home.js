@@ -1,14 +1,12 @@
-import { Outlet } from 'react-router-dom';
-
 import React from "react";
 import Sidebar from "./Sidebar/Sidebar.js";
 import { SLayout, SMain } from "./styles.js";
 
-const Home = () => {
+const Home = ({ children }) => {
   return (
     <SLayout>
       <Sidebar />
-      <SMain>{<Outlet />}</SMain>
+      <SMain>{ children }</SMain>
     </SLayout>
   )
 }

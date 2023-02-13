@@ -33,16 +33,16 @@ export const StyledCard = styled(Card)`
       padding: .2rem .4rem;
       display: visible;
       border-radius: 0 !important;
-      background-color: transparent !important;
+      background-color:  ${({ isActive }) => (isActive ? `grey !important` : `transparent !important`)} ;
       user-select: none;
       max-height: ;
       :hover > div {
-        background-Color: ${({ theme }) => theme.fcard_hover} !important;
+        /* background-Color: ${({ theme }) => theme.fcard_hover} !important; */
+        background-Color: ${({ isActive }) => (isActive ? `unset` : `${({ theme }) => theme.fcard_hover} !importan`)};
       }
        > * {
         cursor: default;
       }
-
 `;
 
 export const StyledCardHeader = styled(CardHeader)`

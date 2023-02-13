@@ -24,7 +24,7 @@
 .Chat_msg{
   max-width: 100%;
   width: fit-content;
-  background-color: aqua;
+  background-color: rgba(0,0,0,.5);
   padding: .8rem;
   word-wrap: break-word;
   border-radius: 4px;

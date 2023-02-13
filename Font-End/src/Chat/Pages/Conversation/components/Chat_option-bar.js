@@ -1,8 +1,6 @@
-import './Chat.css';
-import { StyledCardHeaderOptionbar, StyledBadge } from './styles';
+import { StyledCardHeaderOptionbar, StyledBadge } from '../../../styles';
 import { Avatar } from '@mui/material';
-import img from '../_assets/1.jpg';
-import Card from '@mui/material/Card';
+import img from '../../../../_assets/1.jpg';
 
 const Chat_optionBar = () => {
   return (

@@ -1,8 +1,8 @@
 import './Chat_friend.css';
-import img from '../_assets/1.jpg';
+import img from '../../../../_assets/1.jpg';
 import { forwardRef } from 'react';
 import Avatar from '@mui/material/Avatar';
-import { StyledBadge, StyledCardHeader, StyledCard } from './styles'
+import { StyledBadge, StyledCardHeader, StyledCard } from '../../../styles.js';
 
 
 const Chat_friend = forwardRef((props, ref) => {
@@ -18,8 +18,8 @@ const Chat_friend = forwardRef((props, ref) => {
             <Avatar alt="Remy Sharp" src={img} />
           </StyledBadge>
         }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={name}
+        subheader={last_message}
       />
     </StyledCard>
   )
