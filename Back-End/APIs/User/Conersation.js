@@ -8,7 +8,6 @@ const verify_TOKEY = require('../../middleware/Auth.js');
 router.post("/conversation", verify_TOKEY, async (req, res) => {
     try {
         const { user_id } = req.user;
-
         const findManyConvasation = await prisma.chat_user.findMany({
             where: {
                 OR: [
@@ -54,6 +53,5 @@ router.post("/conversation", verify_TOKEY, async (req, res) => {
         console.log(err);
     }
 })
-
 
 module.exports = router;

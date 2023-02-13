@@ -6,12 +6,13 @@ import { StyledBadge, StyledCardHeader, StyledCard } from '../../../styles.js';
 
 
 const Chat_friend = forwardRef((props, ref) => {
-  const { key, name, last_message, uid } = props;
+  const { key, name, last_message, uid, cid, isActive } = props;
   function handleClick() {
-    props.onClick(uid);
+
+    props.onClick({uid,cid});
   }
   return (
-    <StyledCard onClick={handleClick}>
+    <StyledCard isActive={isActive} onClick={handleClick}>
       <StyledCardHeader
         avatar={
           <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">

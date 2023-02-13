@@ -4,6 +4,9 @@ import styled from "styled-components";
 import CardHeader from '@mui/material/CardHeader';
 import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+
 
 export const BoxCards = styled.div`
     --thumbBG: #000000;
@@ -38,7 +41,7 @@ export const StyledCard = styled(Card)`
       max-height: ;
       :hover > div {
         /* background-Color: ${({ theme }) => theme.fcard_hover} !important; */
-        background-Color: ${({ isActive }) => (isActive ? `unset` : `${({ theme }) => theme.fcard_hover} !importan`)};
+        background-Color: ${({ isActive }) => (!isActive ? `unset` : `${({ theme }) => theme.fcard_hover} !importan`)};
       }
        > * {
         cursor: default;
@@ -97,8 +100,15 @@ export const StyledChatConversation = styled.div`
   flex-direction: column;
   max-width: 100%;
   max-height: 100%;
-  padding: 1rem;
+  padding: .5rem;
   overflow: hidden;
   overflow-y: auto;
 `;
+export const StyledIconButton = styled(IconButton)`
 
+
+`;
+
+export const StyledButton = styled(Button)`
+
+`;

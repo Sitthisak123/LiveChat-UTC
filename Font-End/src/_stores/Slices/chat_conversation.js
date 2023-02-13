@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     conversation: []
 };
+
 const combineWithoutDuplicates = (arr1, arr2) => {
     return arr1.concat(arr2).reduce((result, item) => {
         if (!result.some(existingItem => existingItem.chat_id === item.chat_id)) {

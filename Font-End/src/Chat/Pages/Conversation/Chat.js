@@ -1,17 +1,27 @@
 import { useRef, useContext, useState } from 'react';
 
 import SendIcon from '@mui/icons-material/Send';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 
 import Chatmessage from './components/Chat_message.js';
 import ChatoptionBar from './components/Chat_option-bar.js';
-import { StyledChatConversation, StyledTextField } from '../../styles.js';
+import { StyledChatConversation, StyledTextField, StyledIconButton, StyledButton } from '../../styles.js';
 
+import { ChatContext } from '../../Chat_content.js';
+import { useSelector, useDispatch } from 'react-redux';
+import { CREATE_USER, UPDATE_USER, DELETE_USER } from '../../../_stores/Slices/user.js';
+import { CREATE_CONVERSATION, UPDATE_CONVERSATION, DELETE_CONVERSATION, CLEAR_CONVERSATION } from '../../../_stores/Slices/chat_conversation.js';
+import { CREATE_CHAT_USERS, UPDATE_CHAT_USERS, DELETE_CHAT_USERS, CLEAR_CHAT_USERS } from '../../../_stores/Slices/chat_user.js';
+import { CREATE_CHAT_MSG, UPDATE_CHAT_MSG, DELETE_CHAT_MSG, CLEAR_CHAT_MSG } from '../../../_stores/Slices/chat_msg.js';
 
 const Chat = ({ User_id }) => {
+    const { Chat_state, setChat_state } = useContext(ChatContext);
+    const dispatch = useDispatch();
+    const { Chat_data_msg, Chat_data_users } = useSelector((state) => ({ ...state }));
+
+
+
     /////////////////////////////////// TextAria ///////////////////////////////////////////
     const [text, setText] = useState('');
     const textareaRef = useRef(null);
@@ -53,214 +63,40 @@ const Chat = ({ User_id }) => {
     function test() {
 
     }
-
+    if (!(Chat_state.cid && Chat_state.uid)) {
+        return <bUTTON>GET START YOUR CHAT</bUTTON>
+    }
+    const name = Chat_data_users.users.find(user => user.user_id === Chat_state.uid).user_name;
     return (
         <>
             <ChatoptionBar />
 
             <StyledChatConversation>
-                {/* <ul className='Chat-Conversation'> */}
-                {/* <div className="Chat_conversation">
-{USERdata.map((data, key) => {
-  return <Chat_message {...data} />
-})}
-</div> */}
+                {
+                    Chat_data_msg.chat_msg.map((data) => {
+                        // const name = 
+                        if (data.fk_chat_id === Chat_state.cid) {
+                            return (
+                                <div className="Chat-massage-coversation">
+                                    <Chatmessage
+                                        id={data.msg_reply_id}
+                                        msg_type={data.msg_type}
+                                        from_id={data.fk_user_owner}
+                                        message={data.msg_reply_message}
+                                        timest={data.msg_createTime}
+                                        readed={data.msg_read}
+                                        name={name}
+                                    />
+                                </div>
+                            )
+                        }
+                    })
+                }
 
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'131fjtjtjtjfjjkylfjtjtjtjfjjkyl2312'} timest={User_id} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'131fjtjtjtjfjjkyl2312'} timest={User_id} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkylfjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkylfjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'13fjtjtjtjfjjkyl12fjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkyl3fjtjtjtjfjjkyl12'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'555'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'555'} timest={'1312312'} />
-                </div>
-
-
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'131fjtjtjtjfjjkylfjtjtjtjfjjkyl2312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'131fjtjtjtjfjjkyl2312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkylfjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkylfjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'13fjtjtjtjfjjkyl12fjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkyl3fjtjtjtjfjjkyl12'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>  <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'131fjtjtjtjfjjkylfjtjtjtjfjjkyl2312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'131fjtjtjtjfjjkyl2312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkylfjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkylfjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'13fjtjtjtjfjjkyl12fjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkyl3fjtjtjtjfjjkyl12'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>  <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'131fjtjtjtjfjjkylfjtjtjtjfjjkyl2312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'131fjtjtjtjfjjkyl2312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkylfjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkylfjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'13fjtjtjtjfjjkyl12fjtjtjtjfjjkyl312'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'1312fjtjtjtjfjjkyl3fjtjtjtjfjjkyl12'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'fjtjtjtjfvjjkyl'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'1312312'} message={'tjtfjtjtjtjfjjkyltthfjttjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjtjtfjtjtjtjfjjkyltthfjtjtjtjfjjkyljtrjjtjtjfjjkyljtrj'} timest={'1312312'} />
-                </div>
-                <div className="Chat-massage-coversation">
-                    <Chatmessage id={'1312312'} msg_type={'TEXT'} from_id={'123'} message={'sgsfjtjtjtjfjjkylg'} timest={'1312312'} />
-                </div>
-
-                {/* </ul> */}
             </StyledChatConversation>
             <div className='ta-frame' >
-                <IconButton variant="contained" title="More"><MoreHorizIcon /></IconButton>
-                <IconButton variant="contained" title="Emoji"><TagFacesIcon /></IconButton>
+                <StyledIconButton variant="contained" title="More"><MoreHorizIcon /></StyledIconButton>
+                <StyledIconButton variant="contained" title="Emoji"><TagFacesIcon /></StyledIconButton>
                 <StyledTextField
                     defaultValue=""
                     multiline={true}
@@ -270,7 +106,7 @@ const Chat = ({ User_id }) => {
                     onSelect={handleTextareaSelect}
                     onChange={handleTextareaChange}
                 />
-                <Button variant="contained" onClick={test}><SendIcon /></Button>
+                <StyledButton variant="contained" onClick={test}><SendIcon /></StyledButton>
             </div>
         </>
     )

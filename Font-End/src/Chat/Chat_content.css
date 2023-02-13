@@ -9,16 +9,16 @@
   overflow-y: auto;
   display: grid; 
   max-height: 100%;
-  
+  width: 100%;
   /* grid-template-columns: 1fr;  */
   grid-template-columns: minmax(100%,100%); 
-  grid-template-rows: min-content minmax(20%, 100%) fit-content; 
-  gap: 0px 0px; 
+  grid-template-rows: min-content minmax(50%, 100%) min-content;
   grid-template-areas: 
     "option"
     "Chat"
     "input"; 
-}
+  
+  }
 
 .Chat_option-bar{
   grid-area: option;

@@ -10,7 +10,8 @@ function verify_TOKEY(req, res, next) {
         const decoded = jwt.verify(PUBLIC_TOKEN_KEY, PRIVATE_TOKEN_KEY);
         req.user = decoded;
     } catch (err) {
-        res.status(401).send("Invalid Token!");
+        data = {text: "Invalid Token!", route: '/login'};
+        res.status(401).send({...data});
     }
     return next();
 }
