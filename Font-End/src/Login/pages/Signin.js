@@ -23,12 +23,13 @@ const Signin = () => {
     })
   }
   async function onSubmit(event) {
+    alert(123)
     event.preventDefault();
     try {
       const response = await API_Login.post('',{ ...useFormdata });
       dispatch(CREATE_USER(response.data));
       localStorage.setItem("user", JSON.stringify(response.data));
-      Navigate('/Home');
+      Navigate('/Auth');
     } catch (error) {
       if (error.response) {
         console.log(error.response.data);

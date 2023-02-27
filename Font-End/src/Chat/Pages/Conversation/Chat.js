@@ -15,11 +15,10 @@ import { CREATE_CONVERSATION, UPDATE_CONVERSATION, DELETE_CONVERSATION, CLEAR_CO
 import { CREATE_CHAT_USERS, UPDATE_CHAT_USERS, DELETE_CHAT_USERS, CLEAR_CHAT_USERS } from '../../../_stores/Slices/chat_user.js';
 import { CREATE_CHAT_MSG, UPDATE_CHAT_MSG, DELETE_CHAT_MSG, CLEAR_CHAT_MSG } from '../../../_stores/Slices/chat_msg.js';
 
-const Chat = ({ User_id }) => {
+const Chat = () => {
     const { Chat_state, setChat_state } = useContext(ChatContext);
     const dispatch = useDispatch();
     const { Chat_data_msg, Chat_data_users } = useSelector((state) => ({ ...state }));
-
 
 
     /////////////////////////////////// TextAria ///////////////////////////////////////////
@@ -67,6 +66,7 @@ const Chat = ({ User_id }) => {
         return <bUTTON>GET START YOUR CHAT</bUTTON>
     }
     const name = Chat_data_users.users.find(user => user.user_id === Chat_state.uid).user_name;
+    
     return (
         <>
             <ChatoptionBar />

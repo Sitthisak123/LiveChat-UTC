@@ -8,6 +8,7 @@
     "@mui/icons-material": "^5.10.16",
     "@mui/joy": "^5.0.0-alpha.65",
     "@mui/material": "^5.10.16",
+    "@react-hook/media-query": "^1.1.1",
     "@reduxjs/toolkit": "^1.9.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

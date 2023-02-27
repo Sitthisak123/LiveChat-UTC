@@ -10,13 +10,12 @@ const Login = () => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const User_data = useSelector((state) => ({ ...state }));
-  const [hasRun, setHasRun] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const user = JSON.parse(localStorage.getItem('user'));
   if (user) {
     dispatch(CREATE_USER(user));
-    Navigate("/Home");
+    Navigate("/Auth");
   }
   return (
     <div className='Login-page'>

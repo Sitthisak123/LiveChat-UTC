@@ -7,16 +7,17 @@ import { CREATE_USER, UPDATE_USER, DELETE_USER } from '../../../_stores/Slices/u
 import { CREATE_CHAT_USERS, UPDATE_CHAT_USERS, DELETE_CHAT_USERS, CLEAR_CHAT_USERS } from '../../../_stores/Slices/chat_user.js';
 import { CREATE_CONVERSATION, UPDATE_CONVERSATION, DELETE_CONVERSATION, CLEAR_CONVERSATION } from '../../../_stores/Slices/chat_conversation.js';
 import { ChatContext } from '../../Chat_content.js';
+import { useMediaQuery } from '@react-hook/media-query';
 
 
 const Conversation = () => {
     const dispatch = useDispatch();
     const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg } = useSelector((state) => ({ ...state }));
     const { Chat_state, setChat_state } = useContext(ChatContext);
+    const isSmallScreen = useMediaQuery('(max-width: 780px)');
     function On_Chat_friend(props) {
-        setChat_state({ ...Chat_state,...props});
+            setChat_state({ ...Chat_state, ...props });
     }
-    
     return (
         <>
             <SSearch style={{
@@ -30,6 +31,7 @@ const Conversation = () => {
                     placeholder="Search"
                 />
             </SSearch>
+
             {
                 Chat_data_conversation.conversation.map((data) => {
                     try {

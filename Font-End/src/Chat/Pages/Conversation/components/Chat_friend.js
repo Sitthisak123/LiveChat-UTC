@@ -3,13 +3,18 @@ import img from '../../../../_assets/1.jpg';
 import { forwardRef } from 'react';
 import Avatar from '@mui/material/Avatar';
 import { StyledBadge, StyledCardHeader, StyledCard } from '../../../styles.js';
-
+import { useMediaQuery } from '@react-hook/media-query';
 
 const Chat_friend = forwardRef((props, ref) => {
   const { key, name, last_message, uid, cid, isActive } = props;
-  function handleClick() {
+  const isSmallScreen = useMediaQuery('(max-width: 780px)');
 
-    props.onClick({uid,cid});
+  function handleClick() {
+    if(isSmallScreen){
+      props.onClick({uid,cid,pageState: true});
+    }else{
+      props.onClick({uid,cid,pageState: false});
+    }
   }
   return (
     <StyledCard isActive={isActive} onClick={handleClick}>

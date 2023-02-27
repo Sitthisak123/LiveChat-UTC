@@ -1,0 +1,17 @@
+.Card-Content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.Card-Content > p{
+    width: 100%;
+    white-space: nowrap;
+}
+.Card-Content > *{
+    border: 1px solid blue !important;
+}
+.Card-Action{
+    display: flex;
+}

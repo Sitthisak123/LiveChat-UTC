@@ -20,7 +20,7 @@ const Chat_message = (props) => {
         <div className='Chat_msg'>{message}</div>
         <div className={`chat_info ${my_id == from_id ? 'right' : 'left'}`}>
           <div className='chat_info_time'>{timest}</div>
-          <div className='chat_info_name'>{my_id == from_id ? 'You' : `Name ${name}`}</div>
+          <div className='chat_info_name'>{my_id == from_id ? 'You' : null /*`Name ${name}`*/}</div>
         </div>
       </div>
     </div>

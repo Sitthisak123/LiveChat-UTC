@@ -3,6 +3,7 @@ import { css } from "styled-components";
 export const v = {
     sidebarWidth: `200px`,
     nnSpacing: `1px`,
+    mcSpacing: `2px`,
     mnSpacing: `4px`,
     smSpacing: `8px`,
     mdSpacing: `16px`,
@@ -11,7 +12,9 @@ export const v = {
     xxlSpacing: `48px`,
     borderRadius: `6px`,
 };
-
+export const Responsive = {
+    sidebar: `2.7rem`
+}
 export const btnReset = css`
     font-family: inherit;
     outline: none;

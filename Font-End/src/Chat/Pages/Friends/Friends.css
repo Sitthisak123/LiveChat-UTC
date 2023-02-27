@@ -1,0 +1,31 @@
+
+.Friend-Nav{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.Nav-item{
+    padding: .5rem;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    color: blue; /* Theme */
+    background-color: rgba(0, 0, 0, .6); /* Theme */
+}
+.Nav-item.Active{
+    background-color: rgba(0, 0, 0, .2); /* Theme */
+    border-bottom: .3rem solid black;  /* Theme */
+}
+
+.Friends-Content-Headers{
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: white; /* Theme */
+}
+
+@media (max-width: 780px) {
+    .Nav-item{
+        width: calc(100vw / 3);
+    }
+}

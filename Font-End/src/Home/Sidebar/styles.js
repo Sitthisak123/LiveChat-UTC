@@ -1,21 +1,41 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import { btnReset, v } from "../../styles/variables";
+import { btnReset, v, Responsive } from "../../styles/variables";
 
-export const SSidebar = styled.div`
-    min-width: ${({ isOpen }) => (!isOpen ? `auto` : v.sidebarWidth)};
-    background: ${({ theme }) => theme.bg};
-    height: 100vh;
-    padding: ${v.mnSpacing};
-    max-width: 15vw;
-    position: relative;
+export const SSidebar = styled.div.attrs(props => ({
+    className: props.className || 'sidebar'
+}))`
+
+   /* min-width: ${({ isOpen }) => (!isOpen ? `auto` : v.sidebarWidth)}; */
+  background: transparent;
+  /* background: ${({ theme }) => theme.bg}; */
+  /* height: 100vh;
+  padding: ${v.mnSpacing};
+  max-width: 15vw;
+  position: relative;  */
+
+  background: ${({ theme }) => theme.bg};
+
+  @media (max-width: 780px) {
+    height: ${Responsive.sidebar};
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    flex-direction: row;
+    max-width: 100vw;
+    width: 100vw;
+    z-index: 10;
+
+    align-items: center;
+    justify-content: center;
+  }
+
 `;
+
 
 export const SSidebarButton = styled.button`
     ${btnReset};
-    /* position: absolute; */
-    /* top: ${v.xxlSpacing}; */
     right: ${({ isOpen }) => (isOpen ? `-16px` : `-25px`)};
     width: 32px;
     height: 32px;
@@ -29,8 +49,14 @@ export const SSidebarButton = styled.button`
     z-index: 2;
 
     transform: ${({ isOpen }) => (!isOpen ? `rotate(180deg)` : `initial`)};
-
     margin: ${({ isOpen }) => (isOpen ? `1rem 0 1rem calc(100% - 2rem)` : `1rem auto`)};
+
+    //Responsive Sidebar open-close btn
+    @media (max-width: 780px) {
+        display: none;
+    }
+
+
 `;
 
 export const SLogo = styled.div`
@@ -79,17 +105,26 @@ export const SDivider = styled.div`
     width: 100%;
     background: ${({ theme }) => theme.bg3};
     margin: ${v.lgSpacing} 0;
+    
+    //Responsive Sidebar Divider
+    @media (max-width: 780px) {
+        display: none;
+    }
+
 `;
 
 export const SLinkContainer = styled.div`
     background: ${({ theme, isActive }) => (!isActive ? `transparent` : theme.bg3)};
     border-radius: ${v.borderRadius};
     margin: 4pX 0;
+    
 
 
     :hover {
         box-shadow: inset 0 0 0 1px ${({ theme }) => theme.bg3};
     }
+
+
 `;
 
 export const SLink = styled(Link)`
@@ -99,12 +134,13 @@ export const SLink = styled(Link)`
     color: inherit;
     font-size: 16px;
     padding: calc(${v.mnSpacing} - 2px) 0px;
+    
 `;
 
 export const SLinkIcon = styled.div`
     padding: ${v.mnSpacing} ${v.mdSpacing};
     display: flex;
-
+    
     svg {
         font-size: 20px;
     }
@@ -124,6 +160,7 @@ export const SLinkNotification = styled.div`
     color: white;
 
     margin-right: ${v.mnSpacing};
+    margin-left: ${v.smSpacing};
 `;
 
 export const STheme = styled.div`
@@ -145,6 +182,10 @@ export const SThemeToggler = styled.button`
     background: ${({ theme, isActive }) => (!isActive ? theme.bg3 : theme.primary)};
 
     position: relative;
+     //Responsive Sidebar theme toggle
+     @media (max-width: 780px) {
+        display: none;
+    }
 `;
 
 export const SToggleThumb = styled.div`

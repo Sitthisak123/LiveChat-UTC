@@ -1,4 +1,3 @@
-// TextArea for Chat Message
 import * as React from 'react';
 import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
@@ -9,26 +8,46 @@ export default function TextareaDecorators() {
   const [text, setText] = React.useState('');
   const textareaRef = React.useRef(null);
   const [cursorPosition, setCursorPosition] = React.useState(0);
-  
-  const addEmoji = (emoji) => () => {
+  const [emojiLength, setEmojiLength] = React.useState(0);
+
+  const addEmoji = React.useCallback((emoji) => () => {
+    const emojiLength = emoji.length;
     const newText = `${text.slice(0, cursorPosition)}${emoji}${text.slice(cursorPosition)}`;
     setText(newText);
-    setCursorPosition(cursorPosition + emoji.length);
+    setCursorPosition(cursorPosition + emojiLength);
+    setEmojiLength(emojiLength);
     const textareaDom = textareaRef.current.querySelector('textarea');
     textareaDom.focus();
-    console.log(textareaDom);
     textareaDom.setRangeText(emoji, cursorPosition, cursorPosition, "end");
-    textareaDom.setSelectionRange(cursorPosition + emoji.length, cursorPosition + emoji.length);
-  };
-  
+    textareaDom.setSelectionRange(cursorPosition + emojiLength, cursorPosition + emojiLength);
+  }, [text, cursorPosition]);
+
   const handleTextareaChange = (event) => {
     setText(event.target.value);
   };
-  
+
   const handleTextareaSelect = (event) => {
     setCursorPosition(event.target.selectionStart);
   };
-  
+
+  const handleTextareaKeyDown = (event) => {
+    if (event.key === "Backspace") {
+      const cursorAtStart = cursorPosition === 0;
+      const cursorJustAfterEmoji = text.slice(cursorPosition - 2, cursorPosition).match(/([\uD800-\uDBFF][\uDC00-\uDFFF])/) !== null;
+      if (!cursorAtStart && cursorJustAfterEmoji) {
+        const emojiLength = text.slice(cursorPosition - 2, cursorPosition).length;
+        const newText = `${text.slice(0, cursorPosition - emojiLength)}${text.slice(cursorPosition)}`;
+        setText(newText);
+        setCursorPosition(cursorPosition - emojiLength);
+        setEmojiLength(0);
+        const textareaDom = textareaRef.current.querySelector('textarea');
+        textareaDom.focus();
+        textareaDom.setRangeText('', cursorPosition - emojiLength, cursorPosition, "end"); /// here
+        textareaDom.setSelectionRange(cursorPosition - emojiLength, cursorPosition - emojiLength);
+        event.preventDefault();
+      }
+    }
+  };
   return (
     <Textarea
       ref={textareaRef}
@@ -36,6 +55,7 @@ export default function TextareaDecorators() {
       value={text}
       onChange={handleTextareaChange}
       onSelect={handleTextareaSelect}
+      onKeyDown={handleTextareaKeyDown}
       minRows={2}
       maxRows={4}
       startDecorator={
@@ -53,11 +73,11 @@ export default function TextareaDecorators() {
       }
       endDecorator={
         <Typography level="body3" sx={{ ml: 'auto' }}>
-          {text.length} character(s)
+          {text.length} character(s) {emojiLength}
         </Typography>
       }
       sx={{ minWidth: 300 }}
     />
   );
-  
+
 }
