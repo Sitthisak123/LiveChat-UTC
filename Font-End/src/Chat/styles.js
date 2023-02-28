@@ -7,6 +7,11 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import { Responsive } from '../styles/variables';
+import EditIcon from '@mui/icons-material/Edit';
+import { Box } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import Typography from '@mui/material/Typography';
+import { Modal } from '@mui/material';
 
 export const BoxCards = styled.div`
     --thumbBG: #000000;
@@ -154,16 +159,21 @@ export const StyledProfileMedia = styled.div`
     bottom: ${Responsive.sidebar};
 `;
 
+export const StyledBGImage = styled.img`
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: ${({ theme }) => theme.bg2};
+`;
 export const StyledProfileImage = styled.img`
-    position: absolute;
-    top: 8rem;
-    width: 8rem;
-    height: 8rem;
+    width: 100%;
+    height: 100%;
     left: calc(50% - 4rem);
     border-radius: 50%;
-    border: .3rem solid ${({ theme }) => theme.bg};
-    /* background-color: ${({ theme }) => theme.bg}; */
+    border: .3rem solid ${({ theme }) => theme.bg2}; /* Theme */
+    object-fit: cover;
 `;
+
 export const StyledAddFriendIconButton = styled(IconButton)`
   padding: 0;
   :first-child{
@@ -201,4 +211,64 @@ export const StyledNavItemBage = styled(Badge)`
     right: 20px;
     background-color: ${({ theme }) => theme.primary};
   }
+`;
+export const StyledEditIcon = styled(EditIcon)`
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.fcardAlpha};  /* Theme */
+  border-radius: 50%;
+  padding: 5px;
+  scale: 1.1;
+
+  :hover{
+    color: ${({ theme }) => theme.bg};
+    background-color: ${({ theme }) => theme.fcard};  /* Theme */
+    cursor: pointer;
+  }
+`;
+export const StyledModalBox = styled(Box)`
+  position: absolute;
+  max-width: 290px;
+  top: 40%;
+  left: 50%;
+  background-color: ${({ theme }) => theme.bg3};
+  border: 2px ${({ theme }) => theme.bg2};
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
+  padding: 16px;
+  padding-top: 4px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+`;
+export const StyledCloseIcon = styled(CloseIcon)`
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: ${({ theme }) => theme.fcardAlpha};
+  border-radius: 20%;
+
+  :hover{
+    background-color: ${({ theme }) => theme.fcard};
+    color: ${({ theme }) => theme.textRevers};
+    cursor: pointer;
+  }
+`;
+
+export const StyledTypography = styled(Typography)`
+  text-align: center;
+  width: calc(100% + 16px);
+  margin-bottom: 2rem;
+  user-select: none;
+`;
+export const StyledChangeNameModal = styled(Modal)`
+    position: absolute;
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;

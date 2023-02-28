@@ -1,46 +1,78 @@
-.User_profile-main{
+.User_profile-main {
     max-width: 100%;
     max-height: 100%;
     position: relative;
 }
 
-.profile-headers{
+.profile-headers {
     position: relative;
     max-height: 300px;
-    
+    display: flex;
+    flex-direction: column;
 }
 
-.profile_bg-img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.profile_name{
-    font-size: 1.3rem ;
+.profile_name {
+    padding: .5rem;
+    font-size: 1.3rem;
     font-weight: 500;
     margin-top: 3.5rem;
     text-align: center;
+    align-self: center;
 }
 
-.profile_biology{
+.ChangeName {
+    padding: 0;
+    max-width: 225px !important;
+    font-size: 1.3rem !important;
+    font-weight: 500 !important;
+    margin-top: 3.5rem !important;
+    border: none !important;
+    align-self: center;
+
+
+}
+
+.profile_name:hover {
+    font-weight: 600;
+}
+
+.profile_biology {
     margin-top: 1rem;
     font-size: .9rem;
     padding: 1rem 2rem;
 }
 
-ul.profile_status{
+ul.profile_status {
     list-style: none;
     padding-left: 2rem;
 
 }
-ul.profile_status > li{
+
+ul.profile_status>li {
     font-size: .9rem;
     display: flex;
     padding: .2rem;
     align-items: center;
     gap: 1rem;
 }
-@media screen and (width: 780px){
-    
+
+.profile_BG-img-frame {
+    position: relative;
 }
+
+.profile_img-frame {
+    position: absolute;
+    top: 8rem;
+    width: 8rem;
+    height: 8rem;
+    left: calc(50% - 4rem);
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.Upload-Form {
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (width: 780px) {}

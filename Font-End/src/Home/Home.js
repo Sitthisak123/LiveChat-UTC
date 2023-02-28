@@ -9,9 +9,10 @@ import { useNavigate } from 'react-router-dom';
 const Home = ({ children }) => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const TOKEN = JSON.parse(localStorage.getItem('TOKEN'));
+  console.log(TOKEN)
   const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg } = useSelector((state) => ({ ...state }));
-  if (!user || User_data.value.length < 1) {
+  if (!TOKEN || User_data.value.length < 1) {
     Navigate("/Auth");
   }
   return (

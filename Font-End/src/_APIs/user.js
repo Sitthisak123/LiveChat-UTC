@@ -13,3 +13,6 @@ export const API_Init = axios.create({
 export const API_getImage = axios.create({
   baseURL: `http://${host_adr}:9001/API/user/getImage/`
 });
+export const API_UploadProfileImage = axios.create({
+  baseURL: `http://${host_adr}:9001/API/user/upload/ProfileImage`
+});

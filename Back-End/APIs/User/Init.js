@@ -3,9 +3,9 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient()
 const jwt = require('jsonwebtoken');
-const verify_TOKEY = require('../../middleware/Auth.js');
+const verify_TOKEN = require('../../middleware/Auth.js');
 
-router.post("/init", verify_TOKEY, async (req, res) => {
+router.post("/init", verify_TOKEN, async (req, res) => {
     try {
         /// Fetch User data
         const { user_id } = req.user;
@@ -43,7 +43,19 @@ router.post("/init", verify_TOKEY, async (req, res) => {
             item => (item.chat_user_one === user_id ? item.chat_user_two : item.chat_user_one)
         );
         console.log(userIds);
-
+        const otherUserIds = Relations.reduce((acc, curr) => {
+            if (curr.fk_user_one !== user_id && !acc.has(curr.fk_user_one)) {
+              acc.add(curr.fk_user_one);
+            }
+            if (curr.fk_user_two !== user_id && !acc.has(curr.fk_user_two)) {
+              acc.add(curr.fk_user_two);
+            }
+            return acc;
+          }, new Set());
+          
+          const allUserIds = Array.from(new Set([...userIds, ...otherUserIds]));
+          
+        console.log(allUserIds);
         /// Fetch other Users data
         const users = await prisma.user.findMany({
             where: {
@@ -62,8 +74,22 @@ router.post("/init", verify_TOKEY, async (req, res) => {
                 user_profile_img: true
             }
         });
-
-        const data = { conversation: findManyConversation, users, chat_msg, Relations, };
+        const user = await prisma.user.findFirst({
+            where: {
+                user_id: user_id
+            }, select:
+            {
+                user_id: true,
+                google_id: true,
+                user_username: true,
+                user_password: false,
+                user_email: true,
+                user_phone: true,
+                user_name: true,
+                user_profile_img: true
+            }
+        });
+        const data = { conversation: findManyConversation, users, chat_msg, Relations, user};
         res.status(200).send(data)
     } catch (err) {
         console.log(err);

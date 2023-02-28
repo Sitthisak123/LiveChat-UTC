@@ -66,6 +66,7 @@ model user {
   user_phone                                                  String                 @db.VarChar(12)
   user_name                                                   String                 @db.TinyText
   user_profile_img                                            String                 @default("user_default.png") @db.VarChar(256)
+  user_Cover_img                                              String                 @default("user_default.png") @db.VarChar(256)
   chat_user_chat_user_chat_user_oneTouser                     chat_user[]            @relation("chat_user_chat_user_oneTouser")
   chat_user_chat_user_chat_user_twoTouser                     chat_user[]            @relation("chat_user_chat_user_twoTouser")
   friends_relationship_friends_relationship_fk_user_oneTouser friends_relationship[] @relation("friends_relationship_fk_user_oneTouser")

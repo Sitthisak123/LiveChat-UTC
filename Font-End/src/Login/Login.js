@@ -12,9 +12,9 @@ const Login = () => {
   const User_data = useSelector((state) => ({ ...state }));
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (user) {
-    dispatch(CREATE_USER(user));
+  const TOKEN = JSON.parse(localStorage.getItem('TOKEN'));
+  if (TOKEN) {
+    dispatch(CREATE_USER(TOKEN));
     Navigate("/Auth");
   }
   return (

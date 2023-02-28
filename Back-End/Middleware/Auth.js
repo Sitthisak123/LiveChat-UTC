@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const PRIVATE_TOKEN_KEY = process.env.PRIVATE_TOKEN_KEY;
 
-function verify_TOKEY(req, res, next) {
+function verify_TOKEN(req, res, next) {
     const PUBLIC_TOKEN_KEY = req.headers['access-token-key'] || req.body.token;
     if (!PUBLIC_TOKEN_KEY) return res.status(403).send("a token is require for Authentication!");
     try {
@@ -16,4 +16,4 @@ function verify_TOKEY(req, res, next) {
     return next();
 }
 
-module.exports = verify_TOKEY;
+module.exports = verify_TOKEN;

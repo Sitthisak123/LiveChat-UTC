@@ -20,7 +20,9 @@ import FriendContent from './Chat/Pages/Friends/Components/Content.js';
 import AddFriend from './Chat/Pages/Friends/AddFriend.js';
 import Auth from './Middleware/Auth.js';
 
-
+/* Test */
+import ImageUpload from './Test.js';
+/* Test */
 export const ThemeContext = createContext();
 
 function App() {
@@ -41,12 +43,12 @@ function App() {
           <Routes>
             
             <Route path="Auth/*" element={<Auth />} />
-
+            
             <Route path="Home/*" element={<Chatcontent />}>
+              <Route path="Test/*" element={<ImageUpload />} />
               <Route path="Profile" element={<Profile />} />
               <Route path="Chat" element={<Conversation />} />
-              <Route path="Invite" element={<AddFriend />} >
-              </Route>
+              <Route path="Invite" element={<AddFriend />} ></Route>
               <Route path="Friend/*" element={<Friends />} >
                 <Route path="Friends" element={<FriendContent />} />
                 <Route path="Favorites" element={<FriendContent />} />
@@ -55,7 +57,7 @@ function App() {
               </Route>
 
               <Route path="Settings" element={<Setting1 />} />
-              <Route path="*" element={<Redirect value={"Friend"} />}
+              <Route path="*" element={<Redirect value={"Profile"} />}
               // <Route path="*" element={<Redirect value={"profile"} />}
               />
             </Route>

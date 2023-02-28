@@ -9,44 +9,65 @@ import { useEffect } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import { useState } from 'react';
+
+import Backdrop from '@mui/material/Backdrop';
+import Button from '@mui/material/Button';
+import { CatchingPokemon } from '@mui/icons-material';
 
 const Auth = () => {
     const dispatch = useDispatch();
     const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg } = useSelector((state) => ({ ...state }));
     const Navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('user'));
+    const [hasRun, sethasRun] = useState(false);
+    const user = JSON.parse(localStorage.getItem('TOKEN'));
+
     useEffect(() => {
-        if (!localStorage.getItem("user") || User_data.value.length < 1) {
-            Navigate("/Login");
-        } else {
-            API_Init.post('', {}, { headers: { 'access-token-key': User_data.value.user_TOKEN } }).then(response => {
-                dispatch(CREATE_CONVERSATION(response.data.conversation));
-                dispatch(CREATE_CHAT_USERS(response.data.users));
-                dispatch(CREATE_CHAT_MSG(response.data.chat_msg));
-                Navigate("/Home");
+        if (!hasRun) {
+            sethasRun(true);
+            if (!localStorage.getItem("TOKEN") || User_data.value.length < 1) {
+                Navigate("/Login");
+            } else {
+                API_Init.post('', {}, { headers: { 'access-token-key': User_data.value.user_TOKEN } }).then(response => {
+                    dispatch(CREATE_CONVERSATION(response.data.conversation));
+                    dispatch(CREATE_CHAT_USERS(response.data.users));
+                    dispatch(CREATE_CHAT_MSG(response.data.chat_msg));
+                    dispatch(UPDATE_USER(response.data.user));
+                    Navigate("/Home");
 
-            }).catch((error) => {
-                const data = error.response.data;
-                alert(data.text)
-                console.log(data);
+                }).catch((error) => {
+                        const data = error.response.data;
+                        alert(data.text)
+                        console.log(data);
 
-                localStorage.removeItem('user');
-                dispatch(DELETE_USER())
-                dispatch(CLEAR_CONVERSATION())
-                dispatch(CLEAR_CHAT_USERS())
-                dispatch(CLEAR_CHAT_MSG())
+                        localStorage.removeItem('TOKEN');
+                        dispatch(DELETE_USER())
+                        dispatch(CLEAR_CONVERSATION())
+                        dispatch(CLEAR_CHAT_USERS())
+                        dispatch(CLEAR_CHAT_MSG())
+                        dispatch(DELETE_USER());
 
-                if (data.route) {
-                    Navigate(data.route);
-                }
-            });
+
+                        if (data.route) {
+                            Navigate(data.route);
+                        }
+                        console.log(error);
+
+
+                });
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CircularProgress />
-        </Box>
+        // <Box sx={{ display: 'flex' }}>
+        //     <CircularProgress />
+        // </Box>
+        <div>
+            <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </div>
     );
 }
 export default Auth;

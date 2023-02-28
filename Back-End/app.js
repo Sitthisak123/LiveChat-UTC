@@ -5,7 +5,7 @@ const app = express();
 // const prisma = new PrismaClient()
 // const jwt = require('jsonwebtoken');
 
-const verify_TOKEY = require('./middleware/Auth.js');
+const verify_TOKEN = require('./middleware/Auth.js');
 const API_login = require('./APIs/User/login.js');
 const API_register = require('./APIs/User/register.js');
 const API_conversion = require('./APIs/User/Init.js');
@@ -22,7 +22,7 @@ app.use(APIs_Endpoint_user, API_conversion);
 app.use(APIs_Endpoint_user, API_getImage);
 
 
-// app.post("/API/token/test", verify_TOKEY, (req, res) => {
+// app.post("/API/token/test", verify_TOKEN, (req, res) => {
 //     res.status(201).send('TOKEN is work! congratulations!!');
 // })
 
