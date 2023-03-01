@@ -39,12 +39,7 @@ const ImageUpload = () => {
     const formData = new FormData();
     formData.append('image', file);
 
-    API_UploadProfileImage.post('', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'access-token-key': User_data.value.user_TOKEN
-      },
-    })
+    API_UploadProfileImage(User_data.value.user_TOKEN).post('', formData)
       .then((response) => {
         console.log('File uploaded successfully:', response.data.filename);
         // do something with the filename

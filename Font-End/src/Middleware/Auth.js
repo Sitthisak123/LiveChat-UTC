@@ -12,8 +12,6 @@ import Box from '@mui/material/Box';
 import { useState } from 'react';
 
 import Backdrop from '@mui/material/Backdrop';
-import Button from '@mui/material/Button';
-import { CatchingPokemon } from '@mui/icons-material';
 
 const Auth = () => {
     const dispatch = useDispatch();
@@ -28,7 +26,8 @@ const Auth = () => {
             if (!localStorage.getItem("TOKEN") || User_data.value.length < 1) {
                 Navigate("/Login");
             } else {
-                API_Init.post('', {}, { headers: { 'access-token-key': User_data.value.user_TOKEN } }).then(response => {
+                API_Init(User_data.value.user_TOKEN).post('', { /* request body */ }, { /* headers */ }).then(response => {
+                    console.log(response.data);
                     dispatch(CREATE_CONVERSATION(response.data.conversation));
                     dispatch(CREATE_CHAT_USERS(response.data.users));
                     dispatch(CREATE_CHAT_MSG(response.data.chat_msg));
@@ -46,14 +45,10 @@ const Auth = () => {
                         dispatch(CLEAR_CHAT_USERS())
                         dispatch(CLEAR_CHAT_MSG())
                         dispatch(DELETE_USER());
-
-
                         if (data.route) {
                             Navigate(data.route);
                         }
                         console.log(error);
-
-
                 });
             }
         }

@@ -10,7 +10,6 @@ import WorkIcon from '@mui/icons-material/Work';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import { Modal } from '@mui/material';
-
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 
@@ -27,8 +26,8 @@ import {
   StyledCloseIcon,
   StyledTypography
 } from '../../styles';
-import { hover } from '@testing-library/user-event/dist/hover';
 
+import useErrorHandling from '../../../_methods/HandleError.js';
 
 const Profile = () => {
   const Navigate = useNavigate();
@@ -37,6 +36,7 @@ const Profile = () => {
   const isScreen_mn = useMediaQuery('(max-width: 340px)');
   const isScreen_md = useMediaQuery('(max-width: 480px)');
   const isScreen_lg = useMediaQuery('(max-width: 780px)');
+  const { handleErrors } = useErrorHandling();
   const InputFile = useRef();
   const InputName = useRef();
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -65,26 +65,50 @@ const Profile = () => {
     setFile(selectedFile);
     setPreviewUrl(URL.createObjectURL(selectedFile));
   };
+
+
   const handleUpload = (event) => {
     event.preventDefault();
-
+  
     const formData = new FormData();
     formData.append('image', file);
-
-    API_UploadProfileImage.post('', formData, {
+    formData.append('choice', open.choice);
+    alert(open.choice)
+  
+    API_UploadProfileImage(User_data.value.user_TOKEN).post('', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
-        'access-token-key': User_data.value.user_TOKEN
-      },
-    })
-      .then((response) => {
-        console.log('File uploaded successfully:', response.data.filename);
-        // do something with the filename
-      })
-      .catch((error) => {
-        console.error('Error uploading file:', error);
-      });
+        'Content-Type': 'multipart/form-data'
+      }
+    }).then((response) => {
+      console.log('File uploaded successfully:', response.data.filename);
+      // Do something with the filename
+    }).catch((error) => {
+      console.error('Error uploading file:', error);
+      alert('catch')
+      handleErrors(error);
+    });
   };
+// const handleUpload = (event) => {
+//   event.preventDefault();
+
+//   const formData = new FormData();
+//   formData.append('image', file);
+//   formData.append('choice', open.choice);
+//   alert(open.choice)
+
+//   axios.post('http://localhost:9001/API/user/upload/ProfileImage', formData, {
+//     headers: {
+//       'Content-Type': 'multipart/form-data'
+//     }
+//   }).then((response) => {
+//     console.log('File uploaded successfully:', response.data.filename);
+//     // Do something with the filename
+//   }).catch((error) => {
+//     console.error('Error uploading file:', error);
+//   });
+// };
+
+  
   const itemData = [
     {
       img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
@@ -112,10 +136,7 @@ const Profile = () => {
     },
   ]
   useEffect(() => {
-    API_getImage.get(User_data.value.user_profile_img, {
-      responseType: 'arraybuffer',
-      headers: { 'access-token-key': User_data.value.user_TOKEN }
-    })
+    API_getImage(User_data.value.user_TOKEN).get(User_data.value.user_profile_img)
       .then((response) => {
         const blob = new Blob([response.data], { type: 'image/png' });
         setImageUrl(URL.createObjectURL(blob));
@@ -137,12 +158,12 @@ const Profile = () => {
           <StyledEditIcon id='Upload-Profile' onClick={handleUploadOpen} />
         </div>
         {
-          open.changeName? 
-          <Input defaultValue={'Hello'} autoFocus onBlur={handleClose} ref={InputName} className='ChangeName'/>
-          :
-          <p className='profile_name' onClick={handleChangeNameOpen}>Name Name</p>
+          open.changeName ?
+            <Input defaultValue={'Hello'} autoFocus onBlur={handleClose} ref={InputName} className='ChangeName' />
+            :
+            <p className='profile_name' onClick={handleChangeNameOpen}>Name Name</p>
         }
-        
+
         <p className='profile_biology'>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</p>
         <ul className='profile_status'>
           <li><ContactMailIcon /><p>Contact Information</p></li>
@@ -189,7 +210,7 @@ const Profile = () => {
                 :
                 <Button onClick={handleSelect}><PhotoSizeSelectActualIcon style={{ fontSize: 250 }} /></Button>
             }
-            <Button disabled={file ? false : true} style={{ marginTop: '1.2rem' }}>Upload</Button>
+            <Button disabled={file ? false : true} style={{ marginTop: '1.2rem' }} type='submit' >Upload</Button>
           </form>
         </StyledModalBox>
       </Modal>
