@@ -2,7 +2,7 @@ import './Profile.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { API_getImage, API_UploadProfileImage } from '../../../_APIs/user';
 import { CREATE_USER, UPDATE_USER, DELETE_USER } from '../../../_stores/Slices/user.js';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
@@ -24,45 +24,75 @@ import {
   StyledBGImage,
   StyledModalBox,
   StyledCloseIcon,
-  StyledTypography
+  StyledTypography,
+  StylrdChangeNameBTN
 } from '../../styles';
 
 import useErrorHandling from '../../../_methods/HandleError.js';
+
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { API_ChangeName } from '../../../_APIs/system';
+
 
 const Profile = () => {
   const Navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState({ profile: null, cover: null });
   const { User_data } = useSelector((state) => ({ ...state }));
+  const dispatch = useDispatch();
   const isScreen_mn = useMediaQuery('(max-width: 340px)');
   const isScreen_md = useMediaQuery('(max-width: 480px)');
   const isScreen_lg = useMediaQuery('(max-width: 780px)');
   const { handleErrors } = useErrorHandling();
   const InputFile = useRef();
   const InputName = useRef();
+  const [newName, setNewName] = useState();
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [open, setOpen] = useState({ upLoad: false, choice: null, changeName: false });
+  const [open, setOpen] = useState({ upLoad: false, choice: null, changeName: false, changeNameDialog: false, changeNameSubmit: false });
   const handleUploadOpen = (event) => {
     const choice = event.target.id;
-    setOpen({ upLoad: true, choice: choice, changeName: false })
+    setOpen({ upLoad: true, choice: choice, changeName: false, changeNameDialog: false, changeNameSubmit: false })
   };
   const updateImg = (url) => {
     if (open.choice === 'Upload-Profile') {
-      alert('1')
       setImageUrl({ ...imageUrl, profile: url })
     }
     else if (open.choice === 'Upload-Cover') {
-      alert('2')
       setImageUrl({ ...imageUrl, cover: url })
     }
 
   }
   const handleChangeNameOpen = (event) => {
     const choice = event.target.id;
-    setOpen({ upLoad: false, choice: choice, changeName: true })
+    setOpen({ upLoad: false, choice: null, changeName: true, changeNameDialog: false, changeNameSubmit: false })
   };
-
+  const handleChangeNameDialogOpen = () => {
+    console.log('blur> ' + open.changeNameSubmit);
+    if (open.changeNameSubmit) return
+    setOpen({ upLoad: false, choice: null, changeName: true, changeNameDialog: true, changeNameSubmit: false })
+  }
+  useEffect(() => {
+    console.log('change> ' + open.changeNameSubmit)
+  }, [open.changeNameSubmit])
+  const handleChangeNameDialogClose = (event) => {
+    if (event.target.id === 'yes') {
+      setOpen({ upLoad: false, choice: null, changeName: false, changeNameDialog: false, changeNameSubmit: false })
+      return
+    } else if (event.target.id === 'no') {
+      InputName.current.focus();
+      setOpen({ upLoad: false, choice: null, changeName: true, changeNameDialog: false, changeNameSubmit: false })
+    }
+  }
+  const handleChangeNameSubmit = () => {
+    console.log('sub>');
+    setOpen({ ...open, changeNameSubmit: true })
+  }
   const handleClose = () => {
-    setOpen({ upLoad: false, choice: null, changeName: false });
+    setOpen({ upLoad: false, choice: null, changeName: false, changeNameDialog: false, changeNameSubmit: false });
     setFile(null);
   }
   const [file, setFile] = useState(null);
@@ -75,16 +105,31 @@ const Profile = () => {
     setFile(selectedFile);
     setPreviewUrl(URL.createObjectURL(selectedFile));
   };
+  const handleOnChangeNameFoCus = (event) => {
+    setOpen({ ...open, changeNameSubmit: false });
+    setNewName(event.target.value);
+  }
 
+  const handleUpdateName = () => {
+    // const formData = new FormData();
+    const data = {newName: newName};
 
+    API_ChangeName(User_data.value.user_TOKEN).put('', data).then((response) => {
+      alert(response.data);
+      dispatch(UPDATE_USER({user_name: newName}))
+    }).catch((error) => {
+      console.error('Error uploading file:', error);
+      alert('catch onUpload')
+      handleErrors(error);
+    });
+
+  };
   const handleUpload = (event) => {
     event.preventDefault();
 
     const formData = new FormData();
     formData.append('image', file);
     formData.append('choice', open.choice);
-    alert(open.choice)
-
     API_UploadProfileImage(User_data.value.user_TOKEN).post('', formData).then((response) => {
       const blob = new Blob([response.data], { type: 'image/png' });
       updateImg(URL.createObjectURL(blob));
@@ -139,7 +184,7 @@ const Profile = () => {
       .catch((error) => {
         console.log(error);
       });
-      
+
   }, []);
   return (
     <div className='User_profile-main'>
@@ -154,9 +199,20 @@ const Profile = () => {
         </div>
         {
           open.changeName ?
-            <Input defaultValue={'Hello'} autoFocus onBlur={handleClose} ref={InputName} className='ChangeName' />
+            <div className='input-changeName-frame'>
+              <input
+                defaultValue={User_data.value.user_name}
+                onFocus={handleOnChangeNameFoCus}
+                onBlur={handleChangeNameDialogOpen}
+                onChange={(event)=>setNewName(event.target.value)}
+                autoFocus
+                ref={InputName}
+                className='ChangeName'
+              />
+              <StylrdChangeNameBTN onMouseDown={handleChangeNameSubmit} onClick={() => handleUpdateName()}>ok</StylrdChangeNameBTN>
+            </div>
             :
-            <p className='profile_name' onClick={handleChangeNameOpen}>Name Name</p>
+            <p className='profile_name' onClick={handleChangeNameOpen}>{User_data.value.user_name}</p>
         }
 
         <p className='profile_biology'>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</p>
@@ -209,6 +265,25 @@ const Profile = () => {
           </form>
         </StyledModalBox>
       </Modal>
+
+      <Dialog
+        open={open.changeNameDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {'Are you sure, The name has not been saved.'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleChangeNameDialogClose} id='yes'> Yes </Button>
+          <Button onClick={handleChangeNameDialogClose} id='no' autoFocus> No </Button>
+        </DialogActions>
+      </Dialog>
 
     </div>
   );

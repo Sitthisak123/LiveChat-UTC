@@ -18,17 +18,21 @@
     margin-top: 3.5rem;
     text-align: center;
     align-self: center;
+    
 }
 
 .ChangeName {
-    padding: 0;
-    max-width: 225px !important;
+    padding: .5rem !important;
     font-size: 1.3rem !important;
     font-weight: 500 !important;
-    margin-top: 3.5rem !important;
-    border: none !important;
-    align-self: center;
-
+    text-align: center !important;
+    font-family: inherit;
+    outline: none;
+    border: none;
+    background: none;
+    letter-spacing: inherit;
+    color: inherit;
+    min-width: 20rem;
 
 }
 
@@ -37,7 +41,7 @@
 }
 
 .profile_biology {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     font-size: .9rem;
     padding: 1rem 2rem;
 }
@@ -73,6 +77,11 @@ ul.profile_status>li {
 .Upload-Form {
     display: flex;
     flex-direction: column;
+}
+.input-changeName-frame{
+    align-self: center;
+    position: relative;
+    margin-top: 3.5rem !important;
 }
 
 @media screen and (width: 780px) {}

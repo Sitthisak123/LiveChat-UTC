@@ -216,15 +216,14 @@ export const StyledEditIcon = styled(EditIcon)`
   position: absolute;
   bottom: 10%;
   right: 10%;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.icon};
   background-color: ${({ theme }) => theme.fcardAlpha};  /* Theme */
   border-radius: 50%;
   padding: 5px;
   scale: 1.1;
 
   :hover{
-    color: ${({ theme }) => theme.bg};
-    background-color: ${({ theme }) => theme.fcard};  /* Theme */
+    background-color: ${({ theme }) => theme.primary};  /* Theme */
     cursor: pointer;
   }
 `;
@@ -271,4 +270,14 @@ export const StyledChangeNameModal = styled(Modal)`
     display: flex;
     justify-content: center;
     align-items: center;
+`;
+
+export const StylrdChangeNameBTN = styled(Button)`
+    position: absolute !important;
+    right: 50%;
+    transform: translateX(50%);
+    bottom: -2rem;
+    background-color: ${({ theme }) => theme.primary} !important;
+    color: white !important;
+    padding: 0 !important;
 `;
