@@ -31,7 +31,7 @@ import useErrorHandling from '../../../_methods/HandleError.js';
 
 const Profile = () => {
   const Navigate = useNavigate();
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState({ profile: null, cover: null });
   const { User_data } = useSelector((state) => ({ ...state }));
   const isScreen_mn = useMediaQuery('(max-width: 340px)');
   const isScreen_md = useMediaQuery('(max-width: 480px)');
@@ -45,7 +45,17 @@ const Profile = () => {
     const choice = event.target.id;
     setOpen({ upLoad: true, choice: choice, changeName: false })
   };
+  const updateImg = (url) => {
+    if (open.choice === 'Upload-Profile') {
+      alert('1')
+      setImageUrl({ ...imageUrl, profile: url })
+    }
+    else if (open.choice === 'Upload-Cover') {
+      alert('2')
+      setImageUrl({ ...imageUrl, cover: url })
+    }
 
+  }
   const handleChangeNameOpen = (event) => {
     const choice = event.target.id;
     setOpen({ upLoad: false, choice: choice, changeName: true })
@@ -69,46 +79,22 @@ const Profile = () => {
 
   const handleUpload = (event) => {
     event.preventDefault();
-  
+
     const formData = new FormData();
     formData.append('image', file);
     formData.append('choice', open.choice);
     alert(open.choice)
-  
-    API_UploadProfileImage(User_data.value.user_TOKEN).post('', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then((response) => {
-      console.log('File uploaded successfully:', response.data.filename);
-      // Do something with the filename
+
+    API_UploadProfileImage(User_data.value.user_TOKEN).post('', formData).then((response) => {
+      const blob = new Blob([response.data], { type: 'image/png' });
+      updateImg(URL.createObjectURL(blob));
+      handleClose();
     }).catch((error) => {
       console.error('Error uploading file:', error);
-      alert('catch')
+      alert('catch onUpload')
       handleErrors(error);
     });
   };
-// const handleUpload = (event) => {
-//   event.preventDefault();
-
-//   const formData = new FormData();
-//   formData.append('image', file);
-//   formData.append('choice', open.choice);
-//   alert(open.choice)
-
-//   axios.post('http://localhost:9001/API/user/upload/ProfileImage', formData, {
-//     headers: {
-//       'Content-Type': 'multipart/form-data'
-//     }
-//   }).then((response) => {
-//     console.log('File uploaded successfully:', response.data.filename);
-//     // Do something with the filename
-//   }).catch((error) => {
-//     console.error('Error uploading file:', error);
-//   });
-// };
-
-  
   const itemData = [
     {
       img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
@@ -139,22 +125,31 @@ const Profile = () => {
     API_getImage(User_data.value.user_TOKEN).get(User_data.value.user_profile_img)
       .then((response) => {
         const blob = new Blob([response.data], { type: 'image/png' });
-        setImageUrl(URL.createObjectURL(blob));
+        setImageUrl((prevUrl) => ({ ...prevUrl, profile: URL.createObjectURL(blob) }))
       })
       .catch((error) => {
         console.log(error);
       });
+
+    API_getImage(User_data.value.user_TOKEN).get(User_data.value.user_cover_img)
+      .then((response) => {
+        const blob = new Blob([response.data], { type: 'image/png' });
+        setImageUrl((prevUrl) => ({ ...prevUrl, cover: URL.createObjectURL(blob) }));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
   }, []);
-  /* Change Name*/
   return (
     <div className='User_profile-main'>
       <div className='profile-headers'>
         <div className='profile_BG-img-frame'>
-          <StyledBGImage src={imageUrl} alt='profile.png' className='profile_bg-img' />
+          <StyledBGImage src={imageUrl.cover} alt='profile.png' className='profile_bg-img' />
           <StyledEditIcon id='Upload-Cover' style={{ right: 5, bottom: 5 }} onClick={handleUploadOpen} />
         </div>
         <div className='profile_img-frame'>
-          <StyledProfileImage src={imageUrl} alt='profile.png' className='profile_img' />
+          <StyledProfileImage src={imageUrl.profile} alt='profile.png' className='profile_img' />
           <StyledEditIcon id='Upload-Profile' onClick={handleUploadOpen} />
         </div>
         {
@@ -200,7 +195,7 @@ const Profile = () => {
           </StyledTypography>
           <StyledCloseIcon onClick={handleClose} />
           <form onSubmit={handleUpload} className='Upload-Form'>
-            <input type="file" ref={InputFile} onChange={handleFileChange} style={{ display: 'none' }} name="image" />
+            <input type="file" accept="image/*" ref={InputFile} onChange={handleFileChange} style={{ display: 'none' }} name="image" />
             {
               file ?
                 open.choice === 'Upload-Profile' ?

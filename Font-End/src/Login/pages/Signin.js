@@ -26,8 +26,8 @@ const Signin = () => {
     event.preventDefault();
     try {
       const response = await API_Login.post('',{ ...useFormdata });
-      alert('login')
       dispatch(CREATE_USER(response.data));
+      console.log(response.data)
       localStorage.setItem("TOKEN", JSON.stringify({user_TOKEN: response.data.user_TOKEN}));
       Navigate('/Auth');
     } catch (error) {

@@ -5,78 +5,106 @@ const path = require('path');
 const fs = require('fs');
 const verify_TOKEN = require('../../middleware/Auth.js');
 const { PrismaClient } = require('@prisma/client');
+const { Console } = require('console');
 const prisma = new PrismaClient()
 
 
-// // Set up multer to store uploaded images in the 'uploads' directory
-// const storage = multer.diskStorage({
-//   destination: function (req, choice,file, cb) {
-//     const { user_id } = req.user;
-//     console.log(`\nerr>> 1 ${JSON.stringify(file)}\n`);
-
-//     const dest = `assets/user/image/${user_id}`;
-//     cb(null, dest);
-//   },
-//   filename: function (req, file, cb) {
-//     console.log(`\nerr>> 1 ${req.body.choice}\n`);
-//     const filename = req.body.choice === 'Upload-Profile' ? 'profile' :
-//       req.body.choice === 'Upload-Cover' ? 'cover' : null
-//     if (!filename){
-//       req.errs = {status: 400, msg: 'Error: filename is not defined'};
-//     }
-//       const ext = path.extname(file.originalname);
-//       req.file_ext = ext;
-//       cb(null, `profile${ext}`);    
-//   },
-// });
-
-// const upload = multer({ storage });
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'assets'); // specify the upload directory
+  destination: function (req, file, cb) {
+    cb(null, `assets/user/image/${req.user.user_id}`); // specify the upload directory
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     const randomName = Math.random().toString(36).substring(2, 10) + '_' + Date.now();
     cb(null, randomName + '.' + file.originalname.split('.').pop()); // use the original file name
   }
 });
 
-const upload = multer({ storage: storage });
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb('Error: Only images are allowed');
+  }
+}
 
-router.post('/upload/ProfileImage', verify_TOKEN, upload.single('image'), (req, res) => {
-  console.log(req.file); // the uploaded file info
-  console.log(req.body.choice);
-  res.send('File uploaded successfully');
+const upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  }
 });
 
+router.post('/upload/ProfileImage', verify_TOKEN, upload.single('image'), async (req, res, next) => {
+  if (req.fileValidationError) {
+    return res.status(400).send({ error: req.fileValidationError });
+  }
 
-// Endpoint to handle image uploads
-// router.post('/upload/ProfileImage', verify_TOKEN, upload.single('image'), (req, res) => {
-//   console.log(`\nerr>> 2 ${req.body.choice}\n`);
+  const { user_id } = req.user;
+  const { filename } = req.file;
+  const { choice } = req.body;
+  var update = null;
+  var oldImg = null;
+  try {
+    if (choice === 'Upload-Profile') {
+      const tempOldimg = await prisma.user.findFirst({
+        where: { user_id: user_id },
+        select: {
+          user_id: false,
+          google_id: false,
+          user_username: false,
+          user_password: false,
+          user_email: false,
+          user_phone: false,
+          user_name: false,
+          user_profile_img: true,
+          user_cover_img: false
+        }
+      });
+      oldImg = tempOldimg.user_profile_img;
+
+      update = await prisma.user.update({
+        where: { user_id: user_id },
+        data: { user_profile_img: filename }
+      });
+
+    } else if (choice === 'Upload-Cover') {
+      const tempOldimg = await prisma.user.findFirst({
+        where: { user_id: user_id },
+        select: {
+          user_id: false,
+          google_id: false,
+          user_username: false,
+          user_password: false,
+          user_email: false,
+          user_phone: false,
+          user_name: false,
+          user_profile_img: false,
+          user_cover_img: true
+        }
+      });
+      oldImg = tempOldimg.user_cover_img;
+
+      update = await prisma.user.update({
+        where: { user_id: user_id },
+        data: { user_cover_img: filename }
+      });
+
+    }
+  } catch (err) {
+    console.log(err);
+  }
 
 
-//   console.log('>..\t/upload/profileimage');
+  const oldFilePath = path.join(__dirname, `../../assets/user/image/${user_id}/`, oldImg);
+  DeleteFile(oldFilePath);
 
-//   const { user_id } = req.user;
-//   const ext = req.file_ext;
-//   const filePath = path.join(__dirname, `../../assets/user/image/${user_id}/profile${ext}`);
-//   console.log(filePath);
-//   // Check if the file exists
-//   fs.access(filePath, (err) => {
-//     if (err) {
-//       console.log('>..\tnot file');
-//       // File does not exist, send response with uploaded filename
-//       res.json({ filename });
-//       return;
-//     }
-//     const update = prisma.user.update({
-//       where: { user_id: user_id },
-//       data: { user_profile_img: `profile${ext}` }
-//     })
-//     console.log('>..\thas file');
-//     res.sendFile(filePath);
-//   });
-// });
+  const filePath = path.join(__dirname, `../../assets/user/image/${user_id}/`, filename);
+  res.sendFile(filePath);
+});
+
 
 
 // Endpoint to serve uploaded images
@@ -87,4 +115,14 @@ router.get('/getImage/:filename', verify_TOKEN, (req, res) => {
   res.sendFile(filePath);
 });
 
+const DeleteFile = (fullpath) => {
+  // const filePath = path.join(__dirname, `../../assets/user/image/${user_id}/`, oldImg);
+  fs.unlink(fullpath, (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(`\n>>>  file ${fullpath} has been deleted`);
+  });
+}
 module.exports = router;

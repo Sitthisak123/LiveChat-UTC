@@ -26,13 +26,14 @@ router.post("/login", async (req, res) => {
             }, select:
             {
                 user_id: true,
-                google_id: true,
-                user_username: true,
+                google_id: false,
+                user_username: false,
                 user_password: false,
                 user_email: true,
-                user_phone: true,
-                user_name: true,
-                user_profile_img: true
+                user_phone: false,
+                user_name: false,
+                user_profile_img: false,
+                user_cover_img: false
             }
         });
         if (findUser) {

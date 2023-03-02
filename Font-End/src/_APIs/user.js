@@ -26,10 +26,11 @@ export const API_getImage = (TOKEN) => {
 export const API_UploadProfileImage = (TOKEN) => {
   return axios.create({
     baseURL: `http://${host_adr}:9001/API/user/upload/ProfileImage`,
-    // responseType: 'arraybuffer',
+    responseType: 'arraybuffer',
     headers: {
       'Content-Type': 'multipart/form-data',
       'access-token-key': TOKEN
     }
   });
 }
+ 

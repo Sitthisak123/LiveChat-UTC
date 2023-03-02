@@ -71,7 +71,9 @@ router.post("/init", verify_TOKEN, async (req, res) => {
                 user_email: true,
                 user_phone: true,
                 user_name: true,
-                user_profile_img: true
+                user_profile_img: true,
+                user_cover_img: true
+
             }
         });
         const user = await prisma.user.findFirst({
@@ -86,7 +88,9 @@ router.post("/init", verify_TOKEN, async (req, res) => {
                 user_email: true,
                 user_phone: true,
                 user_name: true,
-                user_profile_img: true
+                user_profile_img: true,
+                user_cover_img: true
+
             }
         });
         const data = { conversation: findManyConversation, users, chat_msg, Relations, user};
