@@ -21,11 +21,22 @@ const useErrorHandling = () => {
       dispatch(CLEAR_CHAT_MSG());
       dispatch(DELETE_USER());
     }
-
+    console.log(error.response)
     if (data.route) {
       alert(`route(${data.route})`);
       Navigate(data.route);
     }
+    if (data.byteLength > 0) {
+      const buffer = error.response.data;
+      const decoder = new TextDecoder('utf-8');
+      const text = JSON.parse(decoder.decode(buffer));
+      console.log(text);
+      if (text.route) {
+        // alert(`route(${text.route})`);
+        // Navigate(text.route);
+      }
+    }
+
   };
 
   return { handleErrors };

@@ -13,7 +13,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 export const ChatContext = createContext();
 
 const Chat_content = () => {
-  const [Chat_state, setChat_state] = useState({ uid: null, cid: null, pageState: false});
+  const [Chat_state, setChat_state] = useState({ uid: null, cid: null, pageState: false });
   const isSmallScreen = useMediaQuery('(max-width: 780px)');
   const BoxCards_ref = useRef();
   const Chat_ref = useRef();
@@ -27,36 +27,33 @@ const Chat_content = () => {
       Chat_ref.current.style.display = '';
       sidebar.style.display = "none";
       sidebar.style.zIndex = "0";
-      
+
       chatContent.style.minHeight = '100%';
       mainContent.style.minHeight = '100%';
       chatContent.style.position = 'fixed';
       chatContent.style.bottom = '0';
-      console.log(0)    
-    }else if(isSmallScreen && !Chat_state.pageState){
+    } else if (isSmallScreen && !Chat_state.pageState) {
       setChat_state({});
       BoxCards_ref.current.style.display = '';
       Chat_ref.current.style.display = '';
       mainContent.style.minHeight = `calc(100vh - ${Response.sidebar})`;
-      
+
       sidebar.style.display = "";
       sidebar.style.zIndex = "";
 
-
-      console.log(1)
-    }else if(!isSmallScreen ){
+    } else if (!isSmallScreen) {
       BoxCards_ref.current.style.display = '';
       Chat_ref.current.style.display = '';
       sidebar.style.display = "";
-      
+
       chatContent.style.minHeight = `100vh`;
       chatContent.style.position = `relative`;
 
-      setChat_state({...Chat_state, pageState: false});
+      setChat_state({ ...Chat_state, pageState: false });
     }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSmallScreen,Chat_state.pageState])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSmallScreen, Chat_state.pageState])
 
   return (
     <ChatContext.Provider value={{ Chat_state, setChat_state }}>
@@ -69,9 +66,9 @@ const Chat_content = () => {
                 <Outlet />
               </BoxCards>
               {
-                  <div className='Chat-section' ref={Chat_ref}>
-                    <Chat />
-                  </div>
+                <div className='Chat-section' ref={Chat_ref}>
+                  <Chat />
+                </div>
               }
             </ChatContentSection>
             :

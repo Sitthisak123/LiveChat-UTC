@@ -92,12 +92,18 @@ router.post('/upload/ProfileImage', verify_TOKEN, upload.single('image'), async 
         data: { user_cover_img: filename }
       });
 
+    } else {
+      const filePath = path.join(__dirname, `../../assets/user/image/${user_id}/`, filename);
+      DeleteFile(filePath);
+      const data = { text: "Upload Fail!", route: 'Auth' };
+      return res.status(400).send(data);
     }
   } catch (err) {
     console.log(err);
   }
-
-
+  console.log(`>>>>> user: ${user_id} choice: ${choice}  old: ${oldImg}\tnew: ${filename}`)
+  console.log(req.body)
+  // console.log(`>>>>> user: ${user_id}    old: ${oldImg}\tnew: ${filename}`)
   const oldFilePath = path.join(__dirname, `../../assets/user/image/${user_id}/`, oldImg);
   DeleteFile(oldFilePath);
 
@@ -115,14 +121,18 @@ router.get('/getImage/:filename', verify_TOKEN, (req, res) => {
   res.sendFile(filePath);
 });
 
-const DeleteFile = (fullpath) => {
-  // const filePath = path.join(__dirname, `../../assets/user/image/${user_id}/`, oldImg);
-  fs.unlink(fullpath, (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(`\n>>>  file ${fullpath} has been deleted`);
-  });
+function DeleteFile(filePath) {
+  if (filePath) {
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error(`Failed to delete file ${filePath}: ${err}`);
+      } else {
+        console.log(`File ${filePath} has been deleted`);
+      }
+    });
+  }
 }
+
+
+
 module.exports = router;

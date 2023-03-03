@@ -23,7 +23,7 @@ export const BoxCards = styled.div`
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.bg};
 
     ::-webkit-scrollbar {
       width: .6vw;
@@ -51,7 +51,7 @@ export const BoxCards = styled.div`
 `;
 export const StyledCard = styled(Card)`
       max-height: 6rem;
-      padding: .2rem .4rem;
+      /* padding: .2rem .4rem; */
       display: visible;
       border-radius: 0 !important;
       background-color:  ${({ isActive }) => (isActive ? `grey !important` : `transparent !important`)} ;
@@ -66,8 +66,11 @@ export const StyledCard = styled(Card)`
 `;
 
 export const StyledCardHeader = styled(CardHeader)`
-      background-color: ${({ theme }) => theme.bg3};
-      border-radius: .8rem;
+      /* background-color: ${({ theme }) => theme.bg}; */
+      background-color: transparent;
+      color: ${({ theme }) => theme.text};
+      border-radius: .8rem ;
+
 `;
 export const StyledCardHeaderOptionbar = styled(StyledCardHeader)`
       width: 100%;
@@ -88,29 +91,7 @@ export const StyledBadge = styled(Badge)`
      .MuiBadge-badge{
        background-Color: #44b700;
        color: #44b700;
-       /* box-Shadow: 0 0 0 2px ${({ theme }) => theme.primary} ; */
      }
-     /* .MuiBadge-badge::after{
-       position: absolute;
-       top: 0;
-       left: 0;
-       width: 100%;
-       height: 100%;
-       border-Radius: 50%;
-       animation: ripple 1.2s infinite ease-in-out; */
-       /* border: 1px solid ${({ theme }) => theme.bg3}; */
-     /* content: "";
-     }
-     @keyframes ripple{
-     0%{
-       transform: scale(.8);
-       opacity: 1;
-     },
-     100% {
-       transform: scale(2.4);
-       opacity: 0;
-     }
-    } */
 `;
 
 export const StyledTextField = styled(TextField)`
@@ -181,10 +162,12 @@ export const StyledAddFriendIconButton = styled(IconButton)`
   }
 `;
 export const StyledFriendActionIconButton = styled(IconButton)`
-  border-radius: 0 !important;
-  padding: 0;
+  border-radius: 1rem !important;
   :only-child{
-    padding: 0;
+    padding: 0 !important;
+  }
+  :hover{
+    background-color: rgba(0,0,0,.2)!important;
   }
 `;
 

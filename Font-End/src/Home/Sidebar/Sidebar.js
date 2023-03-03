@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
     SDivider,
     SLink,
@@ -31,13 +31,14 @@ import AddIcon from '@mui/icons-material/Add'; //Test //
 import { ThemeContext } from "../../App.js";
 
 import { useLocation } from "react-router-dom";
+import { useMediaQuery } from "@react-hook/media-query";
 
 const Sidebar = () => {
     const searchRef = useRef(null);
     const { theme, setTheme } = useContext(ThemeContext);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { pathname } = useLocation();
-
+    const isSmallScreen = useMediaQuery('(max-width: 780px)');
 
     const searchClickHandler = () => {
         if (!sidebarOpen) {
@@ -47,6 +48,13 @@ const Sidebar = () => {
             // search functionality
         }
     };
+    useEffect(() => {
+        console.log(sidebarOpen);
+        if (isSmallScreen) {
+            setSidebarOpen(false);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSmallScreen])
     return (
         <>
             <SSidebar>
@@ -73,7 +81,7 @@ const Sidebar = () => {
                     />
                 </SSearch>
                 <SDivider /> */}
-    
+
                 {linksArray.map(({ icon, label, notification, to }) => (
                     <SLinkContainer key={label} isActive={pathname === to}>
                         <SLink to={to} style={!sidebarOpen ? { width: `fit-content` } : {}}>
@@ -90,9 +98,9 @@ const Sidebar = () => {
                         </SLink>
                     </SLinkContainer>
                 ))}
-    
+
                 <SDivider />
-    
+
                 {secondaryLinksArray.map(({ icon, label }) => (
                     <SLinkContainer key={label}>
                         <SLink to="/" style={!sidebarOpen ? { width: `fit-content` } : {}}>
@@ -101,9 +109,9 @@ const Sidebar = () => {
                         </SLink>
                     </SLinkContainer>
                 ))}
-    
+
                 <SDivider />
-    
+
                 <STheme>
                     {sidebarOpen && <SThemeLabel>Dark Mode</SThemeLabel>}
                     <SThemeToggler

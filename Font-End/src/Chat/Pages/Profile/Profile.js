@@ -11,7 +11,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import { Modal } from '@mui/material';
 import Button from '@mui/material/Button';
-import Input from '@mui/material/Input';
 
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -37,12 +36,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { API_ChangeName } from '../../../_APIs/system';
-
+import Fade from '@mui/material/Fade';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Profile = () => {
-  const Navigate = useNavigate();
-  const [imageUrl, setImageUrl] = useState({ profile: null, cover: null });
   const { User_data } = useSelector((state) => ({ ...state }));
+  const Navigate = useNavigate();
+  const [imageUrl, setImageUrl] = useState({ profile: User_data.value.temp_profile ?? null, cover: User_data.value.temp_cover ?? null });
   const dispatch = useDispatch();
   const isScreen_mn = useMediaQuery('(max-width: 340px)');
   const isScreen_md = useMediaQuery('(max-width: 480px)');
@@ -50,7 +50,7 @@ const Profile = () => {
   const { handleErrors } = useErrorHandling();
   const InputFile = useRef();
   const InputName = useRef();
-  const [newName, setNewName] = useState();
+  const [newName, setNewName] = useState({ name: User_data.value.user_name, onload: false });
   const [previewUrl, setPreviewUrl] = useState(null);
   const [open, setOpen] = useState({ upLoad: false, choice: null, changeName: false, changeNameDialog: false, changeNameSubmit: false });
   const handleUploadOpen = (event) => {
@@ -71,13 +71,11 @@ const Profile = () => {
     setOpen({ upLoad: false, choice: null, changeName: true, changeNameDialog: false, changeNameSubmit: false })
   };
   const handleChangeNameDialogOpen = () => {
-    console.log('blur> ' + open.changeNameSubmit);
     if (open.changeNameSubmit) return
-    setOpen({ upLoad: false, choice: null, changeName: true, changeNameDialog: true, changeNameSubmit: false })
+    else if (User_data.value.user_name !== newName.name) setOpen({ upLoad: false, choice: null, changeName: true, changeNameDialog: true, changeNameSubmit: false })
+    else setOpen({ upLoad: false, choice: null, changeName: false, changeNameDialog: false, changeNameSubmit: false })
   }
-  useEffect(() => {
-    console.log('change> ' + open.changeNameSubmit)
-  }, [open.changeNameSubmit])
+
   const handleChangeNameDialogClose = (event) => {
     if (event.target.id === 'yes') {
       setOpen({ upLoad: false, choice: null, changeName: false, changeNameDialog: false, changeNameSubmit: false })
@@ -95,6 +93,7 @@ const Profile = () => {
     setOpen({ upLoad: false, choice: null, changeName: false, changeNameDialog: false, changeNameSubmit: false });
     setFile(null);
   }
+
   const [file, setFile] = useState(null);
 
   const handleSelect = () => {
@@ -107,16 +106,17 @@ const Profile = () => {
   };
   const handleOnChangeNameFoCus = (event) => {
     setOpen({ ...open, changeNameSubmit: false });
-    setNewName(event.target.value);
+    setNewName({ ...newName, name: event.target.value });
   }
-
   const handleUpdateName = () => {
-    // const formData = new FormData();
-    const data = {newName: newName};
+    const data = { newName: newName.name };
+    setOpen({ upLoad: false, choice: null, changeName: false, changeNameDialog: false, changeNameSubmit: false });
+    setNewName({ ...newName, onload: true })
 
     API_ChangeName(User_data.value.user_TOKEN).put('', data).then((response) => {
-      alert(response.data);
-      dispatch(UPDATE_USER({user_name: newName}))
+      console.log(response.data);
+      dispatch(UPDATE_USER({ user_name: newName.name }))
+      setNewName({ ...newName, onload: false })
     }).catch((error) => {
       console.error('Error uploading file:', error);
       alert('catch onUpload')
@@ -130,13 +130,19 @@ const Profile = () => {
     const formData = new FormData();
     formData.append('image', file);
     formData.append('choice', open.choice);
+    setOpen({ ...open, onload: true });
+    console.log(`>> choice: ${open.choice}`)
     API_UploadProfileImage(User_data.value.user_TOKEN).post('', formData).then((response) => {
       const blob = new Blob([response.data], { type: 'image/png' });
-      updateImg(URL.createObjectURL(blob));
+      const imgUrl = URL.createObjectURL(blob);
+      updateImg(imgUrl);
+      dispatch(UPDATE_USER(open.choice === 'Upload-Profile' ? { temp_profile: imgUrl } : (open.choice === 'Upload-Cover') ? { temp_cover: imgUrl } : null))
+      setOpen({ ...open, onload: false });
       handleClose();
     }).catch((error) => {
       console.error('Error uploading file:', error);
       alert('catch onUpload')
+      setOpen({ ...open, onload: false });
       handleErrors(error);
     });
   };
@@ -186,6 +192,16 @@ const Profile = () => {
       });
 
   }, []);
+
+
+  /*  Debug Sectoin  */
+  useEffect(() => {
+    console.log('change> ' + open.changeNameSubmit)
+  }, [open.changeNameSubmit]);
+  useEffect(() =>
+    console.log(newName), [newName]);
+  useEffect(() => console.log(open), [open])
+
   return (
     <div className='User_profile-main'>
       <div className='profile-headers'>
@@ -204,15 +220,28 @@ const Profile = () => {
                 defaultValue={User_data.value.user_name}
                 onFocus={handleOnChangeNameFoCus}
                 onBlur={handleChangeNameDialogOpen}
-                onChange={(event)=>setNewName(event.target.value)}
+                onChange={(event) => setNewName({ ...newName, name: event.target.value })}
                 autoFocus
+                onKeyDown={(event) => { if (event.key === 'Enter') { handleUpdateName() } }}
                 ref={InputName}
                 className='ChangeName'
               />
               <StylrdChangeNameBTN onMouseDown={handleChangeNameSubmit} onClick={() => handleUpdateName()}>ok</StylrdChangeNameBTN>
             </div>
-            :
-            <p className='profile_name' onClick={handleChangeNameOpen}>{User_data.value.user_name}</p>
+            : !!!newName.onload ?
+              <p className='profile_name' onClick={handleChangeNameOpen}>{User_data.value.user_name}</p>
+              :
+              <p className='profile_name' >
+                <Fade
+                  in={true}
+                  style={{
+                    transitionDelay: '0ms'
+                  }}
+                  unmountOnExit
+                >
+                  <CircularProgress />
+                </Fade>
+              </p>
         }
 
         <p className='profile_biology'>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</p>
@@ -261,7 +290,19 @@ const Profile = () => {
                 :
                 <Button onClick={handleSelect}><PhotoSizeSelectActualIcon style={{ fontSize: 250 }} /></Button>
             }
-            <Button disabled={file ? false : true} style={{ marginTop: '1.2rem' }} type='submit' >Upload</Button>
+            <Button disabled={file? (open.onload? true:false) : true} style={{ marginTop: '1.2rem' }} type='submit' >Upload
+              {open.onload ? 
+              <Fade
+                in={true}
+                style={{
+                  transitionDelay: '0ms',
+                  position: 'absolute',
+                  scale: '.8'
+                }}
+                unmountOnExit
+              >
+                <CircularProgress />
+              </Fade> : ''}</Button>
           </form>
         </StyledModalBox>
       </Modal>

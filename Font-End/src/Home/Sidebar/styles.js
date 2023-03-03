@@ -15,7 +15,7 @@ export const SSidebar = styled.div.attrs(props => ({
   max-width: 15vw;
   position: relative;  */
 
-  background: ${({ theme }) => theme.bg};
+  background: ${({ theme }) => theme.bg2};
 
   @media (max-width: 780px) {
     height: ${Responsive.sidebar};

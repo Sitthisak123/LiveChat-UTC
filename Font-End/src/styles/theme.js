@@ -14,10 +14,10 @@ export const lightTheme = {
     icon: "rgb(230,230,230)",
 };
 export const darkTheme = {
-    bg: "rgb(15,15,15)",
+    bg: "rgb(35,35,30)",
     bgAlpha: "rgba(0,0,0,.6)",
     bgAlpha2: "rgba(0,0,0,.3)",
-    bg2: "rgb(30,30,30)",
+    bg2: "rgb(25,35,45)",
     bg3: "rgb(50,50,50)",
     text: "rgb(210,210,210)",
     textRevers: "rgb(45,45,45)",
