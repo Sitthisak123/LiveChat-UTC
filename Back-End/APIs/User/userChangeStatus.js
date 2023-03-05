@@ -8,7 +8,6 @@ const verify_TOKEN = require('../../middleware/Auth.js');
 router.put('/update/name', verify_TOKEN, async (req, res) => {
     const { user_id } = req.user;
     const { newName } = req.body;
-    console.log(newName);
     try {
         const updatename = await prisma.user.update({
             where: {
@@ -18,7 +17,6 @@ router.put('/update/name', verify_TOKEN, async (req, res) => {
                 user_name: newName
             }
         });
-        console.log(updatename);
     } catch (err) {
         console.log(err);
     }
@@ -26,5 +24,61 @@ router.put('/update/name', verify_TOKEN, async (req, res) => {
 });
 
 
+router.put('/update/relations', verify_TOKEN, async (req, res) => {
+    const { user_id } = req.user;
+    const { newRelation, FriendID } = req.body;
+    const RelationList = { block: 0, Friend: 1, Favorite: 2, Require: 3 };
+    if (Object.values(RelationList).includes(newRelation)) {
+        try {
+            const update = await prisma.friends_relationship.updateMany({
+                where: {
+                    OR: [
+                        {
+                            fk_user_one: user_id,
+                            fk_user_two: FriendID
+                        },
+                        {
+                            fk_user_one: FriendID,
+                            fk_user_two: user_id
+                        }
+                    ]
+                },
+                data: {
+                    relation_status: newRelation
+                }
+            });
+
+        } catch (err) {
+            console.log(err);
+        }
+
+
+        res.status(200).send({ text: 'Update Status Success' });
+    } else if (newRelation === -1) {
+        try {
+            const deleteRelation = await prisma.friends_relationship.deleteMany({
+                where: {
+                    OR: [
+                        {
+                            fk_user_one: user_id,
+                            fk_user_two: FriendID
+                        },
+                        {
+                            fk_user_one: FriendID,
+                            fk_user_two: user_id
+                        }
+                    ]
+                }
+            });
+            res.status(200).send({ text: 'Delete Status Success' });
+            console.log(deleteRelation);
+        } catch (err) {
+            console.log(err);
+        }
+    } else {
+        res.status(400).send({ text: 'Invalid relation status' });
+    }
+
+});
 
 module.exports = router;

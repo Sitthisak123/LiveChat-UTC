@@ -33,4 +33,9 @@ export const API_UploadProfileImage = (TOKEN) => {
     }
   });
 }
- 
+export const API_FindByUnique = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/FindByUnique`,
+    headers: { 'access-token-key': TOKEN }
+  });
+};

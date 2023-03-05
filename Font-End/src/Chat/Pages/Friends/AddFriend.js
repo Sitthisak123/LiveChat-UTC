@@ -16,15 +16,26 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-
+import { useSelector } from 'react-redux';
+import { API_FindByUnique } from '../../../_APIs/user';
+import useErrorHandling from '../../../_methods/HandleError';
 
 const AddFriend = () => {
     const { pathname } = useLocation();
     const pathnamelowcase = pathname.toLowerCase();
     const Navigate = useNavigate();
+    const { handleErrors } = useErrorHandling();
     const [RadioState, setRadioState] = useState('ID');
+    const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg } = useSelector((state) => ({ ...state }));
     
+    const handleFind = (findBy, Unique) => {
+        API_FindByUnique().post('', { findBy, Unique }).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            handleErrors(error);
+        })
+    }
+
     return (
         <div className='Friends-main'>
             <div className='Friends-Content-Headers'>
@@ -39,7 +50,7 @@ const AddFriend = () => {
                             top: 0,
                             left: 0
                         }}
-                        onClick={() => Navigate('Friend')}
+                        onClick={() => Navigate(-1)}
                     >
                         <ArrowBackIosNewOutlinedIcon />
                     </StyledAddFriendIconButton>
@@ -60,7 +71,7 @@ const AddFriend = () => {
                         >
                             <FormControlLabel
                                 value="ID"
-                                control={<Radio />} 
+                                control={<Radio />}
                                 label="ID"
                             />
                             <FormControlLabel
@@ -85,7 +96,7 @@ const AddFriend = () => {
                     paddingTop: '.2rem'
                 }}>
                     <input
-                        placeholder={`Enter Your Friends ${RadioState === "Phone" ? `Number ${RadioState}`:RadioState}`}
+                        placeholder={`Enter Your Friends ${RadioState === "Phone" ? `Number ${RadioState}` : RadioState}`}
                     />
                     <StyledAddFriendIconButton aria-label={'0'}>
                         <SearchIcon />
@@ -93,12 +104,15 @@ const AddFriend = () => {
                 </SSearch>
 
             </div>
-            <FriendCard />
-            <FriendCard />
-            <FriendCard />
-
+            <div className=''>
+                <FriendCard Cardtype={-1} Cardname={"jame's"} />
+            </div>
         </div>
     )
 }
 
+const friendShow = () => {
+
+    return (<></>)
+}
 export default AddFriend;

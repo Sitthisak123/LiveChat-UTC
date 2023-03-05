@@ -5,7 +5,6 @@ const prisma = new PrismaClient()
 
 router.post("/register", async (req, res) => {
     try {
-        console.log(req.body);
         req.body.Email = req.body.Email.toLowercase;
         const { Username, Password, Email } = req.body;
         if (!(Username && Password && Email)) {

@@ -57,8 +57,8 @@ function App() {
               </Route>
 
               <Route path="Settings" element={<Setting1 />} />
-              <Route path="*" element={<Redirect value={"Profile"} />}
-              // <Route path="*" element={<Redirect value={"profile"} />}
+              {/* <Route path="*" element={<Redirect value={"Profile"} />} */}
+
               />
             </Route>
 

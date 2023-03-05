@@ -42,7 +42,7 @@ router.post("/init", verify_TOKEN, async (req, res) => {
         const userIds = findManyConversation.map(
             item => (item.chat_user_one === user_id ? item.chat_user_two : item.chat_user_one)
         );
-        console.log(userIds);
+
         const otherUserIds = Relations.reduce((acc, curr) => {
             if (curr.fk_user_one !== user_id && !acc.has(curr.fk_user_one)) {
               acc.add(curr.fk_user_one);
@@ -52,15 +52,14 @@ router.post("/init", verify_TOKEN, async (req, res) => {
             }
             return acc;
           }, new Set());
-          
           const allUserIds = Array.from(new Set([...userIds, ...otherUserIds]));
           
-        console.log(allUserIds);
+
         /// Fetch other Users data
         const users = await prisma.user.findMany({
             where: {
                 user_id: {
-                    in: userIds
+                    in: allUserIds
                 }
             }, select:
             {

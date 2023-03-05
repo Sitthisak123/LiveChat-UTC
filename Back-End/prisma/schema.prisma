@@ -16,22 +16,22 @@ model chat_user {
   user_chat_user_chat_user_twoTouser user             @relation("chat_user_chat_user_twoTouser", fields: [chat_user_two], references: [user_id], onDelete: Cascade, map: "fk_user_two")
   msg_user_reply                     msg_user_reply[]
 
-  @@index([chat_user_one], map: "fk_user_one")
-  @@index([chat_user_two], map: "fk_user_two")
+  @@unique([chat_user_one, chat_user_two], name: "unique_chat_users")
 }
+
 
 model friends_relationship {
-  relation_id                                 Int      @id @default(autoincrement())
-  fk_user_one                                 Int
-  fk_user_two                                 Int
-  relation_status                             Int
-  relation_createTime                         DateTime @default(now()) @db.Timestamp(0)
-  user_friends_relationship_fk_user_oneTouser user     @relation("friends_relationship_fk_user_oneTouser", fields: [fk_user_one], references: [user_id], onDelete: Cascade, map: "fk_user_one1")
-  user_friends_relationship_fk_user_twoTouser user     @relation("friends_relationship_fk_user_twoTouser", fields: [fk_user_two], references: [user_id], onDelete: Cascade, map: "fk_user_two1")
+  fk_user_one         Int
+  fk_user_two         Int
+  relation_status     Int
+  relation_createTime DateTime @default(now()) @db.Timestamp(0)
 
-  @@index([fk_user_one], map: "fk_user_one1")
-  @@index([fk_user_two], map: "fk_user_two1")
+  user_friends_relationship_fk_user_oneTouser user @relation("friends_relationship_fk_user_oneTouser", fields: [fk_user_one], references: [user_id], onDelete: Cascade)
+  user_friends_relationship_fk_user_twoTouser user @relation("friends_relationship_fk_user_twoTouser", fields: [fk_user_two], references: [user_id], onDelete: Cascade)
+
+  @@id([fk_user_one, fk_user_two])
 }
+
 enum MessageType {
   TEXT
   IMAGE
@@ -40,17 +40,18 @@ enum MessageType {
   PDF
   FILE
 }
+
 model msg_user_reply {
-  msg_reply_id      Int       @id @default(autoincrement())
+  msg_reply_id      Int         @id @default(autoincrement())
   fk_chat_id        Int
   fk_user_owner     Int
-  msg_reply_message String    @db.Text
-  msg_createTime    DateTime  @default(now()) @db.Timestamp(0)
+  msg_reply_message String      @db.Text
+  msg_createTime    DateTime    @default(now()) @db.Timestamp(0)
   msg_type          MessageType @default(TEXT)
   msg_status        Int
   msg_read          Int
-  chat_user         chat_user @relation(fields: [fk_chat_id], references: [chat_id], onDelete: Cascade, map: "fk_chat_id")
-  user              user      @relation(fields: [fk_user_owner], references: [user_id], onDelete: Cascade, map: "fk_user_one_chat")
+  chat_user         chat_user   @relation(fields: [fk_chat_id], references: [chat_id], onDelete: Cascade, map: "fk_chat_id")
+  user              user        @relation(fields: [fk_user_owner], references: [user_id], onDelete: Cascade, map: "fk_user_one_chat")
 
   @@index([fk_chat_id], map: "fk_chat_id")
   @@index([fk_user_owner], map: "fk_user_one_chat")
@@ -60,6 +61,7 @@ model msg_user_reply {
 model user {
   user_id                                                     Int                    @id @default(autoincrement())
   google_id                                                   Int?                   @unique(map: "google_id")
+  user_custom_id                                              String?                @db.VarChar(60)
   user_username                                               String                 @db.VarChar(60)
   user_password                                               String                 @db.VarChar(256)
   user_email                                                  String                 @db.VarChar(256)
@@ -73,5 +75,8 @@ model user {
   friends_relationship_friends_relationship_fk_user_twoTouser friends_relationship[] @relation("friends_relationship_fk_user_twoTouser")
   msg_user_reply                                              msg_user_reply[]
 
-  @@unique([user_username, user_email, user_phone], map: "user_username")
+  @@unique([user_username],   map: "user_username")
+  @@unique([user_email],      map: "user_email")
+  @@unique([user_phone],      map: "user_phone")
+  @@unique([user_custom_id],  map: "user_custom_id")
 }

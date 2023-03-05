@@ -9,15 +9,21 @@ import { pink } from '@mui/material/colors';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useState } from 'react';
-const FriendCard = ({ props }) => {
-    //  const { Cardtype } = props; // 1,2 = friend, 3 =
-    const Cardtype = 3;
+import { API_ChangeRelations } from '../../../../_APIs/system.js';
+import { useSelector, useDispatch } from 'react-redux';
+import useErrorHandling from '../../../../_methods/HandleError';
+import { CREATE_FRIENDS_STATUS, UPDATE_FRIENDS_STATUS, DELETE_FRIENDS_STATUS, CLEAR_FRIENDS_STATUS } from '../../../../_stores/Slices/Friends_Status';
 
+const FriendCard = (props) => {
+    const { CardType, CardName, FriendID } = props; //0 = block, 1,2 = friend,favorite, 3 = request
+    const { User_data, Chat_data_users, Friends_relation } = useSelector((state) => ({ ...state }));
+    const dispacth = useDispatch();
+    const { handleErrors } = useErrorHandling();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-      };
+    };
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -25,6 +31,20 @@ const FriendCard = ({ props }) => {
         /////////// code
         setAnchorEl(null);
     };
+    const handleChangeRelations = (newRelation) => {
+        API_ChangeRelations(User_data.value.user_TOKEN).put('', { newRelation, FriendID }).then((response) => {
+            if (newRelation === -1 || newRelation === 0) {
+                console.log(`delete> id: ${User_data} id: ${User_data.value.user_id} status: ${FriendID}`)
+                console.log(Friends_relation)
+                dispacth(DELETE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID }))
+                console.log(Friends_relation)
+            } else {
+                dispacth(UPDATE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID, relation_status: newRelation }))
+            }
+        }).catch((error) => {
+            handleErrors(error);
+        })
+    }
 
     return (
         <StyledCard>
@@ -36,17 +56,21 @@ const FriendCard = ({ props }) => {
                 }
                 title={
                     <div className="Card-Content">
-                        <p>12345678912345678912</p>
+                        <p>{CardName}</p>
                         {
-                            (Cardtype === 1 || Cardtype === 2) ?
-                                <div className='Card-Action'>
-                                    <StyledFriendActionIconButton><DoneIcon color='success' /></StyledFriendActionIconButton>
-                                    <StyledFriendActionIconButton><ClearIcon sx={{ color: pink[500] }} /></StyledFriendActionIconButton>
-                                </div>
-                                :
+                            (CardType === 1 || CardType === 2) ?
                                 <div className='Card-Action'>
                                     <StyledFriendActionIconButton onClick={handleClick}><MoreHorizIcon /></StyledFriendActionIconButton>
                                 </div>
+                                :CardType === -1 ?
+                                <div className='Card-Action'>
+                                     <StyledFriendActionIconButton onClick={() => handleChangeRelations(3)} ><DoneIcon color='success' /></StyledFriendActionIconButton>
+                                </div>
+                                :<div className='Card-Action'>
+                                    <StyledFriendActionIconButton onClick={() => handleChangeRelations(1)} ><DoneIcon color='success' /></StyledFriendActionIconButton>
+                                    <StyledFriendActionIconButton onClick={() => handleChangeRelations(-1)} ><ClearIcon sx={{ color: pink[500] }} /></StyledFriendActionIconButton>
+                                </div>
+
                         }
 
                     </div>
@@ -63,8 +87,15 @@ const FriendCard = ({ props }) => {
                 }}
             >
                 <MenuItem onClick={handleClosewith} disableRipple>Profile</MenuItem>
-                <MenuItem onClick={handleClosewith} disableRipple>Block</MenuItem>
-                <MenuItem onClick={handleClosewith} disableRipple>Delete</MenuItem>
+                {
+                    CardType === 1 ?
+                        <MenuItem onClick={() => handleChangeRelations(2)} disableRipple>Favorite</MenuItem>
+                        :
+                        <MenuItem onClick={() => handleChangeRelations(1)} disableRipple>Unfavorite</MenuItem>
+                }
+                <MenuItem onClick={() => handleChangeRelations(0)} disableRipple>Block</MenuItem>
+                <MenuItem onClick={() => handleChangeRelations(-1)} disableRipple>Delete</MenuItem>
+
             </Menu>
         </StyledCard>
     );

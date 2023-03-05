@@ -198,8 +198,7 @@ const Profile = () => {
   useEffect(() => {
     console.log('change> ' + open.changeNameSubmit)
   }, [open.changeNameSubmit]);
-  useEffect(() =>
-    console.log(newName), [newName]);
+  useEffect(() => console.log(newName), [newName]);
   useEffect(() => console.log(open), [open])
 
   return (
@@ -228,7 +227,7 @@ const Profile = () => {
               />
               <StylrdChangeNameBTN onMouseDown={handleChangeNameSubmit} onClick={() => handleUpdateName()}>ok</StylrdChangeNameBTN>
             </div>
-            : !!!newName.onload ?
+            : !newName.onload ?
               <p className='profile_name' onClick={handleChangeNameOpen}>{User_data.value.user_name}</p>
               :
               <p className='profile_name' >
@@ -278,7 +277,7 @@ const Profile = () => {
           <StyledTypography id="modal-modal-title" variant="h6" component="h2">
             Select Your {open.choice === 'Upload-Profile' ? 'Profile' : 'Cover'}
           </StyledTypography>
-          <StyledCloseIcon onClick={handleClose} />
+          { open.onload ? '':<StyledCloseIcon onClick={handleClose} /> }
           <form onSubmit={handleUpload} className='Upload-Form'>
             <input type="file" accept="image/*" ref={InputFile} onChange={handleFileChange} style={{ display: 'none' }} name="image" />
             {

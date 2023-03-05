@@ -99,11 +99,7 @@ router.post('/upload/ProfileImage', verify_TOKEN, upload.single('image'), async 
       return res.status(400).send(data);
     }
   } catch (err) {
-    console.log(err);
   }
-  console.log(`>>>>> user: ${user_id} choice: ${choice}  old: ${oldImg}\tnew: ${filename}`)
-  console.log(req.body)
-  // console.log(`>>>>> user: ${user_id}    old: ${oldImg}\tnew: ${filename}`)
   const oldFilePath = path.join(__dirname, `../../assets/user/image/${user_id}/`, oldImg);
   DeleteFile(oldFilePath);
 

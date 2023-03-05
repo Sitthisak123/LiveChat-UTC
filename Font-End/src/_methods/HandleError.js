@@ -20,6 +20,10 @@ const useErrorHandling = () => {
       dispatch(CLEAR_CHAT_USERS());
       dispatch(CLEAR_CHAT_MSG());
       dispatch(DELETE_USER());
+    }else{
+      if(data.text){
+        alert(data.text);
+      }
     }
     console.log(error.response)
     if (data.route) {
