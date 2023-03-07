@@ -109,8 +109,9 @@ export const StyledChatConversation = styled.div`
   overflow-y: auto;
 `;
 export const StyledIconButton = styled(IconButton)`
-
-
+> *{
+  color: ${({ theme }) => theme.text}
+}
 `;
 
 export const StyledButton = styled(Button)`
@@ -177,6 +178,7 @@ export const StyledPageHeaders = styled.div`
   padding-top: .4rem;
   display: flex;
   align-items: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, .2);
   > p{
     font-size: 1.7rem;
     text-align: center;
@@ -263,4 +265,13 @@ export const StylrdChangeNameBTN = styled(Button)`
     background-color: ${({ theme }) => theme.primary} !important;
     color: white !important;
     padding: 0 !important;
+`;
+export const StyledOptionSection = styled.p`
+    font-size: .9rem;
+    padding: .75rem .25rem .2rem .2rem;
+`;
+export const StyledOptionSectionLogout = styled.p`
+    margin: .75rem .25rem .2rem .2rem;
+    border-bottom: 1px solid ${({ theme }) => theme.text};
+    width: 100%;
 `;

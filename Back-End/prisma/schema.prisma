@@ -17,28 +17,19 @@ model chat_user {
   msg_user_reply                     msg_user_reply[]
 
   @@unique([chat_user_one, chat_user_two], name: "unique_chat_users")
+  @@index([chat_user_two], map: "fk_user_two")
 }
-
 
 model friends_relationship {
-  fk_user_one         Int
-  fk_user_two         Int
-  relation_status     Int
-  relation_createTime DateTime @default(now()) @db.Timestamp(0)
-
-  user_friends_relationship_fk_user_oneTouser user @relation("friends_relationship_fk_user_oneTouser", fields: [fk_user_one], references: [user_id], onDelete: Cascade)
-  user_friends_relationship_fk_user_twoTouser user @relation("friends_relationship_fk_user_twoTouser", fields: [fk_user_two], references: [user_id], onDelete: Cascade)
+  fk_user_one                                 Int
+  fk_user_two                                 Int
+  relation_status                             Int
+  relation_createTime                         DateTime @default(now()) @db.Timestamp(0)
+  user_friends_relationship_fk_user_oneTouser user     @relation("friends_relationship_fk_user_oneTouser", fields: [fk_user_one], references: [user_id], onDelete: Cascade)
+  user_friends_relationship_fk_user_twoTouser user     @relation("friends_relationship_fk_user_twoTouser", fields: [fk_user_two], references: [user_id], onDelete: Cascade)
 
   @@id([fk_user_one, fk_user_two])
-}
-
-enum MessageType {
-  TEXT
-  IMAGE
-  AUDIO
-  VIDEO
-  PDF
-  FILE
+  @@index([fk_user_two], map: "friends_relationship_fk_user_two_fkey")
 }
 
 model msg_user_reply {
@@ -61,11 +52,11 @@ model msg_user_reply {
 model user {
   user_id                                                     Int                    @id @default(autoincrement())
   google_id                                                   Int?                   @unique(map: "google_id")
-  user_custom_id                                              String?                @db.VarChar(60)
-  user_username                                               String                 @db.VarChar(60)
+  user_custom_id                                              String?                @unique(map: "user_custom_id") @db.VarChar(60)
+  user_username                                               String                 @unique(map: "user_username") @db.VarChar(60)
   user_password                                               String                 @db.VarChar(256)
-  user_email                                                  String                 @db.VarChar(256)
-  user_phone                                                  String                 @db.VarChar(12)
+  user_email                                                  String                 @unique(map: "user_email") @db.VarChar(256)
+  user_phone                                                  String                 @unique(map: "user_phone") @db.VarChar(12)
   user_name                                                   String                 @db.TinyText
   user_profile_img                                            String                 @default("user_default.png") @db.VarChar(256)
   user_cover_img                                              String                 @default("user_default.png") @db.VarChar(256)
@@ -74,9 +65,13 @@ model user {
   friends_relationship_friends_relationship_fk_user_oneTouser friends_relationship[] @relation("friends_relationship_fk_user_oneTouser")
   friends_relationship_friends_relationship_fk_user_twoTouser friends_relationship[] @relation("friends_relationship_fk_user_twoTouser")
   msg_user_reply                                              msg_user_reply[]
+}
 
-  @@unique([user_username],   map: "user_username")
-  @@unique([user_email],      map: "user_email")
-  @@unique([user_phone],      map: "user_phone")
-  @@unique([user_custom_id],  map: "user_custom_id")
+enum MessageType {
+  TEXT
+  IMAGE
+  AUDIO
+  VIDEO
+  PDF
+  FILE
 }

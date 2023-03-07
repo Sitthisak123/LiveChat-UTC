@@ -5,34 +5,46 @@ const prisma = new PrismaClient()
 const verify_TOKEN = require('../../middleware/Auth.js');
 
 
-router.put('/user/FindByUnique', verify_TOKEN, async (req, res) => {
+router.post('/FindByUnique', verify_TOKEN, async (req, res) => {
     const { user_id } = req.user;
-    const { Findby, Unique } = req.body;
+    const { findBy, unique } = req.body;
+    const findBy_filtered = findBy.trim();
     var findByUnique = null;
     try {
-        if(Findby === 'Phone'){
+        if(findBy_filtered === 'Phone'){
             findByUnique = await prisma.user.findFirst({
                 where: {
-                    user_phone: Unique
+                    user_phone: unique
                 }
             });
-        }else if(Findby === 'E-Mail'){
+        }else if(findBy_filtered === 'E-Mail'){
             findByUnique = await prisma.user.findFirst({
                 where: {
-                    user_phone: Unique
+                    user_email: unique
                 }
             });
-        }else if(Findby === 'ID'){
+        }else if(findBy_filtered === 'ID'){
             findByUnique = await prisma.user.findFirst({
                 where: {
-                    user_phone: Unique
+                    user_custom_id: unique
                 }
             });
+        }else if(findBy_filtered === null || findBy === undefined){
+            res.status(400).send('error');
         }
-        
+        console.log(findByUnique);
     } catch (err) {
         console.log(err);
         res.status(400).send('error');
     }
-    res.status(200).send('success');
+    if(findByUnique){
+        const data = {Text: 'Find Success',users: findByUnique}
+        console.log(data)
+        res.status(200).send(data);
+    }else{
+        const data = {text: 'Not Found'}
+        res.status(404).send(data);
+    }
 });
+
+module.exports = router;

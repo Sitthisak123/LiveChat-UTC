@@ -12,3 +12,10 @@ export const API_ChangeRelations = (TOKEN) => {
     headers: { 'access-token-key': TOKEN }
   });
 };
+
+export const API_RequestFriend = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/create/relations`,
+    headers: { 'access-token-key': TOKEN }
+  });
+};

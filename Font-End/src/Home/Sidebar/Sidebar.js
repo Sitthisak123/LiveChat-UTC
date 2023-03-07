@@ -101,9 +101,9 @@ const Sidebar = () => {
 
                 <SDivider />
 
-                {secondaryLinksArray.map(({ icon, label }) => (
+                {secondaryLinksArray.map(({ icon, label, to}) => (
                     <SLinkContainer key={label}>
-                        <SLink to="/" style={!sidebarOpen ? { width: `fit-content` } : {}}>
+                        <SLink to={to? to:null} style={!sidebarOpen ? { width: `fit-content` } : {}}>
                             <SLinkIcon isOpen={sidebarOpen}>{icon}</SLinkIcon>
                             {sidebarOpen && <SLinkLabel>{label}</SLinkLabel>}
                         </SLink>
@@ -151,6 +151,7 @@ const secondaryLinksArray = [
     {
         label: "Settings",
         icon: <SettingsIcon />,
+        to: "/Home/Settings",
     }
 ];
 

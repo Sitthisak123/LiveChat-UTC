@@ -20,17 +20,17 @@ const Friends = () => {
   const handleClickLink = (event) => {
     setTextInput('');
   }
-  const { Friends_relation } = useSelector((state) => ({ ...state }))
+  const { Friends_relation, User_data } = useSelector((state) => ({ ...state }))
   const [ request, setRequest ] = useState(0);
   useEffect(() => {
     const count = Friends_relation.Friend_data.reduce((acc, friend) => {
-      if (friend.relation_status === 3) {
+      if (friend.relation_status === 3 && friend.fk_user_one !== User_data.value.user_id) {
         return acc + 1;
       }
       return acc;
     }, 0);
     setRequest(count)
-  },[Friends_relation]);
+  },[Friends_relation.Friend_data]);
   return (
     <div className='Friends-main' >
       <div className='Friends-Content-Headers'>

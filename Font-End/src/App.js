@@ -4,7 +4,7 @@ import Profile from './Chat/Pages/Profile/Profile.js';
 import Conversation from './Chat/Pages/Conversation/Conversation.js';
 import Chat from './Chat/Pages/Conversation/Chat.js';
 import Friends from './Chat/Pages/Friends/Friends.js';
-import Setting1 from './Settings/Settings.js';
+import Settings from './Chat/Pages/Setting/Setting.js';
 import Chatcontent from './Chat/Chat_content.js';
 import Login from './Login/Login.js';
 import Signin from './Login/pages/Signin.js';
@@ -56,7 +56,7 @@ function App() {
                 <Route path="*" element={<Redirect value={"Friends"} />} />
               </Route>
 
-              <Route path="Settings" element={<Setting1 />} />
+              <Route path="Settings/*" element={<Settings />} />
               {/* <Route path="*" element={<Redirect value={"Profile"} />} */}
 
               />

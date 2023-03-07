@@ -19,22 +19,50 @@ import FormControl from '@mui/material/FormControl';
 import { useSelector } from 'react-redux';
 import { API_FindByUnique } from '../../../_APIs/user';
 import useErrorHandling from '../../../_methods/HandleError';
+import Fade from '@mui/material/Fade';
+import CircularProgress from '@mui/material/CircularProgress';
+import { API_RequestFriend } from '../../../_APIs/system';
 
 const AddFriend = () => {
     const { pathname } = useLocation();
     const pathnamelowcase = pathname.toLowerCase();
     const Navigate = useNavigate();
     const { handleErrors } = useErrorHandling();
-    const [RadioState, setRadioState] = useState('ID');
-    const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg } = useSelector((state) => ({ ...state }));
-    
-    const handleFind = (findBy, Unique) => {
-        API_FindByUnique().post('', { findBy, Unique }).then((response) => {
-            console.log(response);
+    const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg, Friends_relation } = useSelector((state) => ({ ...state }));
+    const [findBy, setfindBy] = useState('ID');
+    const [unique, setUnique] = useState(null);
+    const [findUsers, setFindUsers] = useState([]);
+    const [findUsers_onload, setFindUsers_onload] = useState(false);
+
+    const handleFind = () => {
+        setFindUsers([])
+        setFindUsers_onload(true)
+        API_FindByUnique(User_data.value.user_TOKEN).post('', { unique, findBy }).then((response) => {
+            const data = [response.data.users]
+            const newdata = data.map(user => {
+                const user_id = user.user_id;
+                const relation = Friends_relation.Friend_data.find(rel =>
+                    rel.fk_user_one === user_id
+                );
+                const relation_myOwner = Friends_relation.Friend_data.find(rel =>
+                    rel.fk_user_two === User_data.value.user_id
+                );
+                if (relation) {
+                    user.relation_status = relation.relation_status;
+                } else if (relation_myOwner) {
+                    user.relation_status_owner = relation_myOwner.relation_status;
+                }
+                return user
+            });
+            setFindUsers(newdata)
+            setFindUsers_onload(false)
         }).catch((error) => {
+            setFindUsers_onload(false)
             handleErrors(error);
+
         })
     }
+
 
     return (
         <div className='Friends-main'>
@@ -67,12 +95,15 @@ const AddFriend = () => {
                             aria-labelledby="demo-row-radio-buttons-group-label"
                             name="row-radio-buttons-group"
                             defaultValue="ID"
-                            onChange={(event) => setRadioState(event.target.value)}
+                            onChange={(event) => {
+                                setfindBy(event.target.value)
+                            }}
                         >
                             <FormControlLabel
                                 value="ID"
                                 control={<Radio />}
                                 label="ID"
+
                             />
                             <FormControlLabel
                                 value="E-Mail"
@@ -95,24 +126,43 @@ const AddFriend = () => {
                     marginTop: '.35rem',
                     paddingTop: '.2rem'
                 }}>
-                    <input
-                        placeholder={`Enter Your Friends ${RadioState === "Phone" ? `Number ${RadioState}` : RadioState}`}
-                    />
-                    <StyledAddFriendIconButton aria-label={'0'}>
-                        <SearchIcon />
+                    <input value={unique} placeholder={`Enter Your Friends ${findBy === "Phone" ? `Number ${findBy}` : findBy}`} onChange={(event) => setUnique(event.target.value)} />
+                    <StyledAddFriendIconButton onClick={() => handleFind()} aria-label={'Search'}>
+                        {
+                            findUsers_onload ?
+                                <Fade in={true} style={{ transitionDelay: '0ms', scale: '.6' }} unmountOnExit >
+                                    <CircularProgress />
+                                </Fade>
+                                :
+                                <SearchIcon />
+                        }
                     </StyledAddFriendIconButton>
                 </SSearch>
 
+
             </div>
             <div className=''>
-                <FriendCard Cardtype={-1} Cardname={"jame's"} />
+                {
+                    findUsers?.map((user, index) => {
+                        var ctype = null;
+                        var relation = null;
+                        console.log(user)
+                        if (user.relation_status !== undefined && user.relation_status !== null) {
+                            ctype = user.relation_status
+                            relation = (ctype === 1 || ctype === 2 || ctype === 3 || ctype === 0) ? ctype : null
+                        } else if (user.relation_status_owner !== undefined && user.relation_status_owner !== null) {
+                            ctype = user.relation_status_owner;
+                            relation = (ctype === 1 || ctype === 2 || ctype === 0) ? ctype : ctype === 3 ? 3.1 : null
+                        }
+                        if (relation !== 0) {
+                            return (<FriendCard CardID={null} CardType={(relation !== undefined && relation !== null) ? relation : -1} CardName={user.user_name} FriendID={user.user_id} />)
+                        }
+                    })
+                }
+
             </div>
         </div>
     )
 }
 
-const friendShow = () => {
-
-    return (<></>)
-}
 export default AddFriend;

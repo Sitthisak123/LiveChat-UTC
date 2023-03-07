@@ -24,7 +24,7 @@ const FriendContent = () => {
         } else if (pathnamelowcase === '/home/friend/favorites') {
             setRelationFilteredData(Friends_relation.Friend_data.filter((item) => item.relation_status === 2));
         } else if (pathnamelowcase === '/home/friend/request') {
-            setRelationFilteredData(Friends_relation.Friend_data.filter((item) => item.relation_status === 3));
+            setRelationFilteredData(Friends_relation.Friend_data.filter((item) => item.relation_status === 3 && item.fk_user_one !== user_id));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname, Friends_relation, Chat_data_users]);
@@ -52,15 +52,11 @@ const FriendContent = () => {
                                 user.user_name.toLowerCase().includes(textinput.toLowerCase())
                             );
                             return filteredUsers.map((user) => (
-                                <CSSTransition   classNames="friend-card" >
-                                    <FriendCard CardID={friend_id} CardType={relation} CardName={user.user_name} FriendID={friend_id} />
-                                </CSSTransition>
+                                <FriendCard CardID={friend_id} CardType={relation} CardName={user.user_name} FriendID={friend_id} />
                             ));
                         } else {
                             return friendUsers.map((user) => (
-                                <CSSTransition   classNames="friend-card" unmounOnExit>
-                                    <FriendCard CardID={friend_id} CardType={relation} CardName={user.user_name} FriendID={friend_id} />
-                                 </CSSTransition>
+                                <FriendCard CardID={friend_id} CardType={relation} CardName={user.user_name} FriendID={friend_id} />
                             ));
                         }
                     })

@@ -74,11 +74,37 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
             console.log(deleteRelation);
         } catch (err) {
             console.log(err);
+            res.status(400).send({ text: 'Invalid relation status' });
         }
     } else {
         res.status(400).send({ text: 'Invalid relation status' });
     }
 
+});
+
+router.put('/create/relations', verify_TOKEN, async (req, res) => {
+    const { user_id } = req.user;
+    const { FriendID } = req.body;
+    let create_relation = {};
+
+    if (FriendID !== null && FriendID !== undefined) {
+        try {
+            create_relation = await prisma.friends_relationship.create({
+                data: {
+                    fk_user_one: user_id,
+                    fk_user_two: FriendID,
+                    relation_status: 3
+                }
+            });
+            console.log(create_relation);
+        } catch (error) {
+            return res.status(403).send({ text: 'Friend Request Error' });
+        }
+    } else {
+        return res.status(400).send({ text: 'Undefined Friend Request Error' });
+    }
+
+    return res.status(200).send({ text: 'Friend Request Success' });
 });
 
 module.exports = router;
