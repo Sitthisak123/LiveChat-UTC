@@ -114,12 +114,14 @@ export const SDivider = styled.div`
 `;
 
 export const SLinkContainer = styled.div`
-    background: ${({ theme, isActive }) => (!isActive ? `transparent` : theme.bg3)};
-    border-radius: ${v.borderRadius};
+    background: ${({ theme, isActive }) => (!isActive ? `transparent` : theme.sidebarActive)};
+    /* border-radius: ${v.borderRadius}; */
+    border-top-left-radius: ${v.borderRadius};
+    border-bottom-left-radius: ${v.borderRadius};
+
+
     margin: 4pX 0;
     
-
-
     :hover {
         box-shadow: inset 0 0 0 1px ${({ theme }) => theme.bg3};
     }

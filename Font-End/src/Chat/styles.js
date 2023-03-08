@@ -109,9 +109,21 @@ export const StyledChatConversation = styled.div`
   overflow-y: auto;
 `;
 export const StyledIconButton = styled(IconButton)`
-> *{
-  color: ${({ theme }) => theme.text}
-}
+
+`;
+export const StyledSettingIconButton = styled(IconButton)`
+     justify-content: space-between !important;
+     width: 100% !important;
+     text-align: left !important;
+     border-radius: 0 !important;
+     padding: 1 !important;
+     :hover{
+      background-color: rgba(0,0,0,.2);
+     }
+
+  > *:is(svg,p):not(svg.logouticon){
+    color: ${({ theme }) => theme.text}
+  }
 `;
 
 export const StyledButton = styled(Button)`
@@ -274,4 +286,10 @@ export const StyledOptionSectionLogout = styled.p`
     margin: .75rem .25rem .2rem .2rem;
     border-bottom: 1px solid ${({ theme }) => theme.text};
     width: 100%;
+`;
+export const StyledDangerButton = styled(Button)`
+  color: red !important;
+  :hover{
+    background-color: rgba(255,25,25,.15) !important;
+  }
 `;

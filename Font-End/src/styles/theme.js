@@ -12,6 +12,7 @@ export const lightTheme = {
     fcard_hover: "rgb(0,0,0)",
     border: "rgb(0,0,0)",
     icon: "rgb(230,230,230)",
+    sidebarActive: "rgba(0,0,0,.3)",
 };
 export const darkTheme = {
     bg: "rgb(35,35,30)",
@@ -27,4 +28,6 @@ export const darkTheme = {
     fcard_hover: "rgb(255,255,255)",
     border: "rgb(255,255,255)",
     icon: "rgb(230,230,230)",
+    sidebarActive: "rgb(80,80,60)",
+
 };

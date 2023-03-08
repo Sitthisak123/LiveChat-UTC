@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom';
 import { Helmet } from "react-helmet";
 import Profile from './Chat/Pages/Profile/Profile.js';
 import Conversation from './Chat/Pages/Conversation/Conversation.js';
-import Chat from './Chat/Pages/Conversation/Chat.js';
 import Friends from './Chat/Pages/Friends/Friends.js';
 import Settings from './Chat/Pages/Setting/Setting.js';
 import Chatcontent from './Chat/Chat_content.js';
@@ -19,7 +18,11 @@ import { Provider } from 'react-redux';
 import FriendContent from './Chat/Pages/Friends/Components/Content.js';
 import AddFriend from './Chat/Pages/Friends/AddFriend.js';
 import Auth from './Middleware/Auth.js';
-
+import Account from './Chat/Pages/Setting/Sub/Accout.js';
+import Chats from './Chat/Pages/Setting/Sub/Chats.js';
+import Friend from './Chat/Pages/Setting/Sub/Friends.js';
+import Language from './Chat/Pages/Setting/Sub/Language.js';
+import Theme from './Chat/Pages/Setting/Sub/Theme.js';
 /* Test */
 import ImageUpload from './Test.js';
 /* Test */
@@ -48,7 +51,7 @@ function App() {
               <Route path="Test/*" element={<ImageUpload />} />
               <Route path="Profile" element={<Profile />} />
               <Route path="Chat" element={<Conversation />} />
-              <Route path="Invite" element={<AddFriend />} ></Route>
+              <Route path="Friend/Invite" element={<AddFriend />} />
               <Route path="Friend/*" element={<Friends />} >
                 <Route path="Friends" element={<FriendContent />} />
                 <Route path="Favorites" element={<FriendContent />} />
@@ -56,10 +59,15 @@ function App() {
                 <Route path="*" element={<Redirect value={"Friends"} />} />
               </Route>
 
-              <Route path="Settings/*" element={<Settings />} />
-              {/* <Route path="*" element={<Redirect value={"Profile"} />} */}
+              <Route path="Settings/*" element={<Settings />} >
+                <Route path="Account" element={<Account />} />
+                <Route path="Chats" element={<Chats />} />
+                <Route path="Friends" element={<Friend />} />
+                <Route path="Language" element={<Language />} />
+                <Route path="Theme" element={<Theme />} />
 
-              />
+              </Route>
+              {/* <Route path="*" element={<Redirect value={"Profile"} />} */}
             </Route>
 
             <Route path="Login/*" element={<Login />} >

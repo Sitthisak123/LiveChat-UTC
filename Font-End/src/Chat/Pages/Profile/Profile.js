@@ -66,8 +66,7 @@ const Profile = () => {
     }
 
   }
-  const handleChangeNameOpen = (event) => {
-    const choice = event.target.id;
+  const handleChangeNameOpen = () => {
     setOpen({ upLoad: false, choice: null, changeName: true, changeNameDialog: false, changeNameSubmit: false })
   };
   const handleChangeNameDialogOpen = () => {
@@ -86,7 +85,6 @@ const Profile = () => {
     }
   }
   const handleChangeNameSubmit = () => {
-    console.log('sub>');
     setOpen({ ...open, changeNameSubmit: true })
   }
   const handleClose = () => {

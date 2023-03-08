@@ -46,7 +46,7 @@ const Friends = () => {
             value={textinput}
             placeholder={`Search ${pathnamelowcase === '/home/friend/friends' ? 'Friends' : pathnamelowcase === '/home/friend/request' ? 'Request' : 'Favorites'}`}
           />
-          <StyledAddFriendIconButton aria-label={'0'} onClick={() => Navigate('../Invite')} >
+          <StyledAddFriendIconButton aria-label={'0'} onClick={() => Navigate('Invite')} >
             <PersonAddAlt1Icon />
           </StyledAddFriendIconButton>
         </SSearch>

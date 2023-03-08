@@ -53,8 +53,9 @@ const Sidebar = () => {
         if (isSmallScreen) {
             setSidebarOpen(false);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSmallScreen])
+
     return (
         <>
             <SSidebar>
@@ -82,33 +83,40 @@ const Sidebar = () => {
                 </SSearch>
                 <SDivider /> */}
 
-                {linksArray.map(({ icon, label, notification, to }) => (
-                    <SLinkContainer key={label} isActive={pathname === to}>
-                        <SLink to={to} style={!sidebarOpen ? { width: `fit-content` } : {}}>
-                            <SLinkIcon isOpen={sidebarOpen} >{icon}</SLinkIcon>
-                            {sidebarOpen && (
-                                <>
-                                    <SLinkLabel>{label}</SLinkLabel>
-                                    {/* if notifications are at 0 or null, do not display */}
-                                    {!!notification && (
-                                        <SLinkNotification>{notification}</SLinkNotification>
-                                    )}
-                                </>
-                            )}
-                        </SLink>
-                    </SLinkContainer>
-                ))}
+                {linksArray.map(({ icon, label, notification, to }) => {
+                    const basePathname = '/' + pathname.split("/").filter(Boolean).slice(0, 2).join("/");
+                    return (
+                        <SLinkContainer key={label} isActive={basePathname === to}>
+                            <SLink to={to} style={!sidebarOpen ? { width: `fit-content` } : {}}>
+                                <SLinkIcon isOpen={sidebarOpen} >{icon}</SLinkIcon>
+                                {sidebarOpen && (
+                                    <>
+                                        <SLinkLabel>{label}</SLinkLabel>
+                                        {/* if notifications are at 0 or null, do not display */}
+                                        {!!notification && (
+                                            <SLinkNotification>{notification}</SLinkNotification>
+                                        )}
+                                    </>
+                                )}
+                            </SLink>
+                        </SLinkContainer>
+                    )
+                })}
 
                 <SDivider />
 
-                {secondaryLinksArray.map(({ icon, label, to}) => (
-                    <SLinkContainer key={label}>
-                        <SLink to={to? to:null} style={!sidebarOpen ? { width: `fit-content` } : {}}>
-                            <SLinkIcon isOpen={sidebarOpen}>{icon}</SLinkIcon>
-                            {sidebarOpen && <SLinkLabel>{label}</SLinkLabel>}
-                        </SLink>
-                    </SLinkContainer>
-                ))}
+                {secondaryLinksArray.map(({ icon, label, to }) => {
+                    const basePathname = '/' + pathname.split("/").filter(Boolean).slice(0, 2).join("/");
+                    return (
+
+                        <SLinkContainer key={label} isActive={basePathname === to}>
+                            <SLink to={to ? to : null} style={!sidebarOpen ? { width: `fit-content` } : {}}>
+                                <SLinkIcon isOpen={sidebarOpen}>{icon}</SLinkIcon>
+                                {sidebarOpen && <SLinkLabel>{label}</SLinkLabel>}
+                            </SLink>
+                        </SLinkContainer>
+                    )
+                })}
 
                 <SDivider />
 
