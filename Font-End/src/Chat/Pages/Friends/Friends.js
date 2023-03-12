@@ -30,6 +30,7 @@ const Friends = () => {
       return acc;
     }, 0);
     setRequest(count)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[Friends_relation.Friend_data]);
   return (
     <div className='Friends-main' >

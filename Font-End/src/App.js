@@ -8,7 +8,7 @@ import Chatcontent from './Chat/Chat_content.js';
 import Login from './Login/Login.js';
 import Signin from './Login/pages/Signin.js';
 import Signup from './Login/pages/Signup.js';
-import { useState, createContext, useReducer } from 'react';
+import { useState, createContext } from 'react';
 import Redirect from './_methods/Redirect.js';
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/globalStyles";
@@ -67,7 +67,7 @@ function App() {
                 <Route path="Theme" element={<Theme />} />
 
               </Route>
-              {/* <Route path="*" element={<Redirect value={"Profile"} />} */}
+              <Route path="*" element={<Redirect value={"Profile"} />} />
             </Route>
 
             <Route path="Login/*" element={<Login />} >

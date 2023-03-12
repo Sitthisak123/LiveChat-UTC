@@ -1,81 +1,61 @@
-import { useState } from 'react';
-import { API_UploadProfileImage } from './_APIs/user';
-import { useSelector } from 'react-redux';
+// import React, { useState, useEffect } from 'react';
+// import io from 'socket.io-client';
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+// const ENDPOINT = 'http://localhost:9001';
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+// const Chat = () => {
+//   const [socket, setSocket] = useState(null);
+//   const [message, setMessage] = useState('');
+//   const [messages, setMessages] = useState([]);
 
-const ImageUpload = () => {
-  const { User_data } = useSelector((state) => ({ ...state }));
-  const [file, setFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+//   useEffect(() => {
+//     const newSocket = io(ENDPOINT,{
+//       // pass the token in the headers field
+//       extraHeaders: {
+//         'access-token-key':"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX2VtYWlsIjoiamFtZXMyNTEyNTMzNzAxN0BnbWFpbC5jb20iLCJpYXQiOjE2Nzg2MzE0MTgsImV4cCI6MTY3ODY2NzQxOH0.Dnf3z9jRu9-sctEJgZNd7Z6WNl38LaXKSI9esS5D2Ys"
+//       }});
+//     // Assuming you have access to the user_id value on the client-side
+//     setSocket(newSocket);
+//     return () => newSocket.close();
+//   }, []);
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-    setPreviewUrl(URL.createObjectURL(selectedFile)); // generate a temporary URL for preview
-  };
+//   useEffect(() => {
+//     if (!socket) return;
 
-  const handleUpload = (event) => {
-    event.preventDefault();
+//     socket.on('send', (msg) => {
+//       setMessages((prevMessages) => [...prevMessages, msg]);
+//     });
 
-    const formData = new FormData();
-    formData.append('image', file);
+//     socket.on('message', (data) => {
+//       setMessages((prevMessages) => [...prevMessages, msg]);
+//     });
 
-    API_UploadProfileImage(User_data.value.user_TOKEN).post('', formData)
-      .then((response) => {
-        console.log('File uploaded successfully:', response.data.filename);
-        // do something with the filename
-      })
-      .catch((error) => {
-        console.error('Error uploading file:', error);
-      });
-  };
+//     return () => socket.off('send');
+//   }, [socket]);
 
-  return (
-    <>
-      <form onSubmit={handleUpload}>
-        <input type="file" name="image" onChange={handleFileChange} />
-        <button type="submit">Upload</button>
-        <Button onClick={handleOpen}>Open modal</Button>
-      </form>
-      <div>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-              {previewUrl && <img src={previewUrl} alt='preview' />} {/* show preview image if exists */}
-            </Typography>
-          </Box>
-        </Modal>
-      </div>
-    </>
-  );
-};
+//   const handleInputChange = (e) => {
+//     setMessage(e.target.value);
+//   };
 
-export default ImageUpload;
+//   const handleFormSubmit = (e) => {
+//     e.preventDefault();
+//     socket.emit('send', message);
+//     setMessage('');
+//   };
+
+//   return (
+//     <div>
+//       <ul>
+//         {messages.map((msg, index) => (
+//           <li key={index}>{msg}</li>
+//         ))}
+//       </ul>
+//       <form onSubmit={handleFormSubmit}>
+//         <input type="text" value={message} onChange={handleInputChange} />
+//         <button type="submit">Send</button>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default Chat;

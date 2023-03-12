@@ -6,7 +6,7 @@
   width: 100%;
   /* grid-template-columns: 1fr;  */
   grid-template-columns: minmax(100%,100%); 
-  grid-template-rows: min-content minmax(50%, 100%) min-content;
+  grid-template-rows: min-content minmax(10%, 100%) min-content;
   grid-template-areas: 
     "option"
     "Chat"

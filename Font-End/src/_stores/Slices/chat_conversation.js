@@ -23,7 +23,7 @@ export const ConversationSlice = createSlice({
         },
         UPDATE_CONVERSATION: (state, action) => {
             const index = state.conversation.findIndex(conversation => conversation.chat_id === action.payload.chat_id);
-            state.conversation[index] = action.payload;
+            state.conversation[index] = {...state.conversation[index], ...action.payload};
         },
         DELETE_CONVERSATION: (state, action) => {
             state.conversation = state.conversation.filter(conversation => conversation.chat_id !== action.payload);

@@ -9,6 +9,7 @@ import ChatoptionBar from './components/Chat_option-bar.js';
 import { StyledChatConversation, StyledTextField, StyledIconButton, StyledButton } from '../../styles.js';
 
 import { ChatContext } from '../../Chat_content.js';
+import { SocketMethod } from '../../../Home/Home.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { CREATE_USER, UPDATE_USER, DELETE_USER } from '../../../_stores/Slices/user.js';
 import { CREATE_CONVERSATION, UPDATE_CONVERSATION, DELETE_CONVERSATION, CLEAR_CONVERSATION } from '../../../_stores/Slices/chat_conversation.js';
@@ -19,7 +20,7 @@ const Chat = () => {
     const { Chat_state, setChat_state } = useContext(ChatContext);
     const dispatch = useDispatch();
     const { Chat_data_msg, Chat_data_users } = useSelector((state) => ({ ...state }));
-
+    const { socket_sendMessage } = useContext(SocketMethod);
 
     /////////////////////////////////// TextAria ///////////////////////////////////////////
     const [text, setText] = useState('');
@@ -59,14 +60,14 @@ const Chat = () => {
             event.preventDefault();
         }
     }
-    function test() {
 
-    }
+
+
     if (!(Chat_state.cid && Chat_state.uid)) {
         return <bUTTON>GET START YOUR CHAT</bUTTON>
     }
     const name = Chat_data_users.users.find(user => user.user_id === Chat_state.uid).user_name;
-    
+
     return (
         <>
             <ChatoptionBar />
@@ -106,7 +107,7 @@ const Chat = () => {
                     onSelect={handleTextareaSelect}
                     onChange={handleTextareaChange}
                 />
-                <StyledButton variant="contained" onClick={test}><SendIcon /></StyledButton>
+                <StyledButton variant="contained" onClick={() => socket_sendMessage(text, Chat_state.uid, Chat_state.cid)}><SendIcon /></StyledButton>
             </div>
         </>
     )

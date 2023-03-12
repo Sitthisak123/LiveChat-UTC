@@ -1,8 +1,10 @@
 import { StyledOptionSection, StyledSettingIconButton } from '../../../styles.js';
 import Headbar from './Component/Headbar.js';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-
+import { useSelector } from 'react-redux';
+import { fontSize } from '@mui/system';
 function Account() {
+    const {User_data} = useSelector((state)=> ({...state}));
     const OpionSettings = [
         {},
         {}
@@ -14,19 +16,27 @@ function Account() {
                 <StyledOptionSection>General info</StyledOptionSection>
                 <StyledSettingIconButton disableRipple sx={{ fontSize: '1.15rem' }}>
                     <p>Username</p>
-                    <p>{'<Undefined>'}</p>
+                    <p style={{fontSize: '1rem'}}>
+                        {User_data.value.user_username}
+                        </p>
                 </StyledSettingIconButton>
                 <StyledSettingIconButton disableRipple sx={{ fontSize: '1.15rem' }}>
                     <p>ID</p>
-                    <p>{'<Undefined>'}</p>
+                    <p style={{fontSize: '1rem'}}>
+                        {User_data.value.user_custom_id? User_data.value.user_custom_id:'<Undefined>'}
+                        </p>
                 </StyledSettingIconButton>
                 <StyledSettingIconButton disableRipple sx={{ fontSize: '1.15rem' }}>
-                    <p>Email Address</p>
-                    <p>{'<Undefined>'}</p>
+                    <p>Email</p>
+                    <p style={{fontSize: '1rem'}}>
+                        {User_data.value.user_email? User_data.value.user_email:'<Undefined>'}
+                        </p>
                 </StyledSettingIconButton>
                 <StyledSettingIconButton disableRipple sx={{ fontSize: '1.15rem' }}>
                     <p>Phone number</p>
-                    <p>{'<Undefined>'}</p>
+                    <p style={{fontSize: '1rem'}}>
+                        {User_data.value.user_phone? User_data.value.user_phone:'<Undefined>'}
+                    </p>
                 </StyledSettingIconButton>
                 <StyledSettingIconButton disableRipple sx={{ fontSize: '1.15rem' }}>
                     <p>Password</p>

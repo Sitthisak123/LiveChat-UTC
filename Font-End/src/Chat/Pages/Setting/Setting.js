@@ -69,10 +69,16 @@ function Settings() {
             text: 'Theme',
             action: () => navigate('Theme'),
         },
+        {   
+            type: 2,
+            icon: <ColorLensIcon sx={{ fontSize: '1.5rem' }} />,
+            text: 'Reset Settings',
+            action: () => navigate('Reset'),
+        },
 
     ]
     const Optiontype = [
-        "Personal info", 'General'
+        "Personal info", 'General','System'
     ]
     const handleLogout = () => {
         dispacth(DELETE_USER());

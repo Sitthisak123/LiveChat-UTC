@@ -39,8 +39,8 @@ model msg_user_reply {
   msg_reply_message String      @db.Text
   msg_createTime    DateTime    @default(now()) @db.Timestamp(0)
   msg_type          MessageType @default(TEXT)
-  msg_status        Int
-  msg_read          Int
+  msg_status        Int         @default(0)
+  msg_read          Int         @default(0)
   chat_user         chat_user   @relation(fields: [fk_chat_id], references: [chat_id], onDelete: Cascade, map: "fk_chat_id")
   user              user        @relation(fields: [fk_user_owner], references: [user_id], onDelete: Cascade, map: "fk_user_one_chat")
 

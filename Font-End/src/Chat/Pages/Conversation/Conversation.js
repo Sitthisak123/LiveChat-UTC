@@ -1,7 +1,7 @@
 import { SSearch, SSearchIcon } from '../../../Home/Sidebar/styles';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import Chatfriend from './components/Chat_friend.js';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CREATE_USER, UPDATE_USER, DELETE_USER } from '../../../_stores/Slices/user.js';
 import { CREATE_CHAT_USERS, UPDATE_CHAT_USERS, DELETE_CHAT_USERS, CLEAR_CHAT_USERS } from '../../../_stores/Slices/chat_user.js';
@@ -16,8 +16,9 @@ const Conversation = () => {
     const { Chat_state, setChat_state } = useContext(ChatContext);
     const isSmallScreen = useMediaQuery('(max-width: 780px)');
     function On_Chat_friend(props) {
-            setChat_state({ ...Chat_state, ...props });
+        setChat_state({ ...Chat_state, ...props });
     }
+    useEffect(() => console.log(Chat_state), [Chat_state]);
     return (
         <>
             <SSearch style={{
@@ -37,24 +38,29 @@ const Conversation = () => {
                     try {
                         const user_id = data.chat_user_one === User_data.value.user_id ? data.chat_user_two : data.chat_user_one;
                         const user = Chat_data_users.users.find(user => user.user_id === user_id)
-                        const last_msg = Chat_data_msg.chat_msg.filter(item => item.fk_chat_id === data.chat_id).at(-1).msg_reply_message;
+                        const last_msg = Chat_data_msg.chat_msg.filter(item => item.fk_chat_id === data.chat_id).at(-1)?.msg_reply_message;
+                        console.table(Chat_data_conversation.conversation)
+
+                        if ((!last_msg) && (data.chat_open === false || data.chat_open === undefined)) {
+                            return null;
+                        }
                         return (
                             <Chatfriend
                                 isActive={Chat_state.cid === data.chat_id ? true : false}
                                 key={data.chat_id}
                                 name={user.user_name}
-                                last_message={last_msg}
+                                last_message={last_msg ? last_msg : null}
                                 uid={user.user_id}
                                 cid={data.chat_id}
                                 onClick={On_Chat_friend}
                             />
                         )
                     } catch (error) {
+                        alert('error')
                         console.log(error)
                     }
                 })
             }
-
         </>
     )
 }

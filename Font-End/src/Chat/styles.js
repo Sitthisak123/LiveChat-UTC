@@ -136,8 +136,8 @@ export const ChatContentSection = styled.div.attrs(props => ({
   display: flex;
   flex-flow: nowrap;
   width: 100%;
-  max-height: 100%;
-  min-height: 100vh;
+  max-height: 100vh;
+
   @media (max-width: 780px) {
     min-height: calc(100vh - ${Responsive.sidebar});
 }

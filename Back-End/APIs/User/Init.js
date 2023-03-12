@@ -65,6 +65,7 @@ router.post("/init", verify_TOKEN, async (req, res) => {
             {
                 user_id: true,
                 google_id: false,
+                user_custom_id: false,
                 user_username: true,
                 user_password: false,
                 user_email: true,

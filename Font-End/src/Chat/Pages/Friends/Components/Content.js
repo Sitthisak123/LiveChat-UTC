@@ -37,7 +37,7 @@ const FriendContent = () => {
 
     }, [relationFilteredData, relationFilteredData]);
     useEffect(() => { }, []);
-
+    
     return (
         <div className="Friends">
             <div className="Friends-Content">

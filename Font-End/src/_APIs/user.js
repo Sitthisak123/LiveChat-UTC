@@ -39,3 +39,9 @@ export const API_FindByUnique = (TOKEN) => {
     headers: { 'access-token-key': TOKEN }
   });
 };
+export const API_NewChat = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/NewChat`,
+    headers: { 'access-token-key': TOKEN }
+  });
+};
