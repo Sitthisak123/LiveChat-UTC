@@ -12,8 +12,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { useState } from 'react';
-import { useRef } from 'react';
-
 
 function Chats() {
     const [fontSelet, setFontSelect] = useState({ isOpen: false, value: 'Small' });
@@ -21,14 +19,14 @@ function Chats() {
         <>
             <Headbar HeadName={'Chats'} />
             <div className='option' >
-                <StyledOptionSection>Manage friends</StyledOptionSection>
+                <StyledOptionSection>Chats appears</StyledOptionSection>
                 <StyledSettingIconButton
                     disableRipple
                     sx={{ fontSize: '1.2rem' }}
                     onClick={() => setFontSelect({ ...fontSelet, isOpen: true })}
                 >
                     <p>Fontsize</p>
-                    {`<${fontSelet.value}>`}
+                    <p style={{fontSize: '1rem'}}>{`< ${fontSelet.value} >`}</p>
                 </StyledSettingIconButton>
             </div>
 

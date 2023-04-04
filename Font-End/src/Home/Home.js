@@ -41,7 +41,6 @@ const Home = ({ children }) => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.emit('joinRoom', 'room1');
     socket.on('send', (msg) => {
       setMessages((prevMessages) => [...prevMessages, msg]);
     });
@@ -69,13 +68,6 @@ const Home = ({ children }) => {
       <SLayout>
         <Sidebar />
         <SMain>{children}</SMain>
-        <button
-          style={{ position: 'absolute', minWidth: '50px', minHeight: '50px', left: '50%', top: '10px', backgroundColor: 'black' }}
-          onClick={null}
-
-        >
-
-        </button>
       </SLayout>
     </SocketMethod.Provider>
   )

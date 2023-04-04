@@ -121,7 +121,7 @@ export const StyledSettingIconButton = styled(IconButton)`
       background-color: rgba(0,0,0,.2);
      }
 
-  > *:is(svg,p):not(svg.logouticon){
+  *:is(svg,p):not(svg.logouticon){
     color: ${({ theme }) => theme.text}
   }
 `;

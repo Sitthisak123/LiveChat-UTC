@@ -18,7 +18,6 @@ const Conversation = () => {
     function On_Chat_friend(props) {
         setChat_state({ ...Chat_state, ...props });
     }
-    useEffect(() => console.log(Chat_state), [Chat_state]);
     return (
         <>
             <SSearch style={{
@@ -39,7 +38,6 @@ const Conversation = () => {
                         const user_id = data.chat_user_one === User_data.value.user_id ? data.chat_user_two : data.chat_user_one;
                         const user = Chat_data_users.users.find(user => user.user_id === user_id)
                         const last_msg = Chat_data_msg.chat_msg.filter(item => item.fk_chat_id === data.chat_id).at(-1)?.msg_reply_message;
-                        console.table(Chat_data_conversation.conversation)
 
                         if ((!last_msg) && (data.chat_open === false || data.chat_open === undefined)) {
                             return null;

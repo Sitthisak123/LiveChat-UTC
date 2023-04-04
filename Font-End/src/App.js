@@ -8,7 +8,7 @@ import Chatcontent from './Chat/Chat_content.js';
 import Login from './Login/Login.js';
 import Signin from './Login/pages/Signin.js';
 import Signup from './Login/pages/Signup.js';
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import Redirect from './_methods/Redirect.js';
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/globalStyles";
@@ -23,15 +23,21 @@ import Chats from './Chat/Pages/Setting/Sub/Chats.js';
 import Friend from './Chat/Pages/Setting/Sub/Friends.js';
 import Language from './Chat/Pages/Setting/Sub/Language.js';
 import Theme from './Chat/Pages/Setting/Sub/Theme.js';
-/* Test */
+
+/*-------------------Test -------------*/
 import ImageUpload from './Test.js';
-/* Test */
+/* //////////////////////////////////// */
+
 export const ThemeContext = createContext();
 
 function App() {
-  const [theme, setTheme] = useState("light");
+  const initTheme = JSON.parse(localStorage.getItem('system'));
+  const currentTheme = initTheme?.theme;
+  const [theme, setTheme] = useState(currentTheme === "light" || currentTheme === "dark" ? currentTheme : 'light');
   const themeStyle = theme === "light" ? lightTheme : darkTheme;
-
+  useEffect(() => {
+    localStorage.setItem('system', JSON.stringify({ theme }))
+  }, [theme]);
   return (
     <Provider store={store}>
       <ThemeContext.Provider value={{ setTheme, theme }}>
@@ -44,9 +50,9 @@ function App() {
             <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
           </Helmet>
           <Routes>
-            
+
             <Route path="Auth/*" element={<Auth />} />
-            
+
             <Route path="Home/*" element={<Chatcontent />}>
               <Route path="Test/*" element={<ImageUpload />} />
               <Route path="Profile" element={<Profile />} />
@@ -67,7 +73,7 @@ function App() {
                 <Route path="Theme" element={<Theme />} />
 
               </Route>
-              <Route path="*" element={<Redirect value={"Profile"} />} />
+              <Route path="*" element={<Redirect value={"test"} />} />
             </Route>
 
             <Route path="Login/*" element={<Login />} >

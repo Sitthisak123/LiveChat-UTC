@@ -64,7 +64,7 @@ const Chat = () => {
 
 
     if (!(Chat_state.cid && Chat_state.uid)) {
-        return <bUTTON>GET START YOUR CHAT</bUTTON>
+        return <button>GET START YOUR CHAT</button>
     }
     const name = Chat_data_users.users.find(user => user.user_id === Chat_state.uid).user_name;
 

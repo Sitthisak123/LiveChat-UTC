@@ -31,7 +31,6 @@ import { API_NewChat } from '../../../../_APIs/user';
 const FriendCard = (props) => {
     const { CardType, CardName, FriendID } = props;
     const { Chat_state, setChat_state } = useContext(ChatContext);
-    console.log(CardType);
     //0 = block, 1,2 = friend,favorite, 3 = request
     const { User_data, Chat_data_users, Friends_relation, Chat_data_conversation } = useSelector((state) => ({ ...state }));
     const dispacth = useDispatch();

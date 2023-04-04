@@ -23,6 +23,13 @@ export const API_getImage = (TOKEN) => {
     headers: { 'access-token-key': TOKEN }
   });
 }
+export const API_getOtherUsersImage = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/get-OtherUserImage`,
+    headers: { 'access-token-key': TOKEN }
+  });
+}
+
 export const API_UploadProfileImage = (TOKEN) => {
   return axios.create({
     baseURL: `http://${host_adr}:9001/API/user/upload/ProfileImage`,

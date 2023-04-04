@@ -171,24 +171,30 @@ const Profile = () => {
     },
   ]
   useEffect(() => {
-    API_getImage(User_data.value.user_TOKEN).get(User_data.value.user_profile_img)
-      .then((response) => {
-        const blob = new Blob([response.data], { type: 'image/png' });
-        setImageUrl((prevUrl) => ({ ...prevUrl, profile: URL.createObjectURL(blob) }))
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    API_getImage(User_data.value.user_TOKEN).get(User_data.value.user_cover_img)
-      .then((response) => {
-        const blob = new Blob([response.data], { type: 'image/png' });
-        setImageUrl((prevUrl) => ({ ...prevUrl, cover: URL.createObjectURL(blob) }));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    if (User_data.value.user_profile_img !== 'user_default.png') {
+      API_getImage(User_data.value.user_TOKEN).get(User_data.value.user_profile_img)
+        .then((response) => {
+          const blob = new Blob([response.data], { type: 'image' });
+          setImageUrl((prevUrl) => ({ ...prevUrl, profile: URL.createObjectURL(blob) }))
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }else{
+      setImageUrl((prevUrl) => ({ ...prevUrl, profile: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png" }));
+    }
+    if (User_data.value.user_cover_img !== 'user_default.png') {
+      API_getImage(User_data.value.user_TOKEN).get(User_data.value.user_cover_img)
+        .then((response) => {
+          const blob = new Blob([response.data], { type: 'image' });
+          setImageUrl((prevUrl) => ({ ...prevUrl, cover: URL.createObjectURL(blob) }));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }else{
+      setImageUrl((prevUrl) => ({ ...prevUrl, cover: "https://www.proactivechannel.com/Files/BrandImages/Default.jpg" }));
+    }
   }, []);
 
 
@@ -275,7 +281,7 @@ const Profile = () => {
           <StyledTypography id="modal-modal-title" variant="h6" component="h2">
             Select Your {open.choice === 'Upload-Profile' ? 'Profile' : 'Cover'}
           </StyledTypography>
-          { open.onload ? '':<StyledCloseIcon onClick={handleClose} /> }
+          {open.onload ? '' : <StyledCloseIcon onClick={handleClose} />}
           <form onSubmit={handleUpload} className='Upload-Form'>
             <input type="file" accept="image/*" ref={InputFile} onChange={handleFileChange} style={{ display: 'none' }} name="image" />
             {
@@ -287,19 +293,19 @@ const Profile = () => {
                 :
                 <Button onClick={handleSelect}><PhotoSizeSelectActualIcon style={{ fontSize: 250 }} /></Button>
             }
-            <Button disabled={file? (open.onload? true:false) : true} style={{ marginTop: '1.2rem' }} type='submit' >Upload
-              {open.onload ? 
-              <Fade
-                in={true}
-                style={{
-                  transitionDelay: '0ms',
-                  position: 'absolute',
-                  scale: '.8'
-                }}
-                unmountOnExit
-              >
-                <CircularProgress />
-              </Fade> : ''}</Button>
+            <Button disabled={file ? (open.onload ? true : false) : true} style={{ marginTop: '1.2rem' }} type='submit' >Upload
+              {open.onload ?
+                <Fade
+                  in={true}
+                  style={{
+                    transitionDelay: '0ms',
+                    position: 'absolute',
+                    scale: '.8'
+                  }}
+                  unmountOnExit
+                >
+                  <CircularProgress />
+                </Fade> : ''}</Button>
           </form>
         </StyledModalBox>
       </Modal>

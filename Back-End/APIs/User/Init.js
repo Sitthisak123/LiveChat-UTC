@@ -18,8 +18,6 @@ router.post("/init", verify_TOKEN, async (req, res) => {
             }
         });
 
-
-
         /// Fetch MSGs data
         const chat_msg = await prisma.msg_user_reply.findMany({
             where: {
@@ -66,10 +64,10 @@ router.post("/init", verify_TOKEN, async (req, res) => {
                 user_id: true,
                 google_id: false,
                 user_custom_id: false,
-                user_username: true,
+                user_username: false,
                 user_password: false,
-                user_email: true,
-                user_phone: true,
+                user_email: false,
+                user_phone: false,
                 user_name: true,
                 user_profile_img: true,
                 user_cover_img: true
@@ -89,7 +87,8 @@ router.post("/init", verify_TOKEN, async (req, res) => {
                 user_phone: true,
                 user_name: true,
                 user_profile_img: true,
-                user_cover_img: true
+                user_cover_img: true,
+                user_custom_id: true,
 
             }
         });
