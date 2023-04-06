@@ -1,4 +1,4 @@
-import { useRef, useContext, useState } from 'react';
+import { useRef, useContext, useState, useEffect } from 'react';
 
 import SendIcon from '@mui/icons-material/Send';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -16,11 +16,19 @@ import { CREATE_CONVERSATION, UPDATE_CONVERSATION, DELETE_CONVERSATION, CLEAR_CO
 import { CREATE_CHAT_USERS, UPDATE_CHAT_USERS, DELETE_CHAT_USERS, CLEAR_CHAT_USERS } from '../../../_stores/Slices/chat_user.js';
 import { CREATE_CHAT_MSG, UPDATE_CHAT_MSG, DELETE_CHAT_MSG, CLEAR_CHAT_MSG } from '../../../_stores/Slices/chat_msg.js';
 
-const Chat = () => {
+const Chat = (props) => {
     const { Chat_state, setChat_state } = useContext(ChatContext);
     const dispatch = useDispatch();
     const { Chat_data_msg, Chat_data_users } = useSelector((state) => ({ ...state }));
     const { socket_sendMessage } = useContext(SocketMethod);
+    const Chat_textfield_Ref = useRef();
+    const Chat_optionbar_Ref = useRef();
+
+    function TextFieldOnKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    }
 
     /////////////////////////////////// TextAria ///////////////////////////////////////////
     const [text, setText] = useState('');
@@ -51,31 +59,24 @@ const Chat = () => {
     const handleTextareaSelect = (event) => {
         setCursorPosition(event.target.selectionStart);
     };
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    const Chat_textfield_Ref = useRef();
-
-    function TextFieldOnKeyDown(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-        }
+    const handleSendMSG = (event) => {
+        Chat_textfield_Ref.current.value = null;
+        socket_sendMessage(text, Chat_state.uid, Chat_state.cid);
     }
-
-
+    /////////////////////////////////////////////////////////////////////////////////////////
 
     if (!(Chat_state.cid && Chat_state.uid)) {
         return <button>GET START YOUR CHAT</button>
     }
-    const name = Chat_data_users.users.find(user => user.user_id === Chat_state.uid).user_name;
+    const FriendData = Chat_data_users.users.find(user => user.user_id === Chat_state.uid);
 
     return (
         <>
-            <ChatoptionBar />
+            <ChatoptionBar ref={Chat_optionbar_Ref} isOnline={null} CardName={FriendData.user_name} CardID={FriendData.user_id} CardImage={FriendData.user_profile_img} />
 
             <StyledChatConversation>
                 {
                     Chat_data_msg.chat_msg.map((data) => {
-                        // const name = 
                         if (data.fk_chat_id === Chat_state.cid) {
                             return (
                                 <div className="Chat-massage-coversation">
@@ -86,7 +87,8 @@ const Chat = () => {
                                         message={data.msg_reply_message}
                                         timest={data.msg_createTime}
                                         readed={data.msg_read}
-                                        name={name}
+                                        name={FriendData.user_name}
+                                        image={FriendData.user_profile_img}
                                     />
                                 </div>
                             )
@@ -102,12 +104,13 @@ const Chat = () => {
                     defaultValue=""
                     multiline={true}
                     maxRows={4}
-                    ref={Chat_textfield_Ref}
+                    inputRef={Chat_textfield_Ref}
                     onKeyDown={handleTextareaKeyDown}
                     onSelect={handleTextareaSelect}
                     onChange={handleTextareaChange}
+                    placeholder={'Type Message.'}
                 />
-                <StyledButton variant="contained" onClick={() => socket_sendMessage(text, Chat_state.uid, Chat_state.cid)}><SendIcon /></StyledButton>
+                <StyledButton variant="contained" onClick={handleSendMSG}><SendIcon /></StyledButton>
             </div>
         </>
     )

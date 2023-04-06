@@ -134,10 +134,8 @@ router.post('/get-OtherUserImage', (req, res) => {
   const { users } = req.body;
   const filepaths = users.map(user => path.join(__dirname, `../../assets/user/image/${user.user_id}/`, user.img));
   console.table(filepaths)
-  
   res.send(filepaths);
 });
-
 
 
 

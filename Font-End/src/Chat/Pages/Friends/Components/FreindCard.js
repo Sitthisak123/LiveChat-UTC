@@ -29,7 +29,7 @@ import {
 import { ChatContext } from '../../../Chat_content';
 import { API_NewChat } from '../../../../_APIs/user';
 const FriendCard = (props) => {
-    const { CardType, CardName, FriendID } = props;
+    const { CardType, CardName, FriendID, CardImage } = props;
     const { Chat_state, setChat_state } = useContext(ChatContext);
     //0 = block, 1,2 = friend,favorite, 3 = request
     const { User_data, Chat_data_users, Friends_relation, Chat_data_conversation } = useSelector((state) => ({ ...state }));
@@ -63,7 +63,7 @@ const FriendCard = (props) => {
             dispacth(UPDATE_CONVERSATION(response.data));
         }).catch((error) => {
             handleErrors(error);
-        })
+        })  
     }
     const handleChangeRelations = (newRelation) => {
         API_ChangeRelations(User_data.value.user_TOKEN).put('', { newRelation, FriendID }).then((response) => {
@@ -93,7 +93,7 @@ const FriendCard = (props) => {
             <StyledCardHeader
                 avatar={
                     <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">
-                        <Avatar alt="Remy Sharp" src={img} />
+                        <Avatar alt={`${CardName}_${FriendID}`} src={`http://localhost:9001/user/image/${FriendID}/${CardImage}`} />
                     </StyledBadge>
                 }
                 title={
@@ -124,7 +124,7 @@ const FriendCard = (props) => {
 
                     </div>
                 }
-                subheader=''
+                subheader={``}
             />
             <Menu
                 id="basic-menu"

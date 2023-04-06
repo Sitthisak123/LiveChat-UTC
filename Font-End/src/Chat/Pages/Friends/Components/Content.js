@@ -52,11 +52,11 @@ const FriendContent = () => {
                                 user.user_name.toLowerCase().includes(textinput.toLowerCase())
                             );
                             return filteredUsers.map((user) => (
-                                <FriendCard CardID={friend_id} CardType={relation} CardName={user.user_name} FriendID={friend_id} />
+                                <FriendCard CardID={friend_id} CardType={relation} CardName={user.user_name} FriendID={friend_id} CardImage={user.user_profile_img} />
                             ));
                         } else {
                             return friendUsers.map((user) => (
-                                <FriendCard CardID={friend_id} CardType={relation} CardName={user.user_name} FriendID={friend_id} />
+                                <FriendCard CardID={friend_id} CardType={relation} CardName={user.user_name} FriendID={friend_id} CardImage={user.user_profile_img} />
                             ));
                         }
                     })

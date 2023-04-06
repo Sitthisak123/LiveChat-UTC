@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+app.use(express.static('assets'));
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient()
 

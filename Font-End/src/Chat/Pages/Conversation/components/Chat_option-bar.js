@@ -8,31 +8,32 @@ import { useMediaQuery } from '@react-hook/media-query';
 import { ChatContext } from '../../../Chat_content';
 import { useContext } from 'react';
 
-const Chat_optionBar = ({ porps }) => {
+const Chat_optionBar = (props) => {
+  const { CardID, CardName, CardImage, isOnline } = props;
   const isSmallScreen = useMediaQuery('(max-width: 780px)');
   const { Chat_state, setChat_state } = useContext(ChatContext);
-  function Back_onClick(){
-    setChat_state({pageState: false});
+  function Back_onClick() {
+    setChat_state({ pageState: false });
   }
   return (
     <ChatSection>
       {
         isSmallScreen
-        ?
+          ?
           <StyledIconButton onClick={Back_onClick}>
             <ArrowBackIosNewOutlinedIcon color='primary' />
           </StyledIconButton>
-        :
+          :
           null
       }
       <StyledCardHeaderOptionbar
         avatar={
           <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">
-            <Avatar alt="Remy Sharp" src={img} />
+            <Avatar alt="Remy Sharp" src={`http://localhost:9001/user/image/${CardID}/${CardImage}`} />
           </StyledBadge>
         }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={CardName}
+        subheader={null}
       ></StyledCardHeaderOptionbar>
     </ChatSection>
   )

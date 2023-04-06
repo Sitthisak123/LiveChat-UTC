@@ -25,7 +25,7 @@ import Language from './Chat/Pages/Setting/Sub/Language.js';
 import Theme from './Chat/Pages/Setting/Sub/Theme.js';
 
 /*-------------------Test -------------*/
-import ImageUpload from './Test.js';
+// import ImageUpload from './Test.js';
 /* //////////////////////////////////// */
 
 export const ThemeContext = createContext();
@@ -54,7 +54,7 @@ function App() {
             <Route path="Auth/*" element={<Auth />} />
 
             <Route path="Home/*" element={<Chatcontent />}>
-              <Route path="Test/*" element={<ImageUpload />} />
+              {/* <Route path="Test/*" element={<ImageUpload />} /> */}
               <Route path="Profile" element={<Profile />} />
               <Route path="Chat" element={<Conversation />} />
               <Route path="Friend/Invite" element={<AddFriend />} />

@@ -1,12 +1,11 @@
 import './Chat_friend.css';
-import img from '../../../../_assets/1.jpg';
 import { forwardRef } from 'react';
 import Avatar from '@mui/material/Avatar';
 import { StyledBadge, StyledCardHeader, StyledCard } from '../../../styles.js';
 import { useMediaQuery } from '@react-hook/media-query';
 
 const Chat_friend = forwardRef((props, ref) => {
-  const { key, name, last_message, uid, cid, isActive } = props;
+  const { key, name, last_message, uid, cid, isActive, image } = props;
   const isSmallScreen = useMediaQuery('(max-width: 780px)');
 
   function handleClick() {
@@ -21,7 +20,7 @@ const Chat_friend = forwardRef((props, ref) => {
       <StyledCardHeader
         avatar={
           <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">
-            <Avatar alt="Remy Sharp" src={img} />
+            <Avatar alt={`${name}_${uid}`} src={`http://localhost:9001/user/image/${uid}/${image}`} />
           </StyledBadge>
         }
         title={name}

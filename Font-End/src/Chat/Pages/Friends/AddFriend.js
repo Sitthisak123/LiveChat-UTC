@@ -155,7 +155,7 @@ const AddFriend = () => {
                             relation = (ctype === 1 || ctype === 2 || ctype === 0) ? ctype : ctype === 3 ? 3.1 : null
                         }
                         if (relation !== 0) {
-                            return (<FriendCard CardID={null} CardType={(relation !== undefined && relation !== null) ? relation : -1} CardName={user.user_name} FriendID={user.user_id} />)
+                            return (<FriendCard CardID={null} CardType={(relation !== undefined && relation !== null) ? relation : -1} CardName={user.user_name} FriendID={user.user_id} CardImage={user.user_profile_img} />)
                         }
                     })
                 }

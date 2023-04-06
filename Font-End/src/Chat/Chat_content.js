@@ -54,7 +54,6 @@ const Chat_content = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSmallScreen, Chat_state.pageState])
-
   return (
     <ChatContext.Provider value={{ Chat_state, setChat_state }}>
       <Home >
@@ -64,12 +63,10 @@ const Chat_content = () => {
             <ChatContentSection>
               <BoxCards ref={BoxCards_ref}>
                 <Outlet />
-              </BoxCards>
-              {
+              </BoxCards>             
                 <div className='Chat-section' ref={Chat_ref}>
                   <Chat />
                 </div>
-              }
             </ChatContentSection>
             :
             <ChatContentSection>

@@ -50,6 +50,7 @@ const Conversation = () => {
                                 last_message={last_msg ? last_msg : null}
                                 uid={user.user_id}
                                 cid={data.chat_id}
+                                image={user.user_profile_img}
                                 onClick={On_Chat_friend}
                             />
                         )
