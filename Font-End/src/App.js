@@ -23,7 +23,7 @@ import Chats from './Chat/Pages/Setting/Sub/Chats.js';
 import Friend from './Chat/Pages/Setting/Sub/Friends.js';
 import Language from './Chat/Pages/Setting/Sub/Language.js';
 import Theme from './Chat/Pages/Setting/Sub/Theme.js';
-
+import FriendBlockedManage from './Chat/Pages/Setting/Sub/Sub/Friend-Blocked_Manage.js';
 /*-------------------Test -------------*/
 // import ImageUpload from './Test.js';
 /* //////////////////////////////////// */
@@ -54,7 +54,7 @@ function App() {
             <Route path="Auth/*" element={<Auth />} />
 
             <Route path="Home/*" element={<Chatcontent />}>
-              {/* <Route path="Test/*" element={<ImageUpload />} /> */}
+              <Route path="Test/*" element={<FriendBlockedManage />} />
               <Route path="Profile" element={<Profile />} />
               <Route path="Chat" element={<Conversation />} />
               <Route path="Friend/Invite" element={<AddFriend />} />
@@ -71,6 +71,8 @@ function App() {
                 <Route path="Friends" element={<Friend />} />
                 <Route path="Language" element={<Language />} />
                 <Route path="Theme" element={<Theme />} />
+                
+                <Route path="Blocked-Manage" element={<FriendBlockedManage />} />
 
               </Route>
               <Route path="*" element={<Redirect value={"test"} />} />

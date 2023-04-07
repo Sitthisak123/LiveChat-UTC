@@ -11,6 +11,10 @@ const prisma = new PrismaClient()
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    const dir = `assets/user/image/${req.user.user_id}`;
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     cb(null, `assets/user/image/${req.user.user_id}`); // specify the upload directory
   },
   filename: function (req, file, cb) {
@@ -23,11 +27,13 @@ function checkFileType(file, cb) {
   const filetypes = /jpeg|jpg|png|gif/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
+
   if (extname && mimetype) {
     return cb(null, true);
   } else {
     cb('Error: Only images are allowed');
   }
+
 }
 
 const upload = multer({
@@ -41,7 +47,6 @@ router.post('/upload/ProfileImage', verify_TOKEN, upload.single('image'), async 
   if (req.fileValidationError) {
     return res.status(400).send({ error: req.fileValidationError });
   }
-
   const { user_id } = req.user;
   const { filename } = req.file;
   const { choice } = req.body;

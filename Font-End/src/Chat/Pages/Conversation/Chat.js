@@ -50,6 +50,9 @@ const Chat = (props) => {
         if (event.key === 'Backspace') {
             setCursorPosition(cursorPosition - emojiLength);
             setEmojiLength(0);
+        }else if(event.key === 'Enter'){
+            handleSendMSG();
+            event.preventDefault();
         }
     };
     const handleTextareaChange = (event) => {
@@ -59,7 +62,7 @@ const Chat = (props) => {
     const handleTextareaSelect = (event) => {
         setCursorPosition(event.target.selectionStart);
     };
-    const handleSendMSG = (event) => {
+    const handleSendMSG = () => {
         Chat_textfield_Ref.current.value = null;
         socket_sendMessage(text, Chat_state.uid, Chat_state.cid);
     }

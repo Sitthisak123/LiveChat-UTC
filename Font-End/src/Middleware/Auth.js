@@ -10,7 +10,6 @@ import { API_getImage, API_getOtherUsersImage, API_Init } from '../_APIs/user';
 import { useEffect } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 import { useState } from 'react';
 
 import Backdrop from '@mui/material/Backdrop';
@@ -19,12 +18,9 @@ const Auth = () => {
     const dispatch = useDispatch();
     const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg, Friends_relation } = useSelector((state) => ({ ...state }));
     const Navigate = useNavigate();
-    const [hasRun, sethasRun] = useState(false);
     const user = JSON.parse(localStorage.getItem('TOKEN'));
 
     useEffect(() => {
-        if (!hasRun) {
-            sethasRun(true);
             if (!localStorage.getItem("TOKEN") || User_data.value.length < 1) {
                 Navigate("/Login");
             } else {
@@ -34,24 +30,17 @@ const Auth = () => {
                     dispatch(CREATE_CHAT_MSG(response.data.chat_msg));
                     dispatch(CREATE_FRIENDS_STATUS(response.data.Relations));
                     dispatch(UPDATE_USER(response.data.user));
-
-                    const profile_usersFiltered = response.data.users
-                        .filter(user => user.user_profile_img !== 'user_default.png')
-                        .map(user => ({ user_id: user.user_id, img: user.user_profile_img }));
-                    const cover_usersFiltered = response.data.users
-                        .filter(user => user.user_cover_img !== 'user_default.png')
-                        .map(user => ({ user_id: user.user_id, img: user.user_cover_img }));;
-                    // API_getOtherUsersImage(User_data.value.user_TOKEN).post('', { users: profile_usersFiltered }).then((response) => {
-                    //     console.log(response.data)
-                    // }).catch((error) => {
-                    //     console.log(error)
-                    // });
+                    // const profile_usersFiltered = response.data.users
+                    //     .filter(user => user.user_profile_img !== 'user_default.png')
+                    //     .map(user => ({ user_id: user.user_id, img: user.user_profile_img }));
+                    // const cover_usersFiltered = response.data.users
+                    //     .filter(user => user.user_cover_img !== 'user_default.png')
+                    //     .map(user => ({ user_id: user.user_id, img: user.user_cover_img }));;
                     Navigate("/Home");
                 }).catch((error) => {
                     const data = error.response.data;
                     alert(data.text)
                     console.log(data);
-
                     localStorage.removeItem('TOKEN');
                     dispatch(DELETE_USER())
                     dispatch(CLEAR_CONVERSATION())
@@ -63,11 +52,7 @@ const Auth = () => {
                     }
                     console.log(error);
                 });
-
-
-
             }
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

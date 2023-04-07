@@ -27,7 +27,7 @@ router.put('/update/name', verify_TOKEN, async (req, res) => {
 router.put('/update/relations', verify_TOKEN, async (req, res) => {
     const { user_id } = req.user;
     const { newRelation, FriendID } = req.body;
-    const RelationList = { block: 0, Friend: 1, Favorite: 2, Require: 3 };
+    const RelationList = { Friend: 1, Favorite: 2, Require: 3 };
     if (Object.values(RelationList).includes(newRelation)) {
         try {
             const update = await prisma.friends_relationship.updateMany({
@@ -54,6 +54,38 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
 
 
         res.status(200).send({ text: 'Update Status Success' });
+    } else if (newRelation === 0) {
+        try {
+            let newBlockedRelation = [];
+            const Blocked = await prisma.friends_relationship.deleteMany({
+                where: {
+                    OR: [
+                        {
+                            fk_user_one: user_id,
+                            fk_user_two: FriendID
+                        },
+                        {
+                            fk_user_one: FriendID,
+                            fk_user_two: user_id
+                        }
+                    ]
+                }
+            })
+            if (Blocked) {
+                newBlockedRelation = await prisma.friends_relationship.create({
+                    data: {
+                        fk_user_one: user_id,
+                        fk_user_two: FriendID,
+                        relation_status: 0
+                    }
+                })
+            }
+            res.status(200).send({ text: 'Blocked Status Success', blocked: newBlockedRelation });
+
+        } catch (err) {
+            console.log(err);
+            res.status(400).send({ text: 'Block has FAil!' });
+        }
     } else if (newRelation === -1) {
         try {
             const deleteRelation = await prisma.friends_relationship.deleteMany({
@@ -74,7 +106,7 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
             console.log(deleteRelation);
         } catch (err) {
             console.log(err);
-            res.status(400).send({ text: 'Invalid relation status' });
+            res.status(400).send({ text: 'Delete relation status has FAil!' });
         }
     } else {
         res.status(400).send({ text: 'Invalid relation status' });

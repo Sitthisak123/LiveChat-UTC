@@ -4,6 +4,11 @@ import Switch from '@mui/material/Switch';
 import FormGroup from '@mui/material/FormGroup';
 import { StyledOptionSection, StyledSettingIconButton } from '../../../styles.js';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { useSelector } from 'react-redux';
+import { CREATE_FRIENDS_STATUS, UPDATE_FRIENDS_STATUS, DELETE_FRIENDS_STATUS, CLEAR_FRIENDS_STATUS } from '../../../../_stores/Slices/Friends_Status';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 const AntSwitch = styled(Switch)(({ theme }) => ({
     width: 28,
     height: 16,
@@ -47,6 +52,15 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function Friends() {
+    const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg, Friends_relation } = useSelector((state) => ({ ...state }));
+    const [blockedFriends, setBlockedFriends] = useState();
+    const navigate = useNavigate();
+    useEffect(() => {
+        const BlockedFiltered = Friends_relation.Friend_data.filter(relation =>
+            relation.fk_user_one === User_data.value.user_id && relation.relation_status === 0
+        )
+        setBlockedFriends(BlockedFiltered)
+    }, [Friends_relation.Friend_data])
     return (
         <>
             <Headbar HeadName={'Friends'} />
@@ -59,8 +73,12 @@ function Friends() {
                     </FormGroup>
                 </StyledSettingIconButton>
                 <StyledOptionSection>Manage friends</StyledOptionSection>
-                <StyledSettingIconButton disableRipple sx={{ fontSize: '1.2rem' }} >
-                    <p>Blocked Account(Undefined)</p>
+                <StyledSettingIconButton 
+                disableRipple 
+                sx={{ fontSize: '1.2rem' }}
+                onClick={()=>navigate('../Blocked-Manage')}
+                >
+                    <p>{`Blocked Account(${blockedFriends? blockedFriends.length : 0})`}</p>
                     <NavigateNextIcon />
                 </StyledSettingIconButton>
             </div>

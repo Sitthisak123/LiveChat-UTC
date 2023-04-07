@@ -49,12 +49,12 @@ const FriendCard = (props) => {
     };
     const handleClosewithChat = () => {
         const chat = Chat_data_conversation.conversation.filter(chat => (chat.chat_user_one === User_data.value.user_id && chat.chat_user_two === FriendID) || (chat.chat_user_one === FriendID && chat.chat_user_two === User_data.value.user_id));
-        
+
         if (chat.length) {
             alert(chat[0].chat_id)
-            dispacth(UPDATE_CONVERSATION({chat_id: chat[0].chat_id, chat_open: true}));
+            dispacth(UPDATE_CONVERSATION({ chat_id: chat[0].chat_id, chat_open: true }));
             setChat_state({ cid: chat[0].chat_id, uid: FriendID });
-            return 
+            return
         }
         API_NewChat(User_data.value.user_TOKEN).put('', { FriendID }).then((response) => {
             const data = response.data;
@@ -63,7 +63,7 @@ const FriendCard = (props) => {
             dispacth(UPDATE_CONVERSATION(response.data));
         }).catch((error) => {
             handleErrors(error);
-        })  
+        })
     }
     const handleChangeRelations = (newRelation) => {
         API_ChangeRelations(User_data.value.user_TOKEN).put('', { newRelation, FriendID }).then((response) => {
@@ -114,7 +114,10 @@ const FriendCard = (props) => {
                                             <StyledFriendActionIconButton onClick={null} ><CheckCircleIcon color='primary' sx={{ scale: '1.2' }} /></StyledFriendActionIconButton>
                                         </div>
                                         : CardType === 0 ?
-                                            '' : CardType === -1 ?
+                                            <div className='Card-Action'>
+                                                <StyledFriendActionIconButton onClick={() => handleChangeRelations(1)} ><DoneIcon color='success' /></StyledFriendActionIconButton>
+                                                <StyledFriendActionIconButton onClick={() => handleChangeRelations(-1)} ><ClearIcon sx={{ color: pink[500] }} /></StyledFriendActionIconButton>
+                                            </div> : CardType === -1 ?
                                                 <div className='Card-Action'>
                                                     <StyledFriendActionIconButton onClick={() => HandleRequestFriend()} ><PersonAddAlt1Icon color='primary' sx={{ scale: '1.2' }} /></StyledFriendActionIconButton>
                                                 </div>
