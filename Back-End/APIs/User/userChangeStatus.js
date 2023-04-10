@@ -29,8 +29,9 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
     const { newRelation, FriendID } = req.body;
     const RelationList = { Friend: 1, Favorite: 2, Require: 3 };
     if (Object.values(RelationList).includes(newRelation)) {
+        let update = []
         try {
-            const update = await prisma.friends_relationship.updateMany({
+            update = await prisma.friends_relationship.updateMany({
                 where: {
                     OR: [
                         {
@@ -53,10 +54,10 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
         }
 
 
-        res.status(200).send({ text: 'Update Status Success' });
+        res.status(200).send({ text: 'Update Status Success' , newRelation: update});
     } else if (newRelation === 0) {
+        let newBlockedRelation = [];
         try {
-            let newBlockedRelation = [];
             const Blocked = await prisma.friends_relationship.deleteMany({
                 where: {
                     OR: [
@@ -80,7 +81,7 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
                     }
                 })
             }
-            res.status(200).send({ text: 'Blocked Status Success', blocked: newBlockedRelation });
+            res.status(200).send({ text: 'Blocked Status Success', newRelation: newBlockedRelation });
 
         } catch (err) {
             console.log(err);

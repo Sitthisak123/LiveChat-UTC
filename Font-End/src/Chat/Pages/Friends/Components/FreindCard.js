@@ -5,11 +5,13 @@ import img from '../../../../_assets/1.jpg';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { pink } from '@mui/material/colors';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useState, useContext } from 'react';
 import { API_ChangeRelations, API_RequestFriend } from '../../../../_APIs/system.js';
 import { useSelector, useDispatch } from 'react-redux';
@@ -67,11 +69,12 @@ const FriendCard = (props) => {
     }
     const handleChangeRelations = (newRelation) => {
         API_ChangeRelations(User_data.value.user_TOKEN).put('', { newRelation, FriendID }).then((response) => {
-            if (newRelation === -1 || newRelation === 0) {
-                console.log(`delete> id: ${User_data} id: ${User_data.value.user_id} status: ${FriendID}`)
-                console.log(Friends_relation)
+            if (newRelation === -1) {
                 dispacth(DELETE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID }))
-                console.log(Friends_relation)
+            } else if (newRelation === 0) {
+                const temp_newRelation = response.data.newRelation;
+                dispacth(DELETE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID }))
+                dispacth(CREATE_FRIENDS_STATUS([temp_newRelation]))
             } else {
                 dispacth(UPDATE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID, relation_status: newRelation }))
             }
@@ -115,8 +118,8 @@ const FriendCard = (props) => {
                                         </div>
                                         : CardType === 0 ?
                                             <div className='Card-Action'>
-                                                <StyledFriendActionIconButton onClick={() => handleChangeRelations(1)} ><DoneIcon color='success' /></StyledFriendActionIconButton>
-                                                <StyledFriendActionIconButton onClick={() => handleChangeRelations(-1)} ><ClearIcon sx={{ color: pink[500] }} /></StyledFriendActionIconButton>
+                                                <StyledFriendActionIconButton onClick={() => handleChangeRelations(1)} ><RemoveCircleOutlineIcon color='success' /></StyledFriendActionIconButton>
+                                                <StyledFriendActionIconButton onClick={() => handleChangeRelations(-1)} ><DeleteOutlineIcon sx={{ color: pink[500] }} /></StyledFriendActionIconButton>
                                             </div> : CardType === -1 ?
                                                 <div className='Card-Action'>
                                                     <StyledFriendActionIconButton onClick={() => HandleRequestFriend()} ><PersonAddAlt1Icon color='primary' sx={{ scale: '1.2' }} /></StyledFriendActionIconButton>
