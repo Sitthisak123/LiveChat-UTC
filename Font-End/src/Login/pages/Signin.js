@@ -64,7 +64,7 @@ const Signin = () => {
         <input type="Password" id="Password" className="formFieldInput" placeholder="Password" onChange={handleChange} />
       
         <br/><br/><label className="formFieldCheckboxLabel">
-          <a href="../Services/ChangePassword" className="formFieldTermsLink" >forgot your password? </a>
+          <a href="../Services/ForgotPassword" className="formFieldTermsLink" >forgot your password? </a>
         </label>
       </div>
 

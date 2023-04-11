@@ -27,6 +27,7 @@ import FriendBlockedManage from './Chat/Pages/Setting/Sub/Sub/Friend-Blocked_Man
 import Service from './Services/Service.js';
 import ForgotPassword from './Services/Sub/ForgotPassword.js';
 import ChangePassword from './Services/Sub/ChangePassword.js';
+import VerifyEmail from './Services/Sub/VerifyEmail.js';
 /*-------------------Test -------------*/
 // import ImageUpload from './Test.js';
 /* //////////////////////////////////// */
@@ -58,6 +59,7 @@ function App() {
             <Route path="Services/*" element={<Service />}>
               <Route path="ChangePassword" element={<ChangePassword />} />
               <Route path="ForgotPassword" element={<ForgotPassword />} />
+              <Route path="VerifyEmail" element={<VerifyEmail />} />
 
             </Route>
 

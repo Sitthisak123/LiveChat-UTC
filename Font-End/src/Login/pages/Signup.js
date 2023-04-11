@@ -43,7 +43,7 @@ const Signup = () => {
       Navigate('/Auth');
     }).catch(error => {
       setResOnload(false);
-      alert(error.response.data);
+      alert(error.response.data.text);
     });
   }
 
@@ -91,7 +91,7 @@ const Signup = () => {
                 }}
                 unmountOnExit
               >
-                <CircularProgress color='secondary' size={20}/>
+                <CircularProgress color='secondary' size={20} />
               </Fade>
             </button>
 

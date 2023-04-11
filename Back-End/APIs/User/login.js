@@ -45,7 +45,7 @@ router.post("/login", async (req, res) => {
             findUser.user_TOKEN = Token;
             res.status(200).send(findUser);
         } else {
-            res.status(409).send("User not found.");
+            res.status(409).send("password incorrect.");
         }
     } catch (err) {
         console.log(err); 
