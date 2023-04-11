@@ -1,16 +1,27 @@
 // eslint-disable-next-line no-unused-vars
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 // eslint-disable-next-line no-unused-vars
 import { gapi } from 'gapi-script';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { API_Register } from '../../_APIs/user';
+import Fade from '@mui/material/Fade';
+import CircularProgress from '@mui/material/CircularProgress';
+
 const Signup = () => {
   const [useFormdata, setFormdata] = useState({});
-
+  const Navigate = useNavigate();
+  const Submit_btn = useRef();
+  const [resOnload, setResOnload] = useState(false);
 
   function handleChange(event) {
     if (event.target.type === 'checkbox') {
+      // if(event.target.value){
+      //   Submit_btn.current.disabled = true
+      // }else{
+      //   Submit_btn.current.disabled = false
+
+      // }
       return setFormdata({
         ...useFormdata,
         [event.target.name]: event.target.checked
@@ -24,10 +35,15 @@ const Signup = () => {
 
   function onSubmit(event) {
     event.preventDefault();
-    API_Register.post('', { ...useFormdata }).then(response => {
-      alert(response.data);
+    setResOnload(true)
+    API_Register().post('', { ...useFormdata }).then(response => {
+      setResOnload(false);
+      console.log(response)
+      localStorage.setItem("TOKEN", JSON.stringify({ user_TOKEN: response.data.TOKEN }));
+      Navigate('/Auth');
     }).catch(error => {
-      console.log(error.response.data);
+      setResOnload(false);
+      alert(error.response.data);
     });
   }
 
@@ -49,7 +65,7 @@ const Signup = () => {
 
       <div className="formField">
         <label className="formFieldLabel" htmlFor="Confirm Password">Confirm Password</label>
-        <input type="Password" id="Confirm Password" className="formFieldInput" placeholder="Confirm Password" onChange={handleChange} />
+        <input type="Password" id="ConfirmPassword" className="formFieldInput" placeholder="Confirm Password" onChange={handleChange} />
       </div>
 
       <div className="formField">
@@ -63,7 +79,23 @@ const Signup = () => {
       </div>
 
       <div className="formField google-login">
-        <button className="formFieldButton" onClick={onSubmit}>Sign Up</button>
+        {
+          !resOnload ?
+            <button className="formFieldButton" ref={Submit_btn} onClick={onSubmit}>Sign Up</button>
+            :
+            <button className="formFieldButton" disabled={true} ref={Submit_btn} >
+              <Fade
+                in={true}
+                style={{
+                  transitionDelay: '0ms'
+                }}
+                unmountOnExit
+              >
+                <CircularProgress color='secondary' size={20}/>
+              </Fade>
+            </button>
+
+        }
         <label className="email_or_google">or</label>
         <GoogleLogin className='Google-button' buttonText='Sign Up with Google' />
       </div>

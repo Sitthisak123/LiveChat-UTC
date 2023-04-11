@@ -24,6 +24,9 @@ import Friend from './Chat/Pages/Setting/Sub/Friends.js';
 import Language from './Chat/Pages/Setting/Sub/Language.js';
 import Theme from './Chat/Pages/Setting/Sub/Theme.js';
 import FriendBlockedManage from './Chat/Pages/Setting/Sub/Sub/Friend-Blocked_Manage.js';
+import Service from './Services/Service.js';
+import ForgotPassword from './Services/Sub/ForgotPassword.js';
+import ChangePassword from './Services/Sub/ChangePassword.js';
 /*-------------------Test -------------*/
 // import ImageUpload from './Test.js';
 /* //////////////////////////////////// */
@@ -52,6 +55,11 @@ function App() {
           <Routes>
 
             <Route path="Auth/*" element={<Auth />} />
+            <Route path="Services/*" element={<Service />}>
+              <Route path="ChangePassword" element={<ChangePassword />} />
+              <Route path="ForgotPassword" element={<ForgotPassword />} />
+
+            </Route>
 
             <Route path="Home/*" element={<Chatcontent />}>
               <Route path="Test/*" element={<FriendBlockedManage />} />
@@ -71,11 +79,11 @@ function App() {
                 <Route path="Friends" element={<Friend />} />
                 <Route path="Language" element={<Language />} />
                 <Route path="Theme" element={<Theme />} />
-                
+
                 <Route path="Blocked-Manage" element={<FriendBlockedManage />} />
 
               </Route>
-              <Route path="*" element={<Redirect value={"test"} />} />
+              <Route path="*" element={<Redirect value={"Profile"} />} />
             </Route>
 
             <Route path="Login/*" element={<Login />} >

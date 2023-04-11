@@ -7,8 +7,11 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CREATE_USER } from '../../_stores/Slices/user.js';
 import { API_Login } from '../../_APIs/user.js';
-const Signin = () => {
+import Fade from '@mui/material/Fade';
+import CircularProgress from '@mui/material/CircularProgress';
 
+const Signin = () => {
+  const [loginOnload, setLoginOnload] = useState(false);
   const Navigate = useNavigate();
   const [useFormdata, setFormdata] = useState();
 
@@ -23,16 +26,20 @@ const Signin = () => {
     })
   }
   async function onSubmit(event) {
+    setLoginOnload(true)
     event.preventDefault();
     try {
       const response = await API_Login.post('',{ ...useFormdata });
+      setLoginOnload(false)
       dispatch(CREATE_USER(response.data));
       console.log(response.data)
       localStorage.setItem("TOKEN", JSON.stringify({user_TOKEN: response.data.user_TOKEN}));
       Navigate('/Auth');
     } catch (error) {
+      setLoginOnload(false)
       if (error.response) {
         console.log(error.response.data);
+        alert(error.response.data)
       } else {
         console.log(error);
       }
@@ -55,10 +62,29 @@ const Signin = () => {
       <div className="formField">
         <label className="formFieldLabel" htmlFor="Password">Password</label>
         <input type="Password" id="Password" className="formFieldInput" placeholder="Password" onChange={handleChange} />
+      
+        <br/><br/><label className="formFieldCheckboxLabel">
+          <a href="../Services/ChangePassword" className="formFieldTermsLink" >forgot your password? </a>
+        </label>
       </div>
 
       <div className="formField google-login">
-        <button className="formFieldButton" onClick={onSubmit}>Sign In</button>
+        {
+          !loginOnload?
+          <button className="formFieldButton" onClick={onSubmit}>Sign In</button>
+          :
+          <button className="formFieldButton">
+            <Fade
+                in={true}
+                style={{
+                  transitionDelay: '0ms'
+                }}
+                unmountOnExit
+              >
+                <CircularProgress color='secondary' size={20}/>
+              </Fade>
+          </button>
+        }
         <label className="email_or_google">or</label>
         <GoogleLogin className='Google-button' />
       </div>

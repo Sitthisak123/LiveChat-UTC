@@ -24,7 +24,7 @@ const API_getImage = require('./APIs/User/getImage.js');
 const API_update = require('./APIs/User/userChangeStatus.js');
 const API_getData = require('./APIs/User/getData.js');
 const API_Chats = require('./APIs/User/chats.js');
-
+const API_service = require('./APIs/User/services.js');
 // socketEvents(io);
 
 app.use(cors());
@@ -37,6 +37,7 @@ app.use(APIs_Endpoint_user, API_getImage);
 app.use(APIs_Endpoint_user, API_update);
 app.use(APIs_Endpoint_user, API_getData);
 app.use(APIs_Endpoint_user, API_Chats);
+app.use(APIs_Endpoint_user, API_service);
 
 
 // app.post("/API/token/test", verify_TOKEN, (req, res) => {

@@ -75,6 +75,7 @@
   color: #616e7f;
 }
 .formFieldButton {
+  /* max-height: 2rem; */
   background-color: #6b5b95;
   color: white;
   border: none;

@@ -19,3 +19,14 @@ export const API_RequestFriend = (TOKEN) => {
     headers: { 'access-token-key': TOKEN }
   });
 };
+export const API_ForgotPassword = () => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/Services/ForgotPassword`,
+  });
+};
+
+export const API_ChangePassword = () => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/Services/ChangePassword`,
+  });
+};
