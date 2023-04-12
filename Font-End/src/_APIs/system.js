@@ -30,3 +30,15 @@ export const API_ChangePassword = () => {
     baseURL: `http://${host_adr}:9001/API/user/Services/ChangePassword`,
   });
 };
+
+export const API_verifyCode_reSend = () => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/Services/register-resend-verifyCode`,
+  });
+};
+
+export const API_verifyEmail = () => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/Services/register-verify`,
+  });
+};

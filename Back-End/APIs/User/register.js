@@ -5,6 +5,7 @@ const prisma = new PrismaClient()
 const jwt = require('jsonwebtoken');
 const redis = require("redis");
 const redisClient = redis.createClient();
+const nodemailer = require("nodemailer");
 
 router.post("/register", async (req, res) => {
     try {
@@ -25,7 +26,7 @@ router.post("/register", async (req, res) => {
                 ]
             }
         });
-        
+
         if (existingUser) {
             return res.status(409).send({ text: "User already exist." })
 
@@ -66,7 +67,7 @@ router.post("/register", async (req, res) => {
                                     const verifyCode = Math.floor(Math.random() * 90000000) + 10000000;
                                     redisClient.setex(
                                         `VerifyCode:${Email}`,
-                                        125, // 2 minutes (in seconds free 5 sec)
+                                        process.env.VERIFY_CODE_EXP,
                                         verifyCode,
                                         (err, reply) => {
                                             if (err) {
@@ -75,7 +76,7 @@ router.post("/register", async (req, res) => {
                                                 console.log(`Verify code saved to Redis`);
                                                 ////// Mailer Here \\\\\\\
                                             }
-                                            return res.status(200).send({ text: "Create Account Success!" })
+                                            return res.status(200).send({ text: "Create Account Success!", Email })
                                         }
                                     )
                                 }
@@ -116,18 +117,86 @@ router.post("/register", async (req, res) => {
     }
 });
 
-router.post("/register-verify", async (req, res) => {
+router.post("/Services/register-verify", async (req, res) => {
     try {
-        const { VerifyCode, Email } = req.body;
+        const { verifyCode, Email } = req.body;
         console.log(req.body);
+
+        redisClient.sismember("emails", Email, async (err, reply) => {
+            if (err) {
+                console.error(err);
+            } else if (reply) {
+                redisClient.get(`VerifyCode:${Email}`, async (err, storedVerifyCode) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send({ text: "Internal Server Error" });
+                    }
+                    if (storedVerifyCode !== verifyCode) {
+                        console.error("Incorrect verify code");
+                        return res.status(400).send({ text: "Incorrect verify code" });
+                    }
+                    console.log("Verify code match");
+
+                    // Get user data from Redis
+                    redisClient.hgetall(`user:${Email}`, async (err, userData) => {
+                        if (err) {
+                            console.error(err);
+                            return res.status(500).send({ text: "Internal Server Error" });
+                        } else {
+                            const newUser = await prisma.user.create({
+                                data: {
+                                    user_username: userData.user_username,
+                                    user_email: userData.user_email,
+                                    user_password: userData.user_password,
+                                    user_phone: userData.user_username,
+                                    user_name: 'Undefined',
+                                },
+                                select: {
+                                    user_id: true
+                                }
+                            });
+                            console.log(newUser);
+
+                            const Token = jwt.sign(
+                                { user_id: newUser.user_id, Email },
+                                process.env.PRIVATE_TOKEN_KEY,
+                                { expiresIn: "5h" }
+                            );
+                            newUser.User_TOKEN = Token;
+                            console.log(`Inserted ${newUser.user_id} row(s) | use: ${newUser.user_username}`);
+                            res.status(201).send({ text: "Register Success!!", TOKEN: Token });
+
+                            // Delete user data from Redis
+                            redisClient.del(`user: ${Email}`, (err, reply) => {
+                                if (err) {
+                                    console.error(err);
+                                } else {
+                                    console.log(`User data deleted from Redis for email: ${Email}`);
+                                }
+                            });
+                        }
+
+                    });
+
+                });
+
+            } else {
+                console.log("Your E-mail Has Verified or Deleted. please Sign Up again");
+                return res.status(403).send({ text: "Your E-mail Has Verified or Deleted. please Sign Up again" });
+            }
+
+        });
+
+
 
     }
     catch (err) {
-
+        console.error(err);
+        return res.status(500).send({ text: "Internal Server Error" });
     }
 });
 
-router.post("/register-resend-verifyCode", async (req, res) => {
+router.post("/Services/register-resend-verifyCode", async (req, res) => {
     try {
         const { Email } = req.body;
         console.log(req.body);
@@ -138,13 +207,13 @@ router.post("/register-resend-verifyCode", async (req, res) => {
                 // Handle the error
             } else if (reply === 1) {
                 const verifyCode = Math.floor(Math.random() * 90000000) + 10000000;
-                redisClient.setex(`VerifyCode:${Email}`, 125, verifyCode, (err, reply) => {
+                redisClient.setex(`VerifyCode:${Email}`, process.env.VERIFY_CODE_EXP, verifyCode, (err, reply) => {
                     if (err) {
                         console.error(err);
                         return res.status(500).send({ error: "Internal Server Error" });
                     } else {
                         console.log(`Verify code updated to Redis`);
-                        ////// Mailer Here \\\\\\\
+                        resend_verifyCod_MailerTo(Email,verifyCode)
                         return res.status(200).send({ text: "Verify Code Updated!" });
                     }
                 });
@@ -158,10 +227,30 @@ router.post("/register-resend-verifyCode", async (req, res) => {
 
     }
     catch (err) {
-
+        console.log(err);
     }
 });
 module.exports = router;
 
 
+async function resend_verifyCod_MailerTo(Email,VerifyCode) {
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.NODE_MAILER_EMAIL, // generated ethereal user
+            pass: process.env.NODE_MAILER_PASS, // generated ethereal password
+        },
+    });
 
+    let info = await transporter.sendMail({
+        from: '"LiveChat-UTC" <Test@example.com>', // sender address
+        to: Email, // list of receivers
+        subject: "verification Code for verify your Email", // Subject line
+        text: "Hello world? Test test", // plain text body
+        html: `Your Verification Code is: <b>${VerifyCode}</b>`, // html body
+    });
+
+    console.log("Message sent: %s", info.messageId);
+
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+}

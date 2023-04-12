@@ -55,8 +55,8 @@ async function MailerTo(Email, TOKEN) {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: "64301282028@utc.ac.th", // generated ethereal user
-            pass: '1330301278046', // generated ethereal password
+            user: process.env.NODE_MAILER_EMAIL, // generated ethereal user
+            pass: process.env.NODE_MAILER_PASS, // generated ethereal password
         },
     });
 

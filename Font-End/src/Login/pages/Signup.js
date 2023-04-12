@@ -39,8 +39,8 @@ const Signup = () => {
     API_Register().post('', { ...useFormdata }).then(response => {
       setResOnload(false);
       console.log(response)
-      localStorage.setItem("TOKEN", JSON.stringify({ user_TOKEN: response.data.TOKEN }));
-      Navigate('/Auth');
+      // localStorage.setItem("TOKEN", JSON.stringify({ user_TOKEN: response.data.TOKEN }));
+      Navigate(`/Services/VerifyEmail?Email=${response.data.Email}`);
     }).catch(error => {
       setResOnload(false);
       alert(error.response.data.text);
