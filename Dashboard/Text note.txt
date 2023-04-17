@@ -1,0 +1,6 @@
+-Pages
+    -Auth
+    -Login
+    -Main
+        -Dashboard
+        -User Manage

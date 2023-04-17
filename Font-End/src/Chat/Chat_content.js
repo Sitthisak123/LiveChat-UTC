@@ -78,8 +78,6 @@ const Chat_content = () => {
               </div>
             </ChatContentSection>
         }
-
-
       </ Home>
     </ChatContext.Provider>
   )
