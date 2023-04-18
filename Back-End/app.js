@@ -30,6 +30,7 @@ const API_service = require('./APIs/User/services.js');
 // Admin APIs
 const admin_API_login = require('./APIs/Admin/login.js');
 const admin_API_init = require('./APIs/Admin/Init.js');
+const admin_API_getData = require('./APIs/Admin/GetData.js');
 
 
 
@@ -48,6 +49,7 @@ app.use(APIs_Endpoint_user, API_service);
 const APIs_Endpoint_admin = '/API/admin';
 app.use(APIs_Endpoint_admin, admin_API_login);
 app.use(APIs_Endpoint_admin, admin_API_init);
+app.use(APIs_Endpoint_admin, admin_API_getData);
 
 
 // app.post("/API/token/test", verify_TOKEN, (req, res) => {
