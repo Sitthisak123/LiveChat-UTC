@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 export const AppLayOutStyled = styled.div`
     /* background-color: #abbcbc;   // test */
     min-height: 100vh;
@@ -15,8 +14,14 @@ export const SideBarStyled = styled.div`
 export const MainStyled = styled.div`
     background-color: #46a541;   // test
     width: 100%;
+    /* height: 100%; */
+`;
+export const MainContentStyled = styled.div`
+    width: 100%;
+
 `;
 export const OptionBarStyled = styled.div`
     background-color: #30b3b6;   // test
     min-height: 3.5rem;
+    max-height: 3.5rem;
 `;

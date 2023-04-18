@@ -65,24 +65,6 @@ const Sidebar = () => {
                     </SSidebarButton>
                 </>
 
-                {/* <SLogo>
-                    <img src={logoSVG} alt="logo" />
-                </SLogo>
-                <SSearch
-                    onClick={searchClickHandler}
-                    style={!sidebarOpen ? { width: `fit-content` } : {}}
-                >
-                    <SSearchIcon>
-                        <SearchOutlinedIcon />
-                    </SSearchIcon>
-                    <input
-                        ref={searchRef}
-                        placeholder="Search"
-                        style={!sidebarOpen ? { width: 0, padding: 0 } : {}}
-                    />
-                </SSearch>
-                <SDivider /> */}
-
                 {linksArray.map(({ icon, label, notification, to }) => {
                     const basePathname = '/' + pathname.split("/").filter(Boolean).slice(0, 2).join("/");
                     return (

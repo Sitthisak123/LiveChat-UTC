@@ -18,7 +18,6 @@ const Auth = () => {
     const dispatch = useDispatch();
     const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg, Friends_relation } = useSelector((state) => ({ ...state }));
     const Navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('TOKEN'));
 
     useEffect(() => {
             if (!localStorage.getItem("TOKEN") || User_data.value.length < 1) {

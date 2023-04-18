@@ -18,3 +18,10 @@
         -MYSQL
         -Redis (Caching Database)
         -Prisma (ORM)
+
+
+3.2.5 online-chat\Back-End\prisma\schema.prisma
+3.2.6 ??? ไม้มี
+3.2.7 C:\Project\online-chat\Font-End\src\Login
+3.2.8 C:\Project\online-chat\Font-End\src\Login
+3.2.9 C:\Project\online-chat\Font-End\src\Home

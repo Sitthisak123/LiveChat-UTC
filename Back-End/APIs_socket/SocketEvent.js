@@ -19,33 +19,48 @@ module.exports = (io) => {
   });
 
   io.on('connection', (socket) => {
-    const user_id = socket.user.user_id;
-    const socket_id = socket.id;
-    console.log(`\n------------------------------\nA user connected ID: ${user_id} ${socket_id}\n------------------------------`);
-    client.sadd("online_users", user_id)
-    client.hincrby("user_connections", user_id, 1);
-    socket.join(user_id);
+    const user = socket.user;
+    if (user.admin_id) {
+      console.log('.....................admin')
 
-    socket.on('test', (data) => {
-      console.log('on test>>>>>>>>>>>>>>')
-      io.to(user_id).emit('test', 'data123');
-    })
+      const { admin_id } = user;
+      client.sadd("online_admin", admin_id)
+      client.hincrby("admin_connections", admin_id, 1);
+      socket.join('admin');
 
+      socket.on('disconnect', () => {
+        console.log('A admin disconnected');
+        client.srem("online_admin", admin_id)
+        client.hincrby("admin_connections", admin_id, -1);
+        const countSessions = client.hget("admin_connections", admin_id);
+        if (!countSessions) {
+          client.hdel("admin_connections", admin_id);
+        }
+      });
 
-    socket.on('disconnect', () => {
-      console.log('A user disconnected');
-      client.srem("online_users", user_id)
-      client.hincrby("user_connections", user_id, -1);
-      const countSessions = client.hget("user_connections", user_id);
-      if (!countSessions) {
-        client.hdel("user_connections", user_id);
-      }
+    } else if (user.user_id) {
+      console.log('.....................user')
+      const { user_id } = user;
+      client.sadd("online_users", user_id)
+      client.hincrby("user_connections", user_id, 1);
+      socket.join(user_id);
+
+      socket.on('disconnect', () => {
+        console.log('A user disconnected');
+        client.srem("online_users", user_id)
+        client.hincrby("user_connections", user_id, -1);
+        const countSessions = client.hget("user_connections", user_id);
+        if (!countSessions) {
+          client.hdel("user_connections", user_id);
+        }
+        showOnline(io);
+      });
+
+      socket_massage(io, socket, user_id);
+      socket_status(io, socket, user_id);
       showOnline(io);
-    });
+    }
 
-    socket_massage(io, socket, user_id);
-    socket_status(io, socket, user_id);
-    showOnline(io);
   });
 }
 
@@ -55,7 +70,7 @@ function showOnline(io) {
       console.error(err);
     } else {
       console.log(`Number of online users: ${count}`);
-      io.emit('Update-onlineUser', count);
+      io.to('admin').emit('Update-onlineUser', count);
     }
   });
 

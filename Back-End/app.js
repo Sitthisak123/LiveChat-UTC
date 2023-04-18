@@ -25,7 +25,13 @@ const API_update = require('./APIs/User/userChangeStatus.js');
 const API_getData = require('./APIs/User/getData.js');
 const API_Chats = require('./APIs/User/chats.js');
 const API_service = require('./APIs/User/services.js');
-// socketEvents(io);
+
+
+// Admin APIs
+const admin_API_login = require('./APIs/Admin/login.js');
+const admin_API_init = require('./APIs/Admin/Init.js');
+
+
 
 app.use(cors());
 app.use(express.json());
@@ -38,6 +44,10 @@ app.use(APIs_Endpoint_user, API_update);
 app.use(APIs_Endpoint_user, API_getData);
 app.use(APIs_Endpoint_user, API_Chats);
 app.use(APIs_Endpoint_user, API_service);
+
+const APIs_Endpoint_admin = '/API/admin';
+app.use(APIs_Endpoint_admin, admin_API_login);
+app.use(APIs_Endpoint_admin, admin_API_init);
 
 
 // app.post("/API/token/test", verify_TOKEN, (req, res) => {

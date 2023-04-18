@@ -15,7 +15,6 @@ const Signin = () => {
   const Navigate = useNavigate();
   const [useFormdata, setFormdata] = useState();
 
-  const user1 = useSelector((state) => state.value)
   const dispatch = useDispatch()
 
   // const { useAppData, setAppData } = useContext(AppDataContext);

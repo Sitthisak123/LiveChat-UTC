@@ -1,54 +1,76 @@
 import { createContext, useEffect, useState } from "react";
 
-import { MainStyled, OptionBarStyled, SideBarStyled, AppLayOutStyled } from "./main-styled";
+import {
+  MainStyled,
+  OptionBarStyled,
+  SideBarStyled,
+  AppLayOutStyled,
+  MainContentStyled,
+} from "./main-styled";
 import OptionBar from "./optionBar/optionBar";
 import SideBar from "./sideBar/sideBar";
 import io from 'socket.io-client';
-
+import { useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
+import IconBreadcrumbs from "./sideBar/Componenta/BreadCrumb";
 const ENDPOINT = 'http://localhost:9001';
 
 const Main = () => {
-    const [socket, setSocket] = useState(null);
-    const [onlineUser, setOnlineUser] = useState(0);
-    useEffect(() => {
-        const newSocket = io(ENDPOINT, {
-          // pass the token in the headers field
-          extraHeaders: {
-            'access-token-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX2VtYWlsIjoiamFtZXMyNTEyNTMzNzAxN0BnbWFpbC5jb20iLCJpYXQiOjE2ODE3OTYzOTEsImV4cCI6MTY4MTgzMjM5MX0.QuqJh7AQXyPn38kxvyGAIDDkv-IeHjS4CWiHXvZ0lbw',
-          }
-        });
-        // Assuming you have access to the user_id value on the client-side
-        setSocket(newSocket);
-        return () => newSocket.close();
-      }, []);
-    
-      useEffect(() => {
-        if (!socket) return;
+  const [socket, setSocket] = useState(null);
+  const [onlineUser, setOnlineUser] = useState(0);
+  const Navigate = useNavigate();
+  const { admin_Store } = useSelector((state) => ({ ...state }));
 
-        socket.on('Update-onlineUser', (data) => {
-            console.log(data);
-            setOnlineUser(data)
-          });
-    
-        return () => socket.off('send');
-      }, [socket]);
+  useEffect(() => {
+    const TOKEN = JSON.parse(localStorage.getItem('TOKEN'));
+    if (!TOKEN || admin_Store.admin_data.length < 1) {
+      Navigate("/Login");
+    }
+  },[])
 
-    return (
-        <AppLayOutStyled>
-            <SideBarStyled>
+  useEffect(() => {
+    const newSocket = io(ENDPOINT, {
+      // pass the token in the headers field
+      extraHeaders: {
+        'access-token-key': admin_Store.admin_data.admin_TOKEN,
+      }
+    });
+    // Assuming you have access to the user_id value on the client-side
+    setSocket(newSocket);
+    return () => newSocket.close();
+  }, []);
 
-                <SideBar />
-            </SideBarStyled>
+  useEffect(() => {
+    if (!socket) return;
 
-            <MainStyled>
-                <OptionBarStyled>
-                    <OptionBar />
-                </OptionBarStyled>
-                <h1>Online: {onlineUser}</h1>
-            </MainStyled>
+    socket.on('Update-onlineUser', (data) => {
+      console.log(data);
+      setOnlineUser(data)
+    });
 
-        </AppLayOutStyled>
-    )
+    return () => socket.off('send');
+  }, [socket]);
+
+  return (
+    <AppLayOutStyled>
+      <SideBarStyled>
+        <SideBar />
+      </SideBarStyled>
+
+      <MainStyled>
+        <OptionBarStyled>
+          <OptionBar />
+        </OptionBarStyled>
+        
+        <IconBreadcrumbs />
+
+        <MainContentStyled>
+          <Outlet />
+        </MainContentStyled>
+      </MainStyled>
+
+    </AppLayOutStyled>
+  )
 }
 
 export default Main;

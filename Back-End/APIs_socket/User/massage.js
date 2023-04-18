@@ -44,12 +44,12 @@ module.exports = (io, socket, user_id) => {
     client.sismember("online_users", friend_id, (err, isOnline) => {
       if (err) throw err;
       if (isOnline) {
-        console.log("User is online");
+        // console.log("User is online");
         io.to(user_id).emit('message', { newMessage, newChat });
         io.to(friend_id).emit('message', { newMessage, newChat });
       }
       else {
-        console.log("User is not online" );
+        // console.log("User is not online" );
         io.to(user_id).emit('message', { newMessage, newChat });
       }
     });

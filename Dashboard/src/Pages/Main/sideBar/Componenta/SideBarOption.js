@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -11,6 +10,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 
+import { LinkStyled } from '../sideBar-styled';
 const SideBarOption = (props, { children }) => {
   const { Text, Icon, Items } = props;
   const [open, setOpen] = useState(false);
@@ -36,18 +36,19 @@ const SideBarOption = (props, { children }) => {
 
           {
             Items.map((item) => {
-              const {IconItem , text , to} = item;
+              const { IconItem, text, to } = item;
               return (
-                <ListItemButton sx={{ pl: 4 }}>
-                  <ListItemIcon>
-                    <IconItem />
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
+                <LinkStyled to={to}>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemIcon>
+                      <IconItem sx={{ color: 'white' }} />
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                </LinkStyled>
               )
             })
           }
-
 
         </List>
       </Collapse>

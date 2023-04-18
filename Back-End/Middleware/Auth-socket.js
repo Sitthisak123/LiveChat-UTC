@@ -14,7 +14,9 @@ function verify_socket_TOKEN(req, res, next) {
     try {
         const decoded = jwt.verify(PUBLIC_TOKEN_KEY, PRIVATE_TOKEN_KEY);
         req.user = decoded;
+        console.log(PUBLIC_TOKEN_KEY)
     } catch (err) {
+        console.log('Fail')
         data = {text: "Invalid Token!", route: '/login'};
         return
     }

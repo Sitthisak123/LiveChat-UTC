@@ -56,7 +56,7 @@ model user {
   user_username                                               String                 @unique(map: "user_username") @db.VarChar(60)
   user_password                                               String                 @db.VarChar(256)
   user_email                                                  String                 @unique(map: "user_email") @db.VarChar(256)
-  user_phone                                                  String                 @unique(map: "user_phone") @db.VarChar(12)
+  user_phone                                                  String?                @unique(map: "user_phone") @db.VarChar(12)
   user_name                                                   String                 @db.TinyText
   user_profile_img                                            String                 @default("user_default.png") @db.VarChar(256)
   user_cover_img                                              String                 @default("user_default.png") @db.VarChar(256)
@@ -75,3 +75,21 @@ enum MessageType {
   PDF
   FILE
 }
+
+model admin {
+  admin_id                                                     Int                    @id @default(autoincrement())
+  admin_username                                               String                 @unique(map: "admin_username") @db.VarChar(60)
+  admin_password                                               String                 @db.VarChar(256)
+  admin_email                                                  String                 @unique(map: "admin_email") @db.VarChar(256)
+  admin_phone                                                  String?                @unique(map: "admin_phone") @db.VarChar(12)
+  admin_name                                                   String                 @db.TinyText
+  admin_profile_img                                            String                 @default("user_default.png") @db.VarChar(256)
+  admin_cover_img                                              String                 @default("user_default.png") @db.VarChar(256)
+  admin_role                                                   Role                   @default(CUSTOMER_SERVICE)                   
+}
+
+enum Role {
+  CUSTOMER_SERVICE
+  ADMIN
+  GENERAL_MANAGER
+}                
