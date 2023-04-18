@@ -10,7 +10,7 @@ import { darkTheme, lightTheme } from "./styles/theme";
 ///// Component \\\\\\
 import Redirect from './_methods/Redirect.js';
 import Main from './Pages/Main/main.js';
-
+import Login from './Pages/Main/Login/login';
 
 export const ThemeContext = createContext();
 
@@ -32,9 +32,9 @@ function App() {
           </Helmet>
           <Routes>
             <Route path="Auth/*" element={<h1>Auth</h1>} />
-            <Route path="Login/*" element={<h1>Login</h1>} />
+            <Route path="Login/*" element={<Login />} />
             <Route path="Main/*" element={<Main />} />
-            <Route path="*" element={<Redirect value={"Auth"} />} />
+            <Route path="*" element={<Redirect value={"Login"} />} />
           </Routes>
         </ThemeProvider>
       </ThemeContext.Provider>

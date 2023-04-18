@@ -40,21 +40,22 @@ module.exports = (io) => {
       if (!countSessions) {
         client.hdel("user_connections", user_id);
       }
-      showOnline();
+      showOnline(io);
     });
 
     socket_massage(io, socket, user_id);
     socket_status(io, socket, user_id);
-    showOnline();
+    showOnline(io);
   });
 }
 
-function showOnline() {
+function showOnline(io) {
   client.scard("online_users", (err, count) => {
     if (err) {
       console.error(err);
     } else {
       console.log(`Number of online users: ${count}`);
+      io.emit('Update-onlineUser', count);
     }
   });
 
