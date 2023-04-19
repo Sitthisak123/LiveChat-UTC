@@ -46,7 +46,7 @@ function App() {
               <Route path="DataTable" element={<UserDataTable />} />
 
             </Route>
-            {/* <Route path="*" element={<Redirect value={"Login"} />} /> */}
+            <Route path="*" element={<Redirect value={"Login"} />} />
           </Routes>
         </ThemeProvider>
       </ThemeContext.Provider>

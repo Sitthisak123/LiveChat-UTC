@@ -24,7 +24,7 @@ const Auth = () => {
                     const data = error.response.data;
                     alert(data.text)
                     console.log(data);
-                    // localStorage.removeItem('TOKEN');
+                    localStorage.removeItem('TOKEN');
                     if (data.route) {
                         Navigate(data.route);
                     }

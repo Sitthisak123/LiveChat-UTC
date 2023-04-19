@@ -12,13 +12,12 @@ export const SideBarStyled = styled.div`
     color: white; //test
 `;
 export const MainStyled = styled.div`
-    background-color: #46a541;   // test
+    background-color: transparent;   // test
     width: 100%;
     /* height: 100%; */
 `;
 export const MainContentStyled = styled.div`
     width: 100%;
-
 `;
 export const OptionBarStyled = styled.div`
     background-color: #30b3b6;   // test
