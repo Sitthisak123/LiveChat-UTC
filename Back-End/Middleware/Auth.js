@@ -6,7 +6,8 @@ const PRIVATE_TOKEN_KEY = process.env.PRIVATE_TOKEN_KEY;
 function verify_TOKEN(req, res, next) {
     const PUBLIC_TOKEN_KEY = req.headers['access-token-key'] || req.body.token;
     if (!PUBLIC_TOKEN_KEY){
-        data = {text: "a token is require for Authentication!", route: '/login'};
+        data = {text: "api a token is require for Authentication!", route: '/login'};
+        console.log(data);
         return res.status(403).send({...data});
     }
     try {

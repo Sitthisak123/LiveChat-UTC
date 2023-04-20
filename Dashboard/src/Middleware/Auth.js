@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { API_Init } from '../_APIs/admin';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useState } from 'react';
-import { UPDATE_ADMIN } from '../_stores/Slices/admin';
+import { UPDATE_ADMIN, CREATE_ADMIN } from '../_stores/Slices/admin';
 import Backdrop from '@mui/material/Backdrop';
 
 const Auth = () => {
@@ -13,7 +13,14 @@ const Auth = () => {
     const Navigate = useNavigate();
 
     useEffect(() => {
-            if (!localStorage.getItem("TOKEN") || admin_Store.admin_data.length < 1) {
+            const TOKEN = JSON.parse(localStorage.getItem('TOKEN'));
+            if (TOKEN) {
+                dispatch(CREATE_ADMIN(TOKEN));
+
+            }
+            console.log('.............>>>');
+            console.log(admin_Store);
+            if (!localStorage.getItem("TOKEN")) {
                 Navigate("/Login");
             } else {
                 API_Init(admin_Store.admin_data.admin_TOKEN).post('', { /* request body */ }, { /* headers */ }).then(response => {

@@ -36,8 +36,8 @@ const useErrorHandling = () => {
       const text = JSON.parse(decoder.decode(buffer));
       console.log(text);
       if (text.route) {
-        // alert(`route(${text.route})`);
-        // Navigate(text.route);
+        alert(`route(${text.route})`);
+        Navigate(text.route);
       }
     }
 

@@ -1,0 +1,52 @@
+.add-btn-frame{
+    border: 1px solid blue;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: .5rem 1rem;
+    gap: 1rem;
+}
+.add-frame-field-namez{
+    padding: .6rem;
+    width: 15%;
+    font-size: 1.3rem;
+    font-weight: 600;
+    
+
+    border: 1px solid blue;
+
+}
+.add-frame-data{
+    display: flex;
+    width: 80%;
+    justify-content: space-around;
+    align-items: center;
+
+
+    border: 1px solid blue;
+}
+.add-frame-data > input{
+    width: 45%;
+    padding: .5rem;
+    text-align: center;
+    outline: none;
+    background-color: transparent;
+    border: none;
+}
+.add-frame-data > .previous-data{
+    width: 45%;
+    padding: .5rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.add-frame-action{
+    display: flex;
+    align-items: center;
+    padding: .5rem;
+
+    border: 1px solid blue;
+}
+.add-frame-data-icon{
+    font-size: 3rem !important;
+}

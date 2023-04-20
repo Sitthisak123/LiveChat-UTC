@@ -209,11 +209,11 @@ const Profile = () => {
     <div className='User_profile-main'>
       <div className='profile-headers'>
         <div className='profile_BG-img-frame'>
-          <StyledBGImage src={imageUrl.cover} alt='profile.png' className='profile_bg-img' />
+          <StyledBGImage src={imageUrl.cover} alt='cover' className='profile_bg-img' />
           <StyledEditIcon id='Upload-Cover' style={{ right: 5, bottom: 5 }} onClick={handleUploadOpen} />
         </div>
         <div className='profile_img-frame'>
-          <StyledProfileImage src={imageUrl.profile} alt='profile.png' className='profile_img' />
+          <StyledProfileImage src={imageUrl.profile} alt='profile' className='profile_img' />
           <StyledEditIcon id='Upload-Profile' onClick={handleUploadOpen} />
         </div>
         {

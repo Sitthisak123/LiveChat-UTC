@@ -1,0 +1,80 @@
+.modal-Header-Content{
+    height: 40%;
+    padding: .5rem 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.modal-Footer-Content{
+    height: 60%;
+    padding: 1rem .5rem 1rem;
+
+    background-color: grey;
+}
+
+.modal-profile{
+    padding-top: 2rem;
+    width: 18rem;
+    min-width: 18rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+
+    border: .1px solid rgba(0, 0, 0, 0.25);
+
+}
+.modal-profile-name{
+    font-size: 1.8rem;
+    font-weight: 700;
+    padding: 1rem 0;
+}
+.modal-data-info{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: #ffffff;
+
+
+    border: .1px solid rgba(0, 0, 0, 0.25);
+
+}
+
+.modal-data-field{
+    margin: .4rem .25rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: .25rem .5rem;
+
+    border-bottom: .15rem solid rgba(204, 184, 184, 0.734);
+}
+.modal-data-field > .Field-name{
+    width: 50%;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+.modal-data-field > .Field-data{
+    width: 50%;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-align: left;
+}
+.modal-actions-btn{
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    background-color: #ffffff;
+
+
+    border: .1px solid rgba(0, 0, 0, 0.25);
+}
+.ban{
+    background-color: #fb8604 !important;
+}
+.delete{
+    background-color: #ff0000 !important;
+}

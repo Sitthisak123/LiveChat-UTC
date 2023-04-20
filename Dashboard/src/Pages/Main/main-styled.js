@@ -1,6 +1,5 @@
 import styled from "styled-components";
 export const AppLayOutStyled = styled.div`
-    /* background-color: #abbcbc;   // test */
     min-height: 100vh;
     display: flex;
 `;
