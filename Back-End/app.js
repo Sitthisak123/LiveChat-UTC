@@ -31,6 +31,8 @@ const API_service = require('./APIs/User/services.js');
 const admin_API_login = require('./APIs/Admin/login.js');
 const admin_API_init = require('./APIs/Admin/Init.js');
 const admin_API_getData = require('./APIs/Admin/GetData.js');
+const admin_API_checkData = require('./APIs/Admin/checkData.js');
+const admin_API_userManage = require('./APIs/Admin/UserManage.js');
 
 
 
@@ -50,6 +52,8 @@ const APIs_Endpoint_admin = '/API/admin';
 app.use(APIs_Endpoint_admin, admin_API_login);
 app.use(APIs_Endpoint_admin, admin_API_init);
 app.use(APIs_Endpoint_admin, admin_API_getData);
+app.use(APIs_Endpoint_admin, admin_API_checkData);
+app.use(APIs_Endpoint_admin, admin_API_userManage);
 
 
 // app.post("/API/token/test", verify_TOKEN, (req, res) => {

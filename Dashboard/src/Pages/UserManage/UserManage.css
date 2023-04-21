@@ -22,6 +22,7 @@
     background-color: #ffffff;
 
     border: .1px solid rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
 
 }
 .modal-profile-name{
@@ -38,6 +39,7 @@
 
 
     border: .1px solid rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
 
 }
 
@@ -71,10 +73,30 @@
 
 
     border: .1px solid rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+
 }
 .ban{
     background-color: #fb8604 !important;
 }
 .delete{
     background-color: #ff0000 !important;
+}
+.close{
+    background-color: #5fa098 !important;
+    padding: .8rem !important;
+}
+.update{
+    background-color: #0f83e1 !important;
+    padding: .8rem !important;
+
+}
+.footer-field-list{
+    height: 90%;
+}
+.modal-footer-actions{
+    height: 10%;
+    display: flex;
+    justify-content: end;
+
 }

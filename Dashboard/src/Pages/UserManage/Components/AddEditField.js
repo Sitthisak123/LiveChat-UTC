@@ -10,10 +10,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useState } from "react";
 import Button from '@mui/material/Button';
 
-
-const EditField = (props) => {
+const AddEditField = (props) => {
     const { unchoose, choose, availableItems } = props;
     const [dialog, setDialog] = useState(false)
+
 
     return (
         <>
@@ -51,4 +51,4 @@ const EditField = (props) => {
         </>
     )
 }
-export default EditField;
+export default AddEditField;

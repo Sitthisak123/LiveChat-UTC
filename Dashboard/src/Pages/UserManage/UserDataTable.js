@@ -2,7 +2,7 @@ import './UserManage.css';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { API_GetAllUser } from '../../_APIs/system';
+import { API_Delete_User, API_GetAllUser } from '../../_APIs/system';
 import {
     DataGrid,
     gridPageCountSelector,
@@ -216,13 +216,21 @@ const UserDataTable = () => {
     const [EditModal, setEditModal] = useState({ open: false, user: {} });
     const Navigate = useNavigate();
     const { admin_Store } = useSelector((state) => ({ ...state }));
+    const [FieldsData, setFieldData] = useState([]);
 
+    const HandleChangeFieldsData = (item) => {
+        const key = item.keyitem;
+        setFieldData([...FieldsData.filter((item) => item.keyitem !== key), item])
+    }
+    useEffect(() => {
+        console.log(FieldsData);
+    }, [FieldsData])
 
     useEffect(() => {
         API_GetAllUser(admin_Store.admin_data.admin_TOKEN).post('', {},).then((response) => {
             const newData = response.data.AllUserData.map((user, idx) => { return { id: idx, ...user } })
             setUserData([...newData]);
-            console.log(newData);
+            // console.log(newData);
         }).catch((error) => {
             const data = error.response.data;
             console.log(data);
@@ -239,11 +247,24 @@ const UserDataTable = () => {
         pageSize: PAGE_SIZE,
         page: 0,
     });
-    const HandleEdit = (user) => {
+    const handleEdit = (user) => {
         setEditModal({ open: true, user });
     }
-    const HandleDelete = (user_id) => {
-
+    const handleDelete = (user_id) => {
+        alert('handleDelete');
+        API_Delete_User(admin_Store.admin_data.admin_TOKEN).post('', { user_id }).then((response) => {
+            alert(response.data.text)
+        }).catch((error) => {
+            const data = error.response.data;
+            console.log(data);
+        })
+    }
+    const handleCloseModal = () => {
+        setFieldData([])
+        setEditModal({ ...EditModal, open: false });
+    }
+    const handleUpdate = () => {
+        console.log(FieldsData);
     }
     const columns = [
         { field: 'user_id', headerName: 'User ID', width: 80 },
@@ -268,44 +289,45 @@ const UserDataTable = () => {
             renderCell: (params) => {
                 return (
                     <div>
-                        <button onClick={() => HandleEdit(params.row)}>Edit</button>
-                        <button onClick={() => HandleDelete()}>Delete</button>
+                        <button onClick={() => handleEdit(params.row)}>Edit</button>
+                        <button onClick={() => handleDelete(params.row.user_id)}>Delete</button>
                     </div>
                 );
             },
         }
     ];
-    const [availableItems, setAvailableItems] = useState([
-        { keyitem: 1, fieldName: '@ID', previousData: EditModal.user.user_id },
-        { keyitem: 2, fieldName: 'Name', previousData: EditModal.user.user_name },
-        { keyitem: 3, fieldName: 'Password', previousData: EditModal.user.user_password },
-        { keyitem: 4, fieldName: 'Email', previousData: EditModal.user.user_email },
-        { keyitem: 5, fieldName: 'Phone', previousData: EditModal.user.user_phone }
-    ]);
-    const [chosenItems, setChosenItems] = useState([
-        
-    ]);
+
+    const [availableItems, setAvailableItems] = useState([]);
+    const [chosenItems, setChosenItems] = useState([]);
 
     useEffect(() => {
-        setAvailableItems(prevAvailableItems => {
-          return prevAvailableItems.map(item => {
-            switch(item.keyitem) {
-              case 1:
-                return { ...item, previousData: EditModal.user.user_id };
-              case 2:
-                return { ...item, previousData: EditModal.user.user_name };
-              case 3:
-                return { ...item, previousData: EditModal.user.user_password };
-              case 4:
-                return { ...item, previousData: EditModal.user.user_email };
-              case 5:
-                return { ...item, previousData: EditModal.user.user_phone };
-              default:
-                return item;
-            }
-          });
-        });
-      }, [EditModal]);
+        // setAvailableItems(prevAvailableItems => {
+        //   return prevAvailableItems.map(item => {
+        //     switch(item.keyitem) {
+        //       case 1:
+        //         return { ...item, previousData: EditModal.user.user_id };
+        //       case 2:
+        //         return { ...item, previousData: EditModal.user.user_name };
+        //       case 3:
+        //         return { ...item, previousData: EditModal.user.user_password };
+        //       case 4:
+        //         return { ...item, previousData: EditModal.user.user_email };
+        //       case 5:
+        //         return { ...item, previousData: EditModal.user.user_phone };
+        //       default:
+        //         return item;
+        //     }
+        //   });
+        // });
+        setAvailableItems([
+            { keyitem: 1, fieldName: '@ID', previousData: EditModal.user.user_custom_id },
+            { keyitem: 2, fieldName: 'Name', previousData: EditModal.user.user_name },
+            { keyitem: 3, fieldName: 'Password', previousData: EditModal.user.user_password },
+            { keyitem: 4, fieldName: 'Email', previousData: EditModal.user.user_email },
+            { keyitem: 5, fieldName: 'Phone', previousData: EditModal.user.user_phone }
+        ])
+        setChosenItems([])
+    }, [EditModal]);
 
     const chooseItem = (keyitem) => {
         setChosenItems([...chosenItems, availableItems.find((item) => item.keyitem === keyitem)]);
@@ -383,32 +405,38 @@ const UserDataTable = () => {
 
                         <div className='modal-actions-btn'>
                             <StyledBTN className='action-btn ban' onClick={() => alert('Baned')}>Ban</StyledBTN>
-                            <StyledBTN className='action-btn delete' onClick={() => alert('Deleted')}>Delete</StyledBTN>
+                            <StyledBTN className='action-btn delete' onClick={() => handleDelete(EditModal.user.user_id)}>Delete</StyledBTN>
                         </div>
 
 
                     </div>
                     <div className='modal-Footer-Content'>
-                        {
-                            chosenItems.map((item) => {
-                                console.log(item)
-                                return (
-                                <EditField
-                                    keyitem={item.keyitem}
-                                    fieldName={item.fieldName}
-                                    previousData={item.previousData}
-                                    unchoose={unchooseItem}
-                                />
-                                )
-                            })
-                        }
-                        {
-                            availableItems.length ? <AddEditField
-                                choose={chooseItem}
-                                availableItems={availableItems}
-                            /> : ''
+                        <div className='footer-field-list'>
+                            {
+                                chosenItems.map((item) => {
+                                    return (
+                                        <EditField
+                                            keyitem={item.keyitem}
+                                            fieldName={item.fieldName}
+                                            previousData={item.previousData}
+                                            unchoose={unchooseItem}
+                                            HandleChange={HandleChangeFieldsData}
+                                        />
+                                    )
+                                })
+                            }
+                            {
+                                availableItems.length ? <AddEditField
+                                    choose={chooseItem}
+                                    availableItems={availableItems}
+                                /> : ''
 
-                        }
+                            }
+                        </div>
+                        <div className='modal-footer-actions'>
+                            <StyledBTN className='action-btn close' onClick={handleCloseModal}>close</StyledBTN>
+                            <StyledBTN className='action-btn update' onClick={handleUpdate}>Update</StyledBTN>
+                        </div>
                     </div>
                 </StyledModalBox>
             </Modal>

@@ -13,7 +13,7 @@
     font-weight: 600;
     
 
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
 
 }
 .add-frame-data{
@@ -23,7 +23,7 @@
     align-items: center;
 
 
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
 }
 .add-frame-data > input{
     width: 45%;
@@ -32,6 +32,8 @@
     outline: none;
     background-color: transparent;
     border: none;
+
+    border: 1px solid blue;
 }
 .add-frame-data > .previous-data{
     width: 45%;
