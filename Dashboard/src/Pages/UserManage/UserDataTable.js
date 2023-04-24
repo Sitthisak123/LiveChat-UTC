@@ -2,7 +2,7 @@ import './UserManage.css';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { API_Delete_User, API_GetAllUser } from '../../_APIs/system';
+import { API_Delete_User, API_GetAllUser, API_Update_User } from '../../_APIs/system';
 import {
     DataGrid,
     gridPageCountSelector,
@@ -22,7 +22,13 @@ import {
 } from './UserManage-styled';
 import EditField from './Components/EditField';
 import AddEditField from './Components/AddEditField';
-
+import DialogBan from './Components/dialog-Ban';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
 
 function customCheckbox() {
@@ -217,16 +223,21 @@ const UserDataTable = () => {
     const Navigate = useNavigate();
     const { admin_Store } = useSelector((state) => ({ ...state }));
     const [FieldsData, setFieldData] = useState([]);
-
+    const [availableItems, setAvailableItems] = useState([]);
+    const [chosenItems, setChosenItems] = useState([]);
+    const [onFieldFocus, setOnFieldFocus] = useState(false);
+    const [dialogs, setDialogs] = useState({ ban: false })
     const HandleChangeFieldsData = (item) => {
         const key = item.keyitem;
-        setFieldData([...FieldsData.filter((item) => item.keyitem !== key), item])
+        if (chosenItems.find((item) => item.keyitem === key)) {
+            setFieldData([...FieldsData.filter((item) => item.keyitem !== key), item])
+        }
     }
+
     useEffect(() => {
         console.log(FieldsData);
     }, [FieldsData])
-
-    useEffect(() => {
+    const HandleGetALlUser = () => {
         API_GetAllUser(admin_Store.admin_data.admin_TOKEN).post('', {},).then((response) => {
             const newData = response.data.AllUserData.map((user, idx) => { return { id: idx, ...user } })
             setUserData([...newData]);
@@ -239,17 +250,19 @@ const UserDataTable = () => {
             }
             console.log(error);
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => HandleGetALlUser, [])
 
     const [paginationModel, setPaginationModel] = useState({
         pageSize: PAGE_SIZE,
         page: 0,
     });
+
     const handleEdit = (user) => {
         setEditModal({ open: true, user });
     }
+
     const handleDelete = (user_id) => {
         alert('handleDelete');
         API_Delete_User(admin_Store.admin_data.admin_TOKEN).post('', { user_id }).then((response) => {
@@ -259,12 +272,27 @@ const UserDataTable = () => {
             console.log(data);
         })
     }
+
     const handleCloseModal = () => {
         setFieldData([])
         setEditModal({ ...EditModal, open: false });
     }
     const handleUpdate = () => {
-        console.log(FieldsData);
+        const CheckFieldInvalid = FieldsData.filter((field) => field.state !== true)
+        const alert_msg = CheckFieldInvalid.map(field => `${field.fieldName}: ${field.FieldData}`).join('\n');
+        if (FieldsData.length < 1) {
+            return alert('Fields has no Change');
+        }
+        if (alert_msg) {
+            alert(`  INVALID FIELD!!\n${alert_msg}`);
+        } else {
+            API_Update_User(admin_Store.admin_data.admin_TOKEN).post('', { FieldsData, user_id: EditModal.user.user_id }).then((response) => {
+                alert(response.data.text);
+                HandleGetALlUser();
+            }).catch((error) => {
+                alert(error.response.data.text);
+            })
+        }
     }
     const columns = [
         { field: 'user_id', headerName: 'User ID', width: 80 },
@@ -297,28 +325,8 @@ const UserDataTable = () => {
         }
     ];
 
-    const [availableItems, setAvailableItems] = useState([]);
-    const [chosenItems, setChosenItems] = useState([]);
 
     useEffect(() => {
-        // setAvailableItems(prevAvailableItems => {
-        //   return prevAvailableItems.map(item => {
-        //     switch(item.keyitem) {
-        //       case 1:
-        //         return { ...item, previousData: EditModal.user.user_id };
-        //       case 2:
-        //         return { ...item, previousData: EditModal.user.user_name };
-        //       case 3:
-        //         return { ...item, previousData: EditModal.user.user_password };
-        //       case 4:
-        //         return { ...item, previousData: EditModal.user.user_email };
-        //       case 5:
-        //         return { ...item, previousData: EditModal.user.user_phone };
-        //       default:
-        //         return item;
-        //     }
-        //   });
-        // });
         setAvailableItems([
             { keyitem: 1, fieldName: '@ID', previousData: EditModal.user.user_custom_id },
             { keyitem: 2, fieldName: 'Name', previousData: EditModal.user.user_name },
@@ -337,6 +345,7 @@ const UserDataTable = () => {
     const unchooseItem = (keyitem) => {
         setAvailableItems([...availableItems, chosenItems.find((item) => item.keyitem === keyitem)]);
         setChosenItems(chosenItems.filter((item) => item.keyitem !== keyitem));
+        setFieldData([...FieldsData.filter((item) => item.keyitem !== keyitem)])
     };
 
     return (
@@ -404,7 +413,7 @@ const UserDataTable = () => {
                         </div>
 
                         <div className='modal-actions-btn'>
-                            <StyledBTN className='action-btn ban' onClick={() => alert('Baned')}>Ban</StyledBTN>
+                            <StyledBTN className='action-btn ban' onClick={() => setDialogs({ ...dialogs, ban: true })}>Ban</StyledBTN>
                             <StyledBTN className='action-btn delete' onClick={() => handleDelete(EditModal.user.user_id)}>Delete</StyledBTN>
                         </div>
 
@@ -421,6 +430,7 @@ const UserDataTable = () => {
                                             previousData={item.previousData}
                                             unchoose={unchooseItem}
                                             HandleChange={HandleChangeFieldsData}
+                                            onFieldFocus={setOnFieldFocus}
                                         />
                                     )
                                 })
@@ -435,11 +445,44 @@ const UserDataTable = () => {
                         </div>
                         <div className='modal-footer-actions'>
                             <StyledBTN className='action-btn close' onClick={handleCloseModal}>close</StyledBTN>
-                            <StyledBTN className='action-btn update' onClick={handleUpdate}>Update</StyledBTN>
+                            {
+                                onFieldFocus ?
+                                    <StyledBTN className='action-btn disable'>Update</StyledBTN>
+                                    :
+                                    <StyledBTN className='action-btn update' onClick={handleUpdate}>Update</StyledBTN>
+
+                            }
                         </div>
                     </div>
                 </StyledModalBox>
             </Modal>
+
+            <DialogBan dialogs={dialogs} setDialogs={setDialogs} UID={EditModal.user.user_id}/>
+
+            {/* <Dialog
+                open={dialogs.ban}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {'Ban'}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        <label for="time-option">Select Time Option:</label>
+                        <select id="time-option" name="time-option">
+                            <option value="hour">Hour</option>
+                            <option value="day">Day</option>
+                            <option value="year">Year</option>
+                            <option value="datetime">Date &amp; Time</option>
+                        </select>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={null} id='yes'> Close </Button>
+                    <Button onClick={null} id='no' autoFocus> Ban </Button>
+                </DialogActions>
+            </Dialog> */}
 
         </div>
     );

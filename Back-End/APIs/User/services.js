@@ -8,19 +8,24 @@ const nodemailer = require("nodemailer");
 
 router.post('/Services/ForgotPassword', async (req, res) => {
     const { Email } = req.body;
-    console.log(Email)
-    const User_data = await prisma.user.findFirst({
-        where: {
-            user_email: Email,
+    if (Email) {
+        const User_data = await prisma.user.findFirst({
+            where: {
+                user_email: Email,
+            }
+        })
+        if (User_data) {
+            MailerTo(Email);
+            res.status(200).send({ text: 'Send Success' });
+        } else {
+            res.status(404).send({ text: 'User not found' });
         }
-    })
-    if (User_data) {
-        MailerTo(Email);
-        res.status(200).send({ text: 'Send Success' });
-    } else {
-        res.status(404).send({ text: 'User not found' });
+    }else{
+        res.status(404).send({ text: 'Require User data' });
     }
+
 });
+
 router.post('/Services/ChangePassword', async (req, res) => {
     const { pass_1, pass_2, FORGOT_PASS_TOKEN } = req.body;
     var Email = '';

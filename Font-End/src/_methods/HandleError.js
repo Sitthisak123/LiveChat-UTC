@@ -4,6 +4,7 @@ import { DELETE_USER } from '../_stores/Slices/user.js';
 import { CLEAR_CONVERSATION } from '../_stores/Slices/chat_conversation.js';
 import { CLEAR_CHAT_USERS } from '../_stores/Slices/chat_user.js';
 import { CLEAR_CHAT_MSG } from '../_stores/Slices/chat_msg.js';
+import { CREATE_SUSPEND_STATUS } from '../_stores/Slices/system.js';
 
 const useErrorHandling = () => {
   const dispatch = useDispatch();
@@ -20,27 +21,22 @@ const useErrorHandling = () => {
       dispatch(CLEAR_CHAT_USERS());
       dispatch(CLEAR_CHAT_MSG());
       dispatch(DELETE_USER());
-    }else{
-      if(data.text){
+    } else {
+      if (data.text) {
         alert(data.text);
       }
     }
+    if (status === 403 && data.suspendAt) {
+      dispatch(CREATE_SUSPEND_STATUS(data));
+      alert(`Suspended ${data.suspendAt}`);
+      Navigate("/Auth");
+    }
+
     console.log(error.response)
     if (data.route) {
       alert(`route(${data.route})`);
       Navigate(data.route);
     }
-    if (data.byteLength > 0) {
-      const buffer = error.response.data;
-      const decoder = new TextDecoder('utf-8');
-      const text = JSON.parse(decoder.decode(buffer));
-      console.log(text);
-      if (text.route) {
-        // alert(`route(${text.route})`);
-        // Navigate(text.route);
-      }
-    }
-
   };
 
   return { handleErrors };

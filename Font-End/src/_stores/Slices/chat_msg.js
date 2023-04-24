@@ -22,7 +22,7 @@ export const ChatMsgSlice = createSlice({
         },
         UPDATE_CHAT_MSG: (state, action) => {
             const index = state.chat_msg.findIndex(msg => msg.msg_reply_id === action.payload.msg_reply_id);
-            state.chat_msg[index] = action.payload;
+            state.chat_msg[index] = {...state.chat_msg[index], ...action.payload};
         },
         DELETE_CHAT_MSG: (state, action) => {
             state.chat_msg = state.chat_msg.filter(msg => msg.msg_reply_id !== action.payload);

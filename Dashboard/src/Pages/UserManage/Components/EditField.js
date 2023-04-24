@@ -9,24 +9,36 @@ import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 
+
 const EditField = (props) => {
-    const { keyitem, fieldName, previousData, unchoose, HandleChange } = props;
+    const { keyitem, fieldName, previousData, unchoose, HandleChange, onFieldFocus } = props;
     const { admin_Store } = useSelector((state) => ({ ...state }));
     const InputField = useRef();
     const [onValidate, setOnValidate] = useState({ load: false, state: false });
 
+    useEffect(() => {
+        InputField.current.value = previousData;
+        HandleChange({ keyitem, fieldName, FieldData: previousData, state: false })
+    }, [])
     const HanndleInputBlur = () => {
         const FieldData = InputField.current.value;
         if (FieldData !== previousData && FieldData.trim() !== '' && FieldData !== undefined) {
             setOnValidate({ ...onValidate, load: true });
             API_User_validate(admin_Store.admin_data.admin_TOKEN).post('', { itemKey: keyitem, itemData: FieldData }).then((response) => {
-                setOnValidate({ load: false, state: response.data });
+                setOnValidate({ ...onValidate, load: false, state: response.data });
                 HandleChange({ keyitem, fieldName, FieldData, state: response.data })
+        onFieldFocus(false)
+
             }).catch((error) => {
+        onFieldFocus(false)
+
                 setOnValidate({ ...onValidate, load: false });
-                alert(error.response.data.text);
+                console.log(error.response)
+                // alert(error.response.data.text);
             })
         } else {
+        onFieldFocus(false)
+
             setOnValidate({ ...onValidate, state: false });
         }
     }
@@ -41,7 +53,13 @@ const EditField = (props) => {
                         <EastIcon className='add-frame-data-icon' />
                     }
 
-                    <input type='text' ref={InputField} onChange={() => setOnValidate({ ...onValidate, state: null })} onBlur={HanndleInputBlur} />
+                    <input 
+                    type='text' 
+                    ref={InputField} 
+                    onChange={() => setOnValidate({ ...onValidate, state: null })} 
+                    onBlur={HanndleInputBlur} 
+                    onFocus={()=>onFieldFocus(true)}
+                    />
                 </div>
                 {
                     onValidate.load ?
@@ -58,10 +76,14 @@ const EditField = (props) => {
 
                 }
                 <div className='add-frame-action'>
-                    <ClearIcon
-                        onClick={() => {
-                            unchoose(keyitem);
-                        }} />
+                    {
+                        onValidate.load ?
+                            <ClearIcon />
+                            :
+                            <ClearIcon
+                                onMouseDown={() => {
+                                    unchoose(keyitem);
+                                }} />}
                 </div>
             </div>
         </>

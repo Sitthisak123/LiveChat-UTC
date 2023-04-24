@@ -15,7 +15,6 @@ module.exports = (io, socket, user_id) => {
             fk_user_owner: user_id,
             fk_chat_id: chat_id,
             msg_reply_message: msg,
-            msg_status: 0,
             msg_read: 0,
           },
         })

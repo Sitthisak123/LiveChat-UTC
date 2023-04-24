@@ -18,3 +18,15 @@ export const API_User_validate = (TOKEN) => {
       headers: { 'access-token-key': TOKEN }
     });
   };
+  export const API_Update_User = (TOKEN) => {
+    return axios.create({
+      baseURL: `http://${host_adr}:9001/API/admin/Update-User`,
+      headers: { 'access-token-key': TOKEN }
+    });
+  };
+  export const API_Ban_User = (TOKEN) => {
+    return axios.create({
+      baseURL: `http://${host_adr}:9001/API/admin/Suspend-User`,
+      headers: { 'access-token-key': TOKEN }
+    });
+  };

@@ -15,8 +15,8 @@ const ForgotPassword = () => {
     return (
         <>
             <div className="formField">
-                <label className="formFieldLabel" htmlFor="Email">Enter Your E-mail</label><br />
-                <input type="Email" id="Email" className="formFieldInput" placeholder="E-mail" onChange={(event) => setEmail(event.target.value)} />
+                <label className="formFieldLabel2" htmlFor="Email">Enter Your E-mail</label><br />
+                <input type="Email" id="Email" className="formFieldInput2" placeholder="E-mail" onChange={(event) => setEmail(event.target.value)} />
             </div>
 
             <div className="formField google-login">

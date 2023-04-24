@@ -3,6 +3,8 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient()
 const verify_TOKEN = require('../../middleware/Auth.js');
+const redis = require("redis");
+const redisClient = redis.createClient();
 
 
 router.put('/update/name', verify_TOKEN, async (req, res) => {
@@ -21,6 +23,184 @@ router.put('/update/name', verify_TOKEN, async (req, res) => {
         console.log(err);
     }
     res.send('Name has Changed');
+});
+
+router.put('/update/phoneNumber', verify_TOKEN, async (req, res) => {
+    const { user_id } = req.user;
+    const { newPhone } = req.body;
+    console.log(newPhone);
+    try {
+        const existPhone = await prisma.user.count({
+            where: {
+                user_phone: newPhone,
+            }
+        })
+        if (existPhone) {
+            return res.status(405).send({ text: "the Phone number already in used" });
+        } else {
+            const updatePhone = await prisma.user.update({
+                where: {
+                    user_id: user_id,
+                },
+                data: {
+                    user_phone: newPhone,
+                }
+            });
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(403).send({ text: "error while update user phone number" });
+    }
+    res.status(200).send({ text: 'Phone Number has Changed' });
+});
+
+router.put('/update/Email', verify_TOKEN, async (req, res) => {
+    const { user_id } = req.user;
+    const { newEmail } = req.body;
+    console.log(newEmail);
+
+    try {
+        const existEmail = await prisma.user.count({
+            where: {
+                user_email: newEmail,
+            }
+        });
+
+        if (existEmail) {
+            return res.status(405).send({ text: "The email is already in use." });
+        } else {
+            redisClient.sismember("emails", newEmail, (err, reply) => {
+                if (err) {
+                    console.error(err);
+                } else if (reply) {
+                    console.error("Email already in use:", newEmail);
+                    return res.status(409).send({ text: "The email is already in use." });
+                } else {
+                    const verificationCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit verification code
+                    redisClient.setex(
+                        `ChangeEmail-Email:${user_id}`,
+                        process.env.VERIFY_CODE_EXP,
+                        newEmail,
+                        (err, reply) => {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                redisClient.setex(
+                                    `ChangeEmail-VerifyCode:${user_id}`,
+                                    process.env.VERIFY_CODE_EXP,
+                                    verificationCode,
+                                    (err, reply) => {
+                                        if (err) {
+                                            console.error(err);
+                                        } else {
+                                            // resend_verifyCod_MailerTo(Email, verifyCode);
+                                            console.log(`Verify code create to Redis`);
+                                            return res.status(200).send({ text: "send verifycode to email Success!", newEmail })
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    )
+                }
+            });
+
+        }
+
+    } catch (err) {
+        console.log(err);
+        return res.status(403).send({ text: "Error while updating user email." });
+    }
+});
+
+router.put('/update/Email-verify', verify_TOKEN, async (req, res) => {
+    const { user_id } = req.user;
+    const { verificationCode } = req.body;
+
+    try {
+        const newEmail = await redisGet(`ChangeEmail-Email:${user_id}`);
+        const storedVerificationCode = await redisGet(`ChangeEmail-VerifyCode:${user_id}`);
+        console.log(`${verificationCode} === ${storedVerificationCode}`)
+        if (verificationCode === storedVerificationCode) {
+            const existEmail = await prisma.user.count({
+                where: {
+                    user_email: newEmail,
+                }
+            });
+            if (existEmail) {
+                return res.status(405).send({ text: "The email is already in use." });
+            } else {
+                await prisma.user.update({
+                    where: {
+                        user_id: user_id,
+                    },
+                    data: {
+                        user_email: newEmail,
+                    }
+                });
+                await redisDel(`ChangeEmail-Email:${user_id}`);
+                await redisDel(`ChangeEmail-VerifyCode:${user_id}`);
+                return res.status(200).send({ text: "Email updated successfully.", newEmail });
+            }
+        } else {
+            return res.status(409).send({ text: "Invalid verification code." });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({ text: "Internal server error." });
+    }
+});
+
+function redisGet(key) {
+    return new Promise((resolve, reject) => {
+        redisClient.get(key, (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+function redisDel(key) {
+    return new Promise((resolve, reject) => {
+        redisClient.del(key, (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+router.put('/update/CustomID', verify_TOKEN, async (req, res) => {
+    const { user_id } = req.user;
+    const { customID } = req.body;
+    console.log(customID);
+    try {
+        const existID = await prisma.user.count({
+            where: {
+                user_custom_id: customID,
+            }
+        })
+        if (existID) {
+            return res.status(405).send({ text: "the ID already in used" });
+        } else {
+            const updatePhone = await prisma.user.update({
+                where: {
+                    user_id: user_id,
+                },
+                data: {
+                    user_custom_id: customID,
+                }
+            });
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(403).send({ text: "error while update user ID" });
+    }
+    res.status(200).send({ text: 'ID has Changed' });
 });
 
 
@@ -54,7 +234,7 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
         }
 
 
-        res.status(200).send({ text: 'Update Status Success' , newRelation: update});
+        res.status(200).send({ text: 'Update Status Success', newRelation: update });
     } else if (newRelation === 0) {
         let newBlockedRelation = [];
         try {
@@ -139,5 +319,62 @@ router.put('/create/relations', verify_TOKEN, async (req, res) => {
 
     return res.status(200).send({ text: 'Friend Request Success' });
 });
+
+router.put('/update/MessageStatus', verify_TOKEN, async (req, res) => {
+    const { user_id } = req.user;
+    const { newStatus, msg_id } = req.body;
+    console.log(0)
+    const MSG_Status = { delete: 1, Unsend: 2 };
+    if (Object.values(MSG_Status).includes(newStatus)) {
+        console.log(1)
+
+        try {
+            const updateMSG = await prisma.msg_user_reply.findFirst({
+                where: {
+                    msg_reply_id: msg_id,
+                }
+            })
+            if (updateMSG) {
+                console.log(2)
+                console.log('>>>')
+                console.log(newStatus)
+                let data = {}
+                if (updateMSG.fk_user_owner === user_id) {
+                    console.log(2.1)
+
+                    data = {
+                        msg_status_owner: newStatus,
+                    }
+                } else if (updateMSG.fk_user_owner !== user_id && newStatus === 1) {
+                    console.log(2.2)
+
+                    data = {
+                        msg_status_other: newStatus,
+                    }
+                } else {
+                    console.log(2.3)
+                    return res.status(403).send({ text: "the new MSG Status has invalid" });
+                }
+                const updatedMessage = await prisma.msg_user_reply.update({
+                    where: {
+                        msg_reply_id: msg_id,
+                    },
+                    data
+                });
+                return res.status(200).send({ text: 'Message status has Changed' });
+            } else {
+                return res.status(405).send({ text: "Message not Found" });
+            }
+        } catch (err) {
+            console.log(err);
+            return res.status(403).send({ text: "error while update Message Status" });
+        }
+    } else {
+        return res.status(403).send({ text: "invalid message status" });
+    }
+});
+
+
+
 
 module.exports = router;

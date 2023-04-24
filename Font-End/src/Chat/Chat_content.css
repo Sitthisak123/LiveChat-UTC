@@ -17,12 +17,12 @@
   grid-area: option;
 }
 
-.ta-frame {
+/* .ta-frame {
   display: flex;
   width: 100%;
   max-height: var(--ta-frame-height);
   grid-area: input;
-}
+} */
 div.Chat-massage-coversation{
   max-width: 100%;
   margin-bottom: 1.5rem;

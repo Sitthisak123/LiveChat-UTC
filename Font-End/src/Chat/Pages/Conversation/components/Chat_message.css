@@ -1,45 +1,79 @@
-.Chat_message_list{
+.Chat_message_list {
   display: flex;
   column-gap: 1rem;
 }
-.Chat_message_list > div.Chat_Avatar {
+
+.Chat_message_list>div.Chat_Avatar {
   align-self: flex-end;
 }
-.Chat_message_list.left{
+
+.Chat_message_list.left {
   justify-content: flex-start;
 }
-.Chat_message_list.right{
+
+.Chat_message_list.right {
   flex-direction: row-reverse;
 }
 
-.Chat_informations{
+.Chat_message_list {
+  cursor: default;
+}
+
+.Chat_informations {
   max-width: 80%;
   display: flex;
   flex-direction: column;
   row-gap: .3rem;
 }
-.Chat_informations.right > .Chat_msg{
+
+.Chat_informations.right>.Chat_msg {
   align-self: flex-end;
 }
-.Chat_msg{
+
+.chat_more_action {
+  align-self: flex-start;
+  padding: .2rem;
+  margin: -.55rem;
+}
+
+.Chat_informations.right>.chat_more_action {
+  align-self: flex-end;
+}
+
+.Chat_msg {
   max-width: 100%;
   width: fit-content;
-  background-color: rgba(0,0,0,.5);
+  background-color: rgba(0, 0, 0, .5);
   padding: .8rem;
   word-wrap: break-word;
   border-radius: 4px;
 }
 
 
-.chat_info{
+.chat_info {
   display: flex;
   gap: .5rem;
   padding: .3rem 0 .2rem;
 }
-.chat_info.left{
-  justify-content: flex-end; 
+
+.chat_info.left {
+  justify-content: flex-end;
   flex-direction: row-reverse;
 }
-.chat_info.right{
-  justify-content: flex-end; 
+
+.chat_info.right {
+  justify-content: flex-end;
+}
+
+.hide {
+  opacity: 0;
+}
+
+.unsend {
+  padding: 2rem 6rem;
+  border-radius: .8rem;
+  box-shadow:
+    inset 2px 2px 10px rgba(255, 255, 255, 0.4),
+    inset -1px -1px 8px rgba(255, 255, 255, 0.4);
+  opacity: .8;
 }

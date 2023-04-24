@@ -26,6 +26,8 @@ export const StyledBTN = styled.button`
     text-align: center;
     font-size: 1.2rem;
     font-weight: 500;
+
+    border-radius: 8px;
 `;
 export const StyledAddEditFieldBTN = styled.button`
     ${btnReset};

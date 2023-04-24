@@ -50,7 +50,7 @@ const VerifyEmail = () => {
             </p>
 
             <div className="formField">
-                <input type='number' className='formFieldInput-number' onChange={(event) => setVerifyCode(event.target.value)} />
+                <input type='number' className='formFieldInput2-number' onChange={(event) => setVerifyCode(event.target.value)} />
             </div>
 
             <div className="formField Btns">

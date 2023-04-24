@@ -24,8 +24,21 @@ router.post("/init", verify_TOKEN, async (req, res) => {
                 fk_chat_id: {
                     in: findManyConversation.chat_id
                 }
+
             }
         });
+
+        const filtered_Chate_MSG = chat_msg.filter((msg) => {
+            //// User Has Delete by self
+            if ((msg.fk_user_owner === user_id && msg.msg_status_owner === 1) || (msg.fk_user_owner !== user_id && msg.msg_status_other === 1)) {
+                return false;
+            //// has unsend by owner
+            } else if (msg.msg_status_owner === 2 || msg.msg_status_other === 2) {
+                msg.msg_reply_message = 'Unsend';
+            }
+            return true;
+        });
+
 
         /// Fetch Relationship [ Block: 0, Friend: 1, Favorite: 2, Request: 3]
         const Relations = await prisma.friends_relationship.findMany({
@@ -37,21 +50,23 @@ router.post("/init", verify_TOKEN, async (req, res) => {
             }
         });
 
+
         const userIds = findManyConversation.map(
             item => (item.chat_user_one === user_id ? item.chat_user_two : item.chat_user_one)
         );
 
         const otherUserIds = Relations.reduce((acc, curr) => {
             if (curr.fk_user_one !== user_id && !acc.has(curr.fk_user_one)) {
-              acc.add(curr.fk_user_one);
+                acc.add(curr.fk_user_one);
             }
             if (curr.fk_user_two !== user_id && !acc.has(curr.fk_user_two)) {
-              acc.add(curr.fk_user_two);
+                acc.add(curr.fk_user_two);
             }
             return acc;
-          }, new Set());
-          const allUserIds = Array.from(new Set([...userIds, ...otherUserIds]));
-          
+        }, new Set());
+
+        const allUserIds = Array.from(new Set([...userIds, ...otherUserIds]));
+
 
         /// Fetch other Users data
         const users = await prisma.user.findMany({
@@ -92,7 +107,7 @@ router.post("/init", verify_TOKEN, async (req, res) => {
 
             }
         });
-        const data = { conversation: findManyConversation, users, chat_msg, Relations, user};
+        const data = { conversation: findManyConversation, users, chat_msg: filtered_Chate_MSG, Relations, user };
         res.status(200).send(data)
     } catch (err) {
         console.log(err);

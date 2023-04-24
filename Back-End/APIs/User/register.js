@@ -64,7 +64,7 @@ router.post("/register", async (req, res) => {
                                     redisClient.sadd("emails", Email);
                                     // Set the expire time to 24 hours (in seconds)
                                     redisClient.expire("user:" + Email, 24 * 60 * 60);
-                                    const verifyCode = Math.floor(Math.random() * 90000000) + 10000000;
+                                    const verifyCode = Math.floor(Math.random() * 900000) + 100000;
                                     redisClient.setex(
                                         `VerifyCode:${Email}`,
                                         process.env.VERIFY_CODE_EXP,
@@ -73,8 +73,9 @@ router.post("/register", async (req, res) => {
                                             if (err) {
                                                 console.error(err);
                                             } else {
-                                                console.log(`Verify code saved to Redis`);
-                                                ////// Mailer Here \\\\\\\
+                                                resend_verifyCod_MailerTo(Email, verifyCode);
+                                                console.log(`Verify code create to Redis and sent`);
+
                                             }
                                             return res.status(200).send({ text: "Create Account Success!", Email })
                                         }
@@ -213,7 +214,7 @@ router.post("/Services/register-resend-verifyCode", async (req, res) => {
                         return res.status(500).send({ error: "Internal Server Error" });
                     } else {
                         console.log(`Verify code updated to Redis`);
-                        resend_verifyCod_MailerTo(Email,verifyCode)
+                        resend_verifyCod_MailerTo(Email, verifyCode)
                         return res.status(200).send({ text: "Verify Code Updated!" });
                     }
                 });
@@ -233,7 +234,7 @@ router.post("/Services/register-resend-verifyCode", async (req, res) => {
 module.exports = router;
 
 
-async function resend_verifyCod_MailerTo(Email,VerifyCode) {
+async function resend_verifyCod_MailerTo(Email, VerifyCode) {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {

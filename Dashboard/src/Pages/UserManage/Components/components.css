@@ -52,3 +52,11 @@
 .add-frame-data-icon{
     font-size: 3rem !important;
 }
+#alert-dialog-description{
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+}
+#time-option{
+    padding: .5rem 0;
+}

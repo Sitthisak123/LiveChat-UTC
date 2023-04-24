@@ -39,7 +39,8 @@ model msg_user_reply {
   msg_reply_message String      @db.Text
   msg_createTime    DateTime    @default(now()) @db.Timestamp(0)
   msg_type          MessageType @default(TEXT)
-  msg_status        Int         @default(0)
+  msg_status_owner  Int         @default(0)
+  msg_status_other  Int         @default(0)
   msg_read          Int         @default(0)
   chat_user         chat_user   @relation(fields: [fk_chat_id], references: [chat_id], onDelete: Cascade, map: "fk_chat_id")
   user              user        @relation(fields: [fk_user_owner], references: [user_id], onDelete: Cascade, map: "fk_user_one_chat")
@@ -65,6 +66,7 @@ model user {
   friends_relationship_friends_relationship_fk_user_oneTouser friends_relationship[] @relation("friends_relationship_fk_user_oneTouser")
   friends_relationship_friends_relationship_fk_user_twoTouser friends_relationship[] @relation("friends_relationship_fk_user_twoTouser")
   msg_user_reply                                              msg_user_reply[]
+  UserSuspendedList                                           UserSuspendedList[]
 }
 
 enum MessageType {
@@ -77,19 +79,29 @@ enum MessageType {
 }
 
 model admin {
-  admin_id                                                     Int                    @id @default(autoincrement())
-  admin_username                                               String                 @unique(map: "admin_username") @db.VarChar(60)
-  admin_password                                               String                 @db.VarChar(256)
-  admin_email                                                  String                 @unique(map: "admin_email") @db.VarChar(256)
-  admin_phone                                                  String?                @unique(map: "admin_phone") @db.VarChar(12)
-  admin_name                                                   String                 @db.TinyText
-  admin_profile_img                                            String                 @default("user_default.png") @db.VarChar(256)
-  admin_cover_img                                              String                 @default("user_default.png") @db.VarChar(256)
-  admin_role                                                   Role                   @default(CUSTOMER_SERVICE)                   
+  admin_id          Int     @id @default(autoincrement())
+  admin_username    String  @unique(map: "admin_username") @db.VarChar(60)
+  admin_password    String  @db.VarChar(256)
+  admin_email       String  @unique(map: "admin_email") @db.VarChar(256)
+  admin_phone       String? @unique(map: "admin_phone") @db.VarChar(12)
+  admin_name        String  @db.TinyText
+  admin_profile_img String  @default("user_default.png") @db.VarChar(256)
+  admin_cover_img   String  @default("user_default.png") @db.VarChar(256)
+  admin_role        Role    @default(CUSTOMER_SERVICE)
 }
 
 enum Role {
   CUSTOMER_SERVICE
   ADMIN
   GENERAL_MANAGER
-}                
+}
+
+model UserSuspendedList {
+  suspended_id          Int       @id @default(autoincrement())
+  user_id               Int       @unique
+  suspended_description String?   @db.VarChar(255)
+  suspended_created_at  DateTime  @default(now()) @db.Timestamp(0)
+  suspended_permanent   Boolean   @default(false)
+  suspended_expire      DateTime?
+  user                  user      @relation(fields: [user_id], references: [user_id])
+}

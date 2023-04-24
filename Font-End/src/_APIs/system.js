@@ -42,3 +42,33 @@ export const API_verifyEmail = () => {
     baseURL: `http://${host_adr}:9001/API/user/Services/register-verify`,
   });
 };
+export const API_ChangePhoneNum = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/update/phoneNumber`,
+    headers: { 'access-token-key': TOKEN }
+  });
+};
+export const API_ConfigID = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/update/CustomID`,
+    headers: { 'access-token-key': TOKEN }
+  });
+};
+export const API_ChangeEmail = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/update/Email`,
+    headers: { 'access-token-key': TOKEN }
+  });
+};
+export const API_VerifyChangeEmail = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/update/Email-verify`,
+    headers: { 'access-token-key': TOKEN }
+  });
+};
+export const API_ChangeMessageStatus = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/update/MessageStatus`,
+    headers: { 'access-token-key': TOKEN }
+  });
+};

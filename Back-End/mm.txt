@@ -25,3 +25,16 @@
 3.2.7 C:\Project\online-chat\Font-End\src\Login
 3.2.8 C:\Project\online-chat\Font-End\src\Login
 3.2.9 C:\Project\online-chat\Font-End\src\Home
+
+Msg_Status
+    0-normal
+    1-delete
+    2-unsend
+
+- 0/1 use owner /
+- 1/0 use owner /
+- 1/1 use owner or other
+- 2/1 other use owner if owner is 2 and ohter is 0
+- 2/1 other use other if other is 1 and owner is any
+- 2/1 owner use owner if owner is 2 and ohter is any
+

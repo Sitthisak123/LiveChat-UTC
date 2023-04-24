@@ -20,18 +20,19 @@
   margin-bottom: 40px;
 }
 
-.formFieldLabel {
+.formFieldLabel2 {
   display: block;
   text-transform: uppercase;
-  font-size: 0.9em;
-  color: white;
+  font-size: 1rem;
+  color: #0e294c;
+  font-weight: 550;
 }
 
-.formFieldInput {
+.formFieldInput2 {
   width: 100%;
   background-color: transparent;
   border: none;
-  color: white;
+  color: #3a424d;
   outline: none;
   border-bottom: 1px solid #445366;
   font-size: 1em;
@@ -40,7 +41,7 @@
   margin-top: 10px;
 }
 
-.formFieldInput-number {
+.formFieldInput2-number {
   outline: none;
   border-bottom: 1px solid #445366;
   font-size: 1.5rem;
@@ -49,7 +50,7 @@
   margin: 5px;
 }
 
-.formFieldInput::placeholder {
+.formFieldInput2::placeholder {
   color: #616e7f;
 }
 
@@ -91,4 +92,11 @@ input[type=number]::-webkit-outer-spin-button {
 .danger-info{
   color: rgba(216, 77, 13, 0.832);
   font-weight: 600;
+}
+.Form-headers{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  margin-left: -1rem;
+  margin-top: -.5rem;
 }

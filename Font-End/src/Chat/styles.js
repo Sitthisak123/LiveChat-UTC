@@ -96,6 +96,7 @@ export const StyledBadge = styled(Badge)`
 
 export const StyledTextField = styled(TextField)`
   width: 100%;
+  margin-bottom: .5rem !important;
 `;
 
 export const StyledChatConversation = styled.div`
@@ -288,8 +289,18 @@ export const StyledOptionSectionLogout = styled.p`
     width: 100%;
 `;
 export const StyledDangerButton = styled(Button)`
-  color: red !important;
-  :hover{
-    background-color: rgba(255,25,25,.15) !important;
-  }
+    color: red !important;
+    :hover{
+      background-color: rgba(255,25,25,.15) !important;
+    }
 `;
+export const StyledTextAreaFrame = styled.div`
+    display: flex;
+    width: 100%;
+    max-height: var(--ta-frame-height);
+    grid-area: input;
+    * {
+      color: ${({ theme }) => theme.text} !important;
+    }
+`;
+

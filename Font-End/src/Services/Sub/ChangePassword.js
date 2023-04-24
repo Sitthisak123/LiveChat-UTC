@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import '../Service.css';
 import { useLocation } from 'react-router-dom';
 import { API_ChangePassword } from '../../_APIs/system';
+import FormHeaders from './sub/FormHeaders.js/Headers';
 const ChangePassword = () => {
     const [newPass, setNewPass] = useState({ pass_1: '', pass_2: '' ,FORGOT_PASS_TOKEN: ''});
     const location = useLocation();
@@ -24,13 +25,14 @@ const ChangePassword = () => {
     }
     return (
         <>
+            <FormHeaders headerName={"Change Password"} />
             <div className="formField">
-                <label className="formFieldLabel" htmlFor="password1">new password</label>
-                <input type="password" id="password1" className="formFieldInput" placeholder="new password" onChange={(event) => setNewPass({ ...newPass, pass_1: event.target.value })} />
+                <label className="formFieldLabel2" htmlFor="password1">new password</label>
+                <input type="password" id="password1" className="formFieldInput2" placeholder="new password" onChange={(event) => setNewPass({ ...newPass, pass_1: event.target.value })} />
             </div>
             <div className="formField">
-                <label className="formFieldLabel" htmlFor="password2">confirm new password</label>
-                <input type="password" id="password2" className="formFieldInput" placeholder="confirm new password" onChange={(event) => setNewPass({ ...newPass, pass_2: event.target.value })} />
+                <label className="formFieldLabel2" htmlFor="password2">confirm new password</label>
+                <input type="password" id="password2" className="formFieldInput2" placeholder="confirm new password" onChange={(event) => setNewPass({ ...newPass, pass_2: event.target.value })} />
             </div>
 
             <div className="formField google-login">

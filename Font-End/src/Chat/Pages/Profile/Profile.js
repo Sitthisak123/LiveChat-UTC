@@ -320,7 +320,6 @@ const Profile = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-
           </DialogContentText>
         </DialogContent>
         <DialogActions>

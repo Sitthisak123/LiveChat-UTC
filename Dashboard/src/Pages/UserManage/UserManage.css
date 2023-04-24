@@ -89,7 +89,10 @@
 .update{
     background-color: #0f83e1 !important;
     padding: .8rem !important;
-
+}
+.disable{
+    background-color: #63808d !important;
+    padding: .8rem !important;
 }
 .footer-field-list{
     height: 90%;
@@ -98,5 +101,6 @@
     height: 10%;
     display: flex;
     justify-content: end;
+    gap: 4rem;
 
 }
