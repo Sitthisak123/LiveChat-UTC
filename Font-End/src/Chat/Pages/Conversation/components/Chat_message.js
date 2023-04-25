@@ -46,22 +46,24 @@ const Chat_message = (props) => {
     handleCloseMenu();
   };
   const handleChangeMSGStatus = (mode) => {
+
     handleCloseMenu();
     setOnload(true);
     const newStatusMSG = mode === 'delete' ? 1 : mode === 'unsend' ? 2 : '';
-    API_ChangeMessageStatus(User_data.value.user_TOKEN).put('', { newStatus: newStatusMSG, msg_id: id, })
-      .then((response) => {
-        setOnload(false);
-        if (newStatusMSG === 2) {
-          dispatch(UPDATE_CHAT_MSG({ msg_reply_id: id, msg_status_owner: newStatusMSG, msg_reply_message: "unsend" }));
-        } else if (newStatusMSG === 1) {
-          dispatch(DELETE_CHAT_MSG(id));
-        }
-      })
-      .catch((error) => {
-        setOnload(false);
-        handleErrors(error);
-      });
+    socket_UnSendMessage({ newStatus: newStatusMSG, msg_id: id });
+    // API_ChangeMessageStatus(User_data.value.user_TOKEN).put('', { newStatus: newStatusMSG, msg_id: id, })
+    //   .then((response) => {
+    //     setOnload(false);
+    //     if (newStatusMSG === 2) {
+    //       dispatch(UPDATE_CHAT_MSG({ msg_reply_id: id, msg_status_owner: newStatusMSG, msg_reply_message: "unsend" }));
+    //     } else if (newStatusMSG === 1) {
+    //       dispatch(DELETE_CHAT_MSG(id));
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     setOnload(false);
+    //     handleErrors(error);
+    //   });
   }
   const anchorSetUp = my_id == from_id ?
     {

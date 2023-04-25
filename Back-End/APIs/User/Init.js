@@ -26,7 +26,7 @@ router.post("/init", verify_TOKEN, async (req, res) => {
                 return chat;
             }
         });
-        console.log(newfindManyConversation);
+        
         /// Fetch MSGs data
         const chat_msg = await prisma.msg_user_reply.findMany({
             where: {

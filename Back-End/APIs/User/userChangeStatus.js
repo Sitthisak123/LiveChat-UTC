@@ -408,7 +408,7 @@ router.put('/update/ChatStatus', verify_TOKEN, async (req, res) => {
                         where: {
                             fk_chat_id: cid,
                             OR: [
-                                { fk_user_owner: user_id, msg_status_owner: MSG_StatusList.normal },
+                                { fk_user_owner: user_id,},
                             ],
                         },
                         data: {
@@ -421,7 +421,7 @@ router.put('/update/ChatStatus', verify_TOKEN, async (req, res) => {
                         where: {
                             fk_chat_id: cid,
                             OR: [   
-                                { fk_user_owner: { not: user_id }, msg_status_other: MSG_StatusList.normal },
+                                { fk_user_owner: { not: user_id }},
                             ],
                         },
                         data: {

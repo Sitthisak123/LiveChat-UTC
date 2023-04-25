@@ -10,7 +10,7 @@ import { CREATE_CONVERSATION, UPDATE_CONVERSATION, DELETE_CONVERSATION, CLEAR_CO
 import { CREATE_CHAT_USERS, UPDATE_CHAT_USERS, DELETE_CHAT_USERS, CLEAR_CHAT_USERS } from '../_stores/Slices/chat_user.js';
 import { CREATE_CHAT_MSG, UPDATE_CHAT_MSG, DELETE_CHAT_MSG, CLEAR_CHAT_MSG } from '../_stores/Slices/chat_msg.js';
 import { CREATE_FRIENDS_STATUS, UPDATE_FRIENDS_STATUS, DELETE_FRIENDS_STATUS, CLEAR_FRIENDS_STATUS } from '../_stores/Slices/Friends_Status';
-
+import useErrorHandling_socket from "../_methods/HandleError_socket.js";
 const ENDPOINT = 'http://localhost:9001';
 export const SocketMethod = createContext();
 
@@ -26,6 +26,7 @@ const Home = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const { handleErrors_socket } = useErrorHandling_socket();
 
   useEffect(() => {
     const newSocket = io(ENDPOINT, {
@@ -53,25 +54,37 @@ const Home = ({ children }) => {
     socket.on('message', (data) => {
       console.log(data);
       dispatch(CREATE_CHAT_MSG(data.newMessage));
-
     });
 
-    
+    socket.on('Unsend-message', (data) => {
+      console.log(data)
+      if (data.status === 200) {
+        const { newStatus, msg_id} = data.UnsendMessage;
+        if (newStatus === 2) {
+          dispatch(UPDATE_CHAT_MSG({ msg_reply_id: msg_id, msg_status_owner: newStatus, msg_reply_message: "unsend" }));
+        } else if (newStatus === 1) {
+          dispatch(DELETE_CHAT_MSG(msg_id));
+        }
+      } else {
+        handleErrors_socket(data);
+      }
+    });
+
 
     return () => socket.off('send');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   function socket_sendMessage(msg, friend_id, chat_id) {
     socket.emit('message', { msg, friend_id, chat_id });
   }
-  function socket_UnSendMessage() {
-    socket.emit('Unsend-message', "test1233");
+  function socket_UnSendMessage(data) {
+    socket.emit('Unsend-message', data);
   }
 
 
   return (
-    <SocketMethod.Provider value={{ socket_sendMessage,socket_UnSendMessage }}>
+    <SocketMethod.Provider value={{ socket_sendMessage, socket_UnSendMessage }}>
       <SLayout>
         <Sidebar />
         <SMain>{children}</SMain>

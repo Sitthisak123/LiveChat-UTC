@@ -112,7 +112,7 @@ const Chat = (props) => {
                                     </div>
                                 )
                             }else if((data.fk_user_owner === User_data.value.user_id && data.msg_status_owner === 2 && data.msg_status_other === 1)){
-                               alert('Error is True')
+                               alert('Error is True data.fk_user_owner === User_data.value.user_id && data.msg_status_owner === 2 && data.msg_status_other === 1)')
                                 // return null;
                             }
                             return (
