@@ -4,6 +4,7 @@ const redis = require('redis');
 const client = redis.createClient();
 
 module.exports = (io, socket, user_id) => {
+
   socket.on('message', async (data) => {
     const { msg, friend_id, chat_id } = data;
     var newMessage;
@@ -39,17 +40,32 @@ module.exports = (io, socket, user_id) => {
     } catch (error) {
       console.log(error);
     }
-    console.log(data);
-    client.sismember("online_users", friend_id, (err, isOnline) => {
+
+    if (checkOnline) {
+      io.to(user_id).emit('message', { newMessage, newChat });
+      io.to(friend_id).emit('message', { newMessage, newChat });
+    } else {
+      io.to(user_id).emit('message', { newMessage, newChat });
+    }
+  });
+
+  socket.on('Unsend-message', async (data) => {
+    
+  });
+
+}
+
+
+
+function checkOnline(friend_id) {
+  return new Promise((resolve, reject) => {
+    Client.sismember("online_users", friend_id, (err, isOnline) => {
       if (err) throw err;
       if (isOnline) {
-        // console.log("User is online");
-        io.to(user_id).emit('message', { newMessage, newChat });
-        io.to(friend_id).emit('message', { newMessage, newChat });
+        resolve(true);
       }
       else {
-        // console.log("User is not online" );
-        io.to(user_id).emit('message', { newMessage, newChat });
+        resolve(false);
       }
     });
   });

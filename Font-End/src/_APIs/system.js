@@ -72,3 +72,9 @@ export const API_ChangeMessageStatus = (TOKEN) => {
     headers: { 'access-token-key': TOKEN }
   });
 };
+export const API_ChangeChatStatus = (TOKEN) => {
+  return axios.create({
+    baseURL: `http://${host_adr}:9001/API/user/update/ChatStatus`,
+    headers: { 'access-token-key': TOKEN }
+  });
+};

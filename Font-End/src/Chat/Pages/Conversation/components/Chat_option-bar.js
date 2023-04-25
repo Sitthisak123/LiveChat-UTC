@@ -34,7 +34,10 @@ const Chat_optionBar = (props) => {
         }
         title={CardName}
         subheader={null}
-      ></StyledCardHeaderOptionbar>
+      >
+        
+      </StyledCardHeaderOptionbar>
+      
     </ChatSection>
   )
 }

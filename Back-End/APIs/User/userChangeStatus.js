@@ -203,7 +203,6 @@ router.put('/update/CustomID', verify_TOKEN, async (req, res) => {
     res.status(200).send({ text: 'ID has Changed' });
 });
 
-
 router.put('/update/relations', verify_TOKEN, async (req, res) => {
     const { user_id } = req.user;
     const { newRelation, FriendID } = req.body;
@@ -374,7 +373,77 @@ router.put('/update/MessageStatus', verify_TOKEN, async (req, res) => {
     }
 });
 
+router.put('/update/ChatStatus', verify_TOKEN, async (req, res) => {
+    try {
+        const { user_id } = req.user;
+        const { newChatStatus, cid } = req.body;
+        console.log(newChatStatus);
+        const StatusList = { nomal: 0, pin: 1, Delete: 3 };
+        if (Object.values(StatusList).includes(newChatStatus)) {
+            const existChat = await prisma.chat_user.findFirst({
+                where: {
+                    chat_id: cid,
+                }
+            });
+            if (existChat) {
+                if (newChatStatus !== StatusList.Delete) {
+                    let data = {}
+                    if (existChat.chat_user_one === user_id) {
+                        data = { chat_status_one: newChatStatus };
+                    } else {
+                        data = { chat_status_two: newChatStatus };
+                    }
+                    const UpdateChat = await prisma.chat_user.update({
+                        where: {
+                            chat_id: cid,
+                        },
+                        data
+                    });
+                    return res.status(200).send({ text: "Chat Status has Changed" });
+                } else {
+                    const MSG_StatusList = { normal: 0, delete: 1, Unsend: 2 };
+                    ///Change All msg In Chat to
+                    
+                    const updateMSGStatus = await prisma.msg_user_reply.updateMany({
+                        where: {
+                            fk_chat_id: cid,
+                            OR: [
+                                { fk_user_owner: user_id, msg_status_owner: MSG_StatusList.normal },
+                            ],
+                        },
+                        data: {
+                            msg_status_owner: {
+                                set: MSG_StatusList.delete,
+                            },
+                        },
+                    });
+                    const updateMSGStatus2 = await prisma.msg_user_reply.updateMany({
+                        where: {
+                            fk_chat_id: cid,
+                            OR: [   
+                                { fk_user_owner: { not: user_id }, msg_status_other: MSG_StatusList.normal },
+                            ],
+                        },
+                        data: {
+                            msg_status_other: {
+                                set: MSG_StatusList.delete,
+                            },
+                        },
+                    });
+                    return res.status(200).send({ text: "All message Has Deleted" });
+                }
+            } else {
+                return res.status(403).send({ text: "Chat not Found" });
+            }
+        } else {
+            return res.status(403).send({ text: "invalid User Input" });
+        }
 
+    } catch (err) {
+        console.log(err);
+        return res.status(403).send({ text: "error while update All MSG in chat" });
+    }
+});
 
 
 module.exports = router;

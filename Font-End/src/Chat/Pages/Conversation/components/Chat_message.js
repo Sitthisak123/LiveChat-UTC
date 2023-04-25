@@ -3,14 +3,15 @@ import './Chat_message.css';
 import Avatar from '@mui/material/Avatar';
 import { useDispatch, useSelector } from 'react-redux';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { API_ChangeMessageStatus } from '../../../../_APIs/system';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
 import { UPDATE_CHAT_MSG, DELETE_CHAT_MSG } from '../../../../_stores/Slices/chat_msg';
-
+import useErrorHandling from '../../../../_methods/HandleError';
+import { SocketMethod } from '../../../../Home/Home';
 const Chat_message = (props) => {
   const { id, from_id, name, message, timest, image } = props;
   const { User_data } = useSelector((state) => ({ ...state }));
@@ -21,6 +22,9 @@ const Chat_message = (props) => {
   const [menu, setMenu] = useState(false);
   const [onload, setOnload] = useState(false);
   const dispatch = useDispatch();
+  const { handleErrors } = useErrorHandling();
+  const { socket_UnSendMessage } = useContext(SocketMethod);
+
   const date = new Date(timest);
   const year = date.getFullYear();
   const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -49,13 +53,14 @@ const Chat_message = (props) => {
       .then((response) => {
         setOnload(false);
         if (newStatusMSG === 2) {
-          dispatch(UPDATE_CHAT_MSG({ msg_reply_id: id, msg_status_owner: newStatusMSG, msg_reply_message: "unsend"}));
+          dispatch(UPDATE_CHAT_MSG({ msg_reply_id: id, msg_status_owner: newStatusMSG, msg_reply_message: "unsend" }));
         } else if (newStatusMSG === 1) {
           dispatch(DELETE_CHAT_MSG(id));
         }
       })
       .catch((error) => {
         setOnload(false);
+        handleErrors(error);
       });
   }
   const anchorSetUp = my_id == from_id ?

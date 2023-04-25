@@ -56,15 +56,22 @@ const Home = ({ children }) => {
 
     });
 
+    
+
     return () => socket.off('send');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   function socket_sendMessage(msg, friend_id, chat_id) {
     socket.emit('message', { msg, friend_id, chat_id });
   }
+  function socket_UnSendMessage() {
+    socket.emit('Unsend-message', "test1233");
+  }
+
 
   return (
-    <SocketMethod.Provider value={{ socket_sendMessage, }}>
+    <SocketMethod.Provider value={{ socket_sendMessage,socket_UnSendMessage }}>
       <SLayout>
         <Sidebar />
         <SMain>{children}</SMain>

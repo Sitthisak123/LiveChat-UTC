@@ -93,8 +93,8 @@ export const SSearchIcon = styled.button`
     ${btnReset};
     padding: calc(${v.mdSpacing} - 2px) ${v.mdSpacing};
     display: flex;
-    cursor: pointer;
-
+    cursor: default;
+    
     svg {
         font-size: 20px;
     }

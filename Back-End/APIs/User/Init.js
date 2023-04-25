@@ -17,14 +17,22 @@ router.post("/init", verify_TOKEN, async (req, res) => {
                 ]
             }
         });
-
+        const newfindManyConversation = findManyConversation.map((chat) => {
+            if (chat.chat_user_one === user_id) {
+                chat.chat_status_two = false;
+                return chat;
+            } else if (chat.chat_user_two === user_id) {
+                chat.chat_status_one = false;
+                return chat;
+            }
+        });
+        console.log(newfindManyConversation);
         /// Fetch MSGs data
         const chat_msg = await prisma.msg_user_reply.findMany({
             where: {
                 fk_chat_id: {
-                    in: findManyConversation.chat_id
+                    in: findManyConversation.chat_id,
                 }
-
             }
         });
 
@@ -32,7 +40,7 @@ router.post("/init", verify_TOKEN, async (req, res) => {
             //// User Has Delete by self
             if ((msg.fk_user_owner === user_id && msg.msg_status_owner === 1) || (msg.fk_user_owner !== user_id && msg.msg_status_other === 1)) {
                 return false;
-            //// has unsend by owner
+                //// has unsend by owner
             } else if (msg.msg_status_owner === 2 || msg.msg_status_other === 2) {
                 msg.msg_reply_message = 'Unsend';
             }
@@ -107,7 +115,7 @@ router.post("/init", verify_TOKEN, async (req, res) => {
 
             }
         });
-        const data = { conversation: findManyConversation, users, chat_msg: filtered_Chate_MSG, Relations, user };
+        const data = { conversation: newfindManyConversation, users, chat_msg: filtered_Chate_MSG, Relations, user };
         res.status(200).send(data)
     } catch (err) {
         console.log(err);

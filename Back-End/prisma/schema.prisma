@@ -12,6 +12,8 @@ model chat_user {
   chat_user_one                      Int
   chat_user_two                      Int
   chat_createTime                    DateTime         @default(now()) @db.Timestamp(0)
+  chat_status_one                    Int              @default(0)
+  chat_status_two                    Int              @default(0)
   user_chat_user_chat_user_oneTouser user             @relation("chat_user_chat_user_oneTouser", fields: [chat_user_one], references: [user_id], onDelete: Cascade, map: "fk_user_one")
   user_chat_user_chat_user_twoTouser user             @relation("chat_user_chat_user_twoTouser", fields: [chat_user_two], references: [user_id], onDelete: Cascade, map: "fk_user_two")
   msg_user_reply                     msg_user_reply[]
@@ -61,6 +63,7 @@ model user {
   user_name                                                   String                 @db.TinyText
   user_profile_img                                            String                 @default("user_default.png") @db.VarChar(256)
   user_cover_img                                              String                 @default("user_default.png") @db.VarChar(256)
+  user_create_at                                              DateTime               @default(now()) @db.Timestamp(0)
   chat_user_chat_user_chat_user_oneTouser                     chat_user[]            @relation("chat_user_chat_user_oneTouser")
   chat_user_chat_user_chat_user_twoTouser                     chat_user[]            @relation("chat_user_chat_user_twoTouser")
   friends_relationship_friends_relationship_fk_user_oneTouser friends_relationship[] @relation("friends_relationship_fk_user_oneTouser")
@@ -79,15 +82,16 @@ enum MessageType {
 }
 
 model admin {
-  admin_id          Int     @id @default(autoincrement())
-  admin_username    String  @unique(map: "admin_username") @db.VarChar(60)
-  admin_password    String  @db.VarChar(256)
-  admin_email       String  @unique(map: "admin_email") @db.VarChar(256)
-  admin_phone       String? @unique(map: "admin_phone") @db.VarChar(12)
-  admin_name        String  @db.TinyText
-  admin_profile_img String  @default("user_default.png") @db.VarChar(256)
-  admin_cover_img   String  @default("user_default.png") @db.VarChar(256)
-  admin_role        Role    @default(CUSTOMER_SERVICE)
+  admin_id          Int      @id @default(autoincrement())
+  admin_username    String   @unique(map: "admin_username") @db.VarChar(60)
+  admin_password    String   @db.VarChar(256)
+  admin_email       String   @unique(map: "admin_email") @db.VarChar(256)
+  admin_phone       String?  @unique(map: "admin_phone") @db.VarChar(12)
+  admin_name        String   @db.TinyText
+  admin_profile_img String   @default("user_default.png") @db.VarChar(256)
+  admin_cover_img   String   @default("user_default.png") @db.VarChar(256)
+  admin_role        Role     @default(CUSTOMER_SERVICE)
+  admin_created_at  DateTime @default(now()) @db.Timestamp(0)
 }
 
 enum Role {

@@ -68,8 +68,35 @@ export const StyledCard = styled(Card)`
 export const StyledCardHeader = styled(CardHeader)`
       /* background-color: ${({ theme }) => theme.bg}; */
       background-color: transparent;
-      color: ${({ theme }) => theme.text};
+      /* color: ${({ theme }) => theme.text}; */
       border-radius: .8rem ;
+      .MuiCardHeader-title{
+        color: ${({ theme }) => theme.text};
+        font-weight: 700;
+        padding: .1rem;
+      }
+
+      .MuiCardHeader-content{
+        /* max-width: 75% !important; */
+        min-width: 14.5rem;
+        max-width: 75%;
+      }
+
+      .MuiCardHeader-action{
+        width: 1.6rem;
+        margin: auto;
+        color: ${({ theme }) => theme.primary};
+      }
+
+      .MuiCardHeader-subheader{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: ${({ theme }) => theme.text};
+        opacity: .7;
+
+      }
+
 
 `;
 export const StyledCardHeaderOptionbar = styled(StyledCardHeader)`

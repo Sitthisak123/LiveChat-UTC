@@ -11,6 +11,7 @@ router.post("/login", async (req, res) => {
         if (!(Username && Password)) {
             return res.status(400).send(`All input is required!!!`);
         }
+        
         const findUser = await prisma.user.findFirst({
             where: {
                 AND: [
