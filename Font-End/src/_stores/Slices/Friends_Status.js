@@ -22,6 +22,11 @@ export const FriendsStatusSlice = createSlice({
       }, []);
       state.Friend_data = uniqueRelations;
     },
+    CREATE_ONCE_FRIENDS_STATUS: (state, action) => {
+      const relations = action.payload;
+      state.Friend_data.push(relations);
+    },
+
     UPDATE_FRIENDS_STATUS: (state, action) => {
       const index = state.Friend_data.findIndex(Friend => (Friend.fk_user_one === action.payload.fk_user_one && Friend.fk_user_two === action.payload.fk_user_two) || (Friend.fk_user_one === action.payload.fk_user_two && Friend.fk_user_two === action.payload.fk_user_one));
       state.Friend_data[index] = { ...state.Friend_data[index], ...action.payload };
@@ -38,5 +43,5 @@ export const FriendsStatusSlice = createSlice({
   },
 });
 
-export const { CREATE_FRIENDS_STATUS, UPDATE_FRIENDS_STATUS, DELETE_FRIENDS_STATUS, CLEAR_FRIENDS_STATUS } = FriendsStatusSlice.actions;
+export const { CREATE_FRIENDS_STATUS, CREATE_ONCE_FRIENDS_STATUS, UPDATE_FRIENDS_STATUS, DELETE_FRIENDS_STATUS, CLEAR_FRIENDS_STATUS } = FriendsStatusSlice.actions;
 export default FriendsStatusSlice.reducer;

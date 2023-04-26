@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 const verify_TOKEN = require('../../middleware/Auth.js');
 const redis = require("redis");
 const redisClient = redis.createClient();
-
+const checkOnline = require('./../../_methods/Redis_methods.js');
 
 router.put('/update/name', verify_TOKEN, async (req, res) => {
     const { user_id } = req.user;
@@ -207,8 +207,11 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
     const { user_id } = req.user;
     const { newRelation, FriendID } = req.body;
     const RelationList = { Friend: 1, Favorite: 2, Require: 3 };
+    const io = require('./../../index.js');
+
     if (Object.values(RelationList).includes(newRelation)) {
         let update = []
+        let FriendData = {}
         try {
             update = await prisma.friends_relationship.updateMany({
                 where: {
@@ -227,13 +230,20 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
                     relation_status: newRelation
                 }
             });
+            FriendData = await prisma.user.findFirst({
+                where: {
+                    user_id: FriendID,
+                }
+            });
 
         } catch (err) {
             console.log(err);
         }
+        if (newRelation === RelationList.Friend && checkOnline(FriendID)) {
+            io.to(FriendID).emit('upDateRelation', { update, FriendData });
+        }
+        return res.status(200).send({ text: 'Update Status Success', newRelation: update, FriendData });
 
-
-        res.status(200).send({ text: 'Update Status Success', newRelation: update });
     } else if (newRelation === 0) {
         let newBlockedRelation = [];
         try {
@@ -298,6 +308,8 @@ router.put('/create/relations', verify_TOKEN, async (req, res) => {
     const { user_id } = req.user;
     const { FriendID } = req.body;
     let create_relation = {};
+    let FriendData = {};
+    const io = require('./../../index.js');
 
     if (FriendID !== null && FriendID !== undefined) {
         try {
@@ -308,6 +320,11 @@ router.put('/create/relations', verify_TOKEN, async (req, res) => {
                     relation_status: 3
                 }
             });
+            FriendData = await prisma.user.findFirst({
+                where: {
+                    user_id: FriendID,
+                }
+            });
             console.log(create_relation);
         } catch (error) {
             return res.status(403).send({ text: 'Friend Request Error' });
@@ -316,7 +333,11 @@ router.put('/create/relations', verify_TOKEN, async (req, res) => {
         return res.status(400).send({ text: 'Undefined Friend Request Error' });
     }
 
-    return res.status(200).send({ text: 'Friend Request Success' });
+    if (checkOnline(FriendID)) {
+        io.to(FriendID).emit('newRelation', {FriendData,create_relation});
+    }
+
+    return res.status(200).send({FriendData, create_relation});
 });
 
 router.put('/update/MessageStatus', verify_TOKEN, async (req, res) => {
@@ -325,8 +346,6 @@ router.put('/update/MessageStatus', verify_TOKEN, async (req, res) => {
     console.log(0)
     const MSG_Status = { delete: 1, Unsend: 2 };
     if (Object.values(MSG_Status).includes(newStatus)) {
-        console.log(1)
-
         try {
             const updateMSG = await prisma.msg_user_reply.findFirst({
                 where: {
@@ -334,24 +353,17 @@ router.put('/update/MessageStatus', verify_TOKEN, async (req, res) => {
                 }
             })
             if (updateMSG) {
-                console.log(2)
-                console.log('>>>')
-                console.log(newStatus)
                 let data = {}
                 if (updateMSG.fk_user_owner === user_id) {
-                    console.log(2.1)
-
                     data = {
                         msg_status_owner: newStatus,
                     }
                 } else if (updateMSG.fk_user_owner !== user_id && newStatus === 1) {
-                    console.log(2.2)
 
                     data = {
                         msg_status_other: newStatus,
                     }
                 } else {
-                    console.log(2.3)
                     return res.status(403).send({ text: "the new MSG Status has invalid" });
                 }
                 const updatedMessage = await prisma.msg_user_reply.update({
@@ -403,12 +415,12 @@ router.put('/update/ChatStatus', verify_TOKEN, async (req, res) => {
                 } else {
                     const MSG_StatusList = { normal: 0, delete: 1, Unsend: 2 };
                     ///Change All msg In Chat to
-                    
+
                     const updateMSGStatus = await prisma.msg_user_reply.updateMany({
                         where: {
                             fk_chat_id: cid,
                             OR: [
-                                { fk_user_owner: user_id,},
+                                { fk_user_owner: user_id, },
                             ],
                         },
                         data: {
@@ -420,8 +432,8 @@ router.put('/update/ChatStatus', verify_TOKEN, async (req, res) => {
                     const updateMSGStatus2 = await prisma.msg_user_reply.updateMany({
                         where: {
                             fk_chat_id: cid,
-                            OR: [   
-                                { fk_user_owner: { not: user_id }},
+                            OR: [
+                                { fk_user_owner: { not: user_id } },
                             ],
                         },
                         data: {

@@ -29,7 +29,7 @@ const Chat_optionBar = (props) => {
       <StyledCardHeaderOptionbar
         avatar={
           <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">
-            <Avatar alt={CardName} src={`http://localhost:9001/user/image/${CardID}/${CardImage}`} />
+            <Avatar alt={CardName} src={`${process.env.REACT_APP_IMG_URL}${CardID}/${CardImage}`} />
           </StyledBadge>
         }
         title={CardName}

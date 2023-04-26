@@ -117,7 +117,8 @@ const Profile = () => {
       setNewName({ ...newName, onload: false })
     }).catch((error) => {
       console.error('Error uploading file:', error);
-      alert('catch onUpload')
+      Navigate("/Chat");
+      // alert('catch onUpload')
       handleErrors(error);
     });
 

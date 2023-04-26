@@ -23,6 +23,7 @@ const UsersSlice = createSlice({
         UPDATE_CHAT_USERS: (state, action) => {
             const index = state.users.findIndex(user => user.user_id === action.payload.user_id);
             state.users[index] = action.payload;
+
         },
         DELETE_CHAT_USERS: (state, action) => {
             state.users = state.users.filter(user => user.user_id !== action.payload);

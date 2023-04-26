@@ -4,7 +4,6 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient()
 const jwt = require('jsonwebtoken');
 const verify_TOKEN = require('../../middleware/Auth.js');
-
 router.post("/init", verify_TOKEN, async (req, res) => {
     try {
         /// Fetch User data

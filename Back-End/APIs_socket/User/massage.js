@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-
+const checkOnline = require('./../../_methods/Redis_methods.js');
 
 module.exports = (io, socket, user_id) => {
 
@@ -109,18 +109,18 @@ module.exports = (io, socket, user_id) => {
 
 
 
-function checkOnline(user_id) {
-  const redis = require('redis');
-  const client = redis.createClient();
-  return new Promise((resolve, reject) => {
-    client.sismember("online_users", user_id, (err, isOnline) => {
-      if (err) throw err;
-      if (isOnline) {
-        resolve(true);
-      }
-      else {
-        resolve(false);
-      }
-    });
-  });
-}
+// function checkOnline(user_id) {
+//   const redis = require('redis');
+//   const client = redis.createClient();
+//   return new Promise((resolve, reject) => {
+//     client.sismember("online_users", user_id, (err, isOnline) => {
+//       if (err) throw err;
+//       if (isOnline) {
+//         resolve(true);
+//       }
+//       else {
+//         resolve(false);
+//       }
+//     });
+//   });
+// }

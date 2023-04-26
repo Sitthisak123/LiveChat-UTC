@@ -19,7 +19,7 @@ const ChatmessageUnsend = (props) => {
     <div key={id} className={`Chat_message_list ${my_id == from_id ? 'right' : 'left'}`}>
 
       <div className='Chat_Avatar'>
-        <Avatar alt={name} src={`http://localhost:9001/user/image/${my_id == from_id ? my_id : from_id}/${my_id == from_id ? User_data.value.user_profile_img : image}`} />
+        <Avatar alt={name} src={`${process.env.REACT_APP_IMG_URL}${my_id == from_id ? my_id : from_id}/${my_id == from_id ? User_data.value.user_profile_img : image}`} />
       </div>
 
       <div className={`Chat_informations ${my_id == from_id ? 'right' : 'left'}`}>

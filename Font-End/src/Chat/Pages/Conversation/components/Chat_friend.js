@@ -49,7 +49,7 @@ const Chat_friend = forwardRef((props, ref) => {
       return
     }
     if (isSmallScreen) {
-      props.onMouseDown({ uid, cid, pageState: true });
+      props.onClick({ uid, cid, pageState: true });
     } else {
       props.onClick({ uid, cid, pageState: false });
     }
@@ -60,7 +60,7 @@ const Chat_friend = forwardRef((props, ref) => {
 
         avatar={
           <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">
-            <Avatar alt={`${name}_${uid}`} src={`http://localhost:9001/user/image/${uid}/${image}`} />
+            <Avatar alt={`${name}_${uid}`} src={`${process.env.REACT_APP_IMG_URL}${uid}/${image}`} />
           </StyledBadge>
         }
         title={name}

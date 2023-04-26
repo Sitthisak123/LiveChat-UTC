@@ -18,10 +18,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import useErrorHandling from '../../../../_methods/HandleError';
 import {
     CREATE_FRIENDS_STATUS,
+    CREATE_ONCE_FRIENDS_STATUS,
     UPDATE_FRIENDS_STATUS,
     DELETE_FRIENDS_STATUS,
     CLEAR_FRIENDS_STATUS,
 } from '../../../../_stores/Slices/Friends_Status';
+import { CREATE_CHAT_USERS } from '../../../../_stores/Slices/chat_user';
 import {
     CREATE_CONVERSATION,
     UPDATE_CONVERSATION,
@@ -30,14 +32,17 @@ import {
 } from '../../../../_stores/Slices/chat_conversation.js';
 import { ChatContext } from '../../../Chat_content';
 import { API_NewChat } from '../../../../_APIs/user';
+import { useNavigate } from 'react-router-dom';
+
 const FriendCard = (props) => {
     const { CardType, CardName, FriendID, CardImage } = props;
     const { Chat_state, setChat_state } = useContext(ChatContext);
     //0 = block, 1,2 = friend,favorite, 3 = request
     const { User_data, Chat_data_users, Friends_relation, Chat_data_conversation } = useSelector((state) => ({ ...state }));
-    const dispacth = useDispatch();
+    const dispatch = useDispatch();
     const { handleErrors } = useErrorHandling();
     const [anchorEl, setAnchorEl] = useState(null);
+    const navigate = useNavigate();
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -53,39 +58,45 @@ const FriendCard = (props) => {
         const chat = Chat_data_conversation.conversation.filter(chat => (chat.chat_user_one === User_data.value.user_id && chat.chat_user_two === FriendID) || (chat.chat_user_one === FriendID && chat.chat_user_two === User_data.value.user_id));
 
         if (chat.length) {
-            alert(chat[0].chat_id)
-            dispacth(UPDATE_CONVERSATION({ chat_id: chat[0].chat_id, chat_open: true }));
-            setChat_state({ cid: chat[0].chat_id, uid: FriendID });
+            // alert(chat[0].chat_id)
+            dispatch(UPDATE_CONVERSATION({ chat_id: chat[0].chat_id, chat_open: true }));
+            setChat_state({ cid: chat[0].chat_id, uid: FriendID, pageState: true});
+            navigate("../../Chat");
             return
         }
         API_NewChat(User_data.value.user_TOKEN).put('', { FriendID }).then((response) => {
             const data = response.data;
             const newChat = { ...data, chat_open: true }
-            setChat_state({ cid: newChat.chst_id, uid: FriendID });
-            dispacth(UPDATE_CONVERSATION(response.data));
+            dispatch(CREATE_CONVERSATION(newChat));
+            navigate("../../Chat");
+            setChat_state({ cid: newChat.chst_id, uid: FriendID, pageState: true });
         }).catch((error) => {
             handleErrors(error);
-        })
+        });
     }
     const handleChangeRelations = (newRelation) => {
         API_ChangeRelations(User_data.value.user_TOKEN).put('', { newRelation, FriendID }).then((response) => {
+            alert(newRelation)
             if (newRelation === -1) {
-                dispacth(DELETE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID }))
+                dispatch(DELETE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID }))
             } else if (newRelation === 0) {
                 const temp_newRelation = response.data.newRelation;
-                dispacth(DELETE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID }))
-                dispacth(CREATE_FRIENDS_STATUS([temp_newRelation]))
+                dispatch(DELETE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID }))
+                dispatch(CREATE_FRIENDS_STATUS([temp_newRelation]))
             } else {
-                dispacth(UPDATE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID, relation_status: newRelation }))
+                dispatch(CREATE_CHAT_USERS(response.data.FriendData));
+                dispatch(UPDATE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID, relation_status: newRelation }))
+
             }
         }).catch((error) => {
             handleErrors(error);
         })
     }
     const HandleRequestFriend = () => {
-        alert(FriendID);
+        // alert(FriendID);
         API_RequestFriend(User_data.value.user_TOKEN).put('', { FriendID }).then((response) => {
-            console.log(response.data)
+            const {create_relation, FriendData } = response.data;
+            dispatch(CREATE_ONCE_FRIENDS_STATUS(create_relation));
         }).catch((error) => {
             handleErrors(error);
         });
@@ -96,7 +107,7 @@ const FriendCard = (props) => {
             <StyledCardHeader
                 avatar={
                     <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">
-                        <Avatar alt={`${CardName}_${FriendID}`} src={`http://localhost:9001/user/image/${FriendID}/${CardImage}`} />
+                        <Avatar alt={`${CardName}_${FriendID}`} src={`${process.env.REACT_APP_IMG_URL}${FriendID}/${CardImage}`} />
                     </StyledBadge>
                 }
                 title={

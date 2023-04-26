@@ -26,6 +26,7 @@ function Account() {
                     <p>ID</p>
                     <p style={{ fontSize: '1rem' }}>
                         {User_data.value.user_custom_id ? User_data.value.user_custom_id : '<Undefined>'}
+                        {User_data.value.user_custom_id ? null : <NavigateNextIcon />}
                     </p>
                 </StyledSettingIconButton>
                 <StyledSettingIconButton onClick={() => setDialogs({ ...dialogs, Email: true })} disableRipple sx={{ fontSize: '1.15rem' }}>

@@ -20,7 +20,7 @@ const Friends = () => {
   const handleClickLink = (event) => {
     setTextInput('');
   }
-  const { Friends_relation, User_data } = useSelector((state) => ({ ...state }))
+  const { Friends_relation, User_data, Ch } = useSelector((state) => ({ ...state }))
   const [ request, setRequest ] = useState(0);
   useEffect(() => {
     const count = Friends_relation.Friend_data.reduce((acc, friend) => {

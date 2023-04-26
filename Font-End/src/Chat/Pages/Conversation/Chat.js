@@ -31,7 +31,6 @@ const Chat = (props) => {
     const { socket_sendMessage } = useContext(SocketMethod);
     const Chat_textfield_Ref = useRef();
     const Chat_optionbar_Ref = useRef();
-
     function TextFieldOnKeyDown(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
