@@ -89,7 +89,7 @@ const DialogChangePhone = (props) => {
                 ) : (
                     <>
                         <Button onClick={onClose}>Cancel</Button>
-                        <Button onClick={handleSendButtonClick}>Send</Button>
+                        <Button onClick={handleSendButtonClick}>Change</Button>
                     </>
                 )}
             </DialogActions>

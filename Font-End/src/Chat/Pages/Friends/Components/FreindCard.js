@@ -76,7 +76,7 @@ const FriendCard = (props) => {
     }
     const handleChangeRelations = (newRelation) => {
         API_ChangeRelations(User_data.value.user_TOKEN).put('', { newRelation, FriendID }).then((response) => {
-            alert(newRelation)
+            // alert(newRelation)
             if (newRelation === -1) {
                 dispatch(DELETE_FRIENDS_STATUS({ fk_user_one: User_data.value.user_id, fk_user_two: FriendID }))
             } else if (newRelation === 0) {

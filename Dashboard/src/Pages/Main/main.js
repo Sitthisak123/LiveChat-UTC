@@ -13,7 +13,8 @@ import io from 'socket.io-client';
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import IconBreadcrumbs from "./sideBar/Componenta/BreadCrumb";
-const ENDPOINT = 'http://localhost:9001';
+const ENDPOINT = 'http://192.168.29.178:9001';
+export const UserOnline = createContext();
 
 const Main = () => {
   const [socket, setSocket] = useState(null);
@@ -26,7 +27,7 @@ const Main = () => {
     if (!TOKEN || admin_Store.admin_data.length < 1) {
       Navigate("/Login");
     }
-  },[])
+  }, [])
 
   useEffect(() => {
     const newSocket = io(ENDPOINT, {
@@ -61,12 +62,13 @@ const Main = () => {
         <OptionBarStyled>
           <OptionBar />
         </OptionBarStyled>
-        
-        <IconBreadcrumbs />
 
-        <MainContentStyled>
-          <Outlet />
-        </MainContentStyled>
+        <IconBreadcrumbs />
+        <UserOnline.Provider value={{onlineUser}}>
+          <MainContentStyled >
+            <Outlet />
+          </MainContentStyled>
+        </UserOnline.Provider>
       </MainStyled>
 
     </AppLayOutStyled>

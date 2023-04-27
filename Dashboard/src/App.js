@@ -14,7 +14,7 @@ import Main from './Pages/Main/main.js';
 import Login from './Pages/Login/login.js';
 import Auth from './Middleware/Auth.js';
 import UserDataTable from './Pages/UserManage/UserDataTable.js';
-
+import RealTime from './Pages/RealTime/realTime.js';
 
 
 export const ThemeContext = createContext();
@@ -39,8 +39,7 @@ function App() {
             <Route path="Auth/*" element={<Auth />} />
             <Route path="Login/*" element={<Login />} />
             <Route path="Main/*" element={<Main />} >
-              <Route path="1" element={<h1>RealTime</h1>} />
-              <Route path="RealTime" element={<h1>RealTime</h1>} />
+              <Route path="RealTime" element={<RealTime />} />
               <Route path="Analysis" element={<h1>Analysis</h1>} />
               
               <Route path="DataTable" element={<UserDataTable />} />
