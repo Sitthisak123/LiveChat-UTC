@@ -7,13 +7,14 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { API_ConfigID } from '../../../../../_APIs/system';
 import { useSelector } from 'react-redux';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { UPDATE_USER } from '../../../../../_stores/Slices/user';
 import { useDispatch } from 'react-redux';
 import useErrorHandling from '../../../../../_methods/HandleError';
+import { LanguageContext } from '../../../../../App';
 
 const DialogConfigID = (props) => {
     const { onOpen, onClose } = props;
@@ -22,6 +23,7 @@ const DialogConfigID = (props) => {
     const [customID, setCustomID] = useState(User_data.value.user_phone);
     const dispatch = useDispatch();
     const { handleErrors } = useErrorHandling();
+    const { Language } = useContext(LanguageContext);
     
     const handleSendButtonClick = () => {
 
@@ -49,9 +51,9 @@ const DialogConfigID = (props) => {
                 <DialogContentText sx={{ padding: '.5rem' }}>
                     <TextField
                         id="outlined-error-helper-text"
-                        label="ID"
+                        label={ Language.Setting.Account.id}
                         defaultValue={User_data.value.user_custom_id}
-                        helperText={"You cannot change this ID afterwards"}
+                        helperText={ Language.Setting.Account.dialog_ID.input_helps}
                         onChange={(event)=>setCustomID(event.target.value)}
                     />
                 </DialogContentText>
@@ -73,8 +75,8 @@ const DialogConfigID = (props) => {
                     </Fade>
                 ) : (
                     <>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button onClick={handleSendButtonClick}>Send</Button>
+                        <Button onClick={onClose}>{Language.Setting.Actions.cancel}</Button>
+                        <Button onClick={handleSendButtonClick}>{Language.Setting.Actions.send}</Button>
                     </>
                 )}
             </DialogActions>

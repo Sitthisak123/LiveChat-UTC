@@ -13,7 +13,7 @@ import io from 'socket.io-client';
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import IconBreadcrumbs from "./sideBar/Componenta/BreadCrumb";
-const ENDPOINT = 'http://192.168.29.178:9001';
+const ENDPOINT = `${process.env.REACT_APP_SOCKET_PORT}`;
 export const UserOnline = createContext();
 
 const Main = () => {

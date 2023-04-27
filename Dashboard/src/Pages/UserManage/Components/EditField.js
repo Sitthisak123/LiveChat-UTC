@@ -27,17 +27,17 @@ const EditField = (props) => {
             API_User_validate(admin_Store.admin_data.admin_TOKEN).post('', { itemKey: keyitem, itemData: FieldData }).then((response) => {
                 setOnValidate({ ...onValidate, load: false, state: response.data });
                 HandleChange({ keyitem, fieldName, FieldData, state: response.data })
-        onFieldFocus(false)
+                onFieldFocus(false)
 
             }).catch((error) => {
-        onFieldFocus(false)
+                onFieldFocus(false)
 
                 setOnValidate({ ...onValidate, load: false });
                 console.log(error.response)
                 // alert(error.response.data.text);
             })
         } else {
-        onFieldFocus(false)
+            onFieldFocus(false)
 
             setOnValidate({ ...onValidate, state: false });
         }
@@ -53,12 +53,12 @@ const EditField = (props) => {
                         <EastIcon className='add-frame-data-icon' />
                     }
 
-                    <input 
-                    type='text' 
-                    ref={InputField} 
-                    onChange={() => setOnValidate({ ...onValidate, state: null })} 
-                    onBlur={HanndleInputBlur} 
-                    onFocus={()=>onFieldFocus(true)}
+                    <input
+                        type='text'
+                        ref={InputField}
+                        onChange={() => setOnValidate({ ...onValidate, state: null })}
+                        onBlur={HanndleInputBlur}
+                        onFocus={() => onFieldFocus(true)}
                     />
                 </div>
                 {
@@ -75,16 +75,19 @@ const EditField = (props) => {
                                 : <div style={{ width: '1.5rem' }} ></div>
 
                 }
-                <div className='add-frame-action'>
-                    {
-                        onValidate.load ?
+
+                {
+                    onValidate.load ?
+                        <div className='add-frame-action'>
                             <ClearIcon />
-                            :
+                        </div>
+                        :
+                        <div className='add-frame-action' onMouseDown={() => unchoose(keyitem)}>
                             <ClearIcon
-                                onMouseDown={() => {
-                                    unchoose(keyitem);
-                                }} />}
-                </div>
+                                 />
+                        </div>
+                }
+
             </div>
         </>
     )

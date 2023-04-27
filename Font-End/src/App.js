@@ -13,6 +13,7 @@ import Redirect from './_methods/Redirect.js';
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/globalStyles";
 import { darkTheme, lightTheme } from "./styles/theme";
+import { Languages } from './styles/Languages.js';
 import { store } from './_stores/Stores.js';
 import { Provider } from 'react-redux';
 import FriendContent from './Chat/Pages/Friends/Components/Content.js';
@@ -30,69 +31,85 @@ import ChangePassword from './Services/Sub/ChangePassword.js';
 import VerifyEmail from './Services/Sub/VerifyEmail.js';
 
 export const ThemeContext = createContext();
-
+export const LanguageContext = createContext();
 function App() {
   const initTheme = JSON.parse(localStorage.getItem('system'));
   const currentTheme = initTheme?.theme;
   const [theme, setTheme] = useState(currentTheme === "light" || currentTheme === "dark" ? currentTheme : 'light');
   const themeStyle = theme === "light" ? lightTheme : darkTheme;
+  const [lang, setLang] = useState("th");
+
   useEffect(() => {
     localStorage.setItem('system', JSON.stringify({ theme }))
   }, [theme]);
+
+  useEffect(()=>{
+    const init_lang = localStorage.getItem('lang');
+    if(init_lang === 'en' || init_lang === 'th' ){
+      setLang(init_lang);
+    }
+},[])
+
+  useEffect(() => {
+    localStorage.setItem('lang', JSON.stringify(lang))
+  }, [lang]);
+
   return (
     <Provider store={store}>
-      <ThemeContext.Provider value={{ setTheme, theme }}>
-        <ThemeProvider theme={themeStyle}>
-          <GlobalStyle />
-          <Helmet>
-            <title>LiveChat-UTC</title>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-          </Helmet>
-          <Routes>
+      <LanguageContext.Provider value={{ lang, setLang, Language: lang === "en" ? Languages.en : lang === "th" ? Languages.th : '' }}>
+        <ThemeContext.Provider value={{ setTheme, theme }}>
+          <ThemeProvider theme={themeStyle}>
+            <GlobalStyle />
+            <Helmet>
+              <title>LiveChat-UTC</title>
+              <link rel="preconnect" href="https://fonts.googleapis.com" />
+              <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+              <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+            </Helmet>
+            <Routes>
 
-            <Route path="Services/*" element={<Service />}>
-              <Route path="ChangePassword" element={<ChangePassword />} />
-              <Route path="ForgotPassword" element={<ForgotPassword />} />
-              <Route path="VerifyEmail" element={<VerifyEmail />} />
-            </Route>
-            
-            <Route path="Auth/*" element={<Auth />} />
-
-            <Route path="Home/*" element={<Chatcontent />}>
-              <Route path="Test/*" element={<FriendBlockedManage />} />
-              <Route path="Profile" element={<Profile />} />
-              <Route path="Chat" element={<Conversation />} />
-              <Route path="Friend/Invite" element={<AddFriend />} />
-              <Route path="Friend/*" element={<Friends />} >
-                <Route path="Friends" element={<FriendContent />} />
-                <Route path="Favorites" element={<FriendContent />} />
-                <Route path="Request" element={<FriendContent />} />
-                <Route path="*" element={<Redirect value={"Friends"} />} />
+              <Route path="Services/*" element={<Service />}>
+                <Route path="ChangePassword" element={<ChangePassword />} />
+                <Route path="ForgotPassword" element={<ForgotPassword />} />
+                <Route path="VerifyEmail" element={<VerifyEmail />} />
               </Route>
 
-              <Route path="Settings/*" element={<Settings />} >
-                <Route path="Account" element={<Account />} />
-                <Route path="Chats" element={<Chats />} />
-                <Route path="Friends" element={<Friend />} />
-                <Route path="Language" element={<Language />} />
-                <Route path="Theme" element={<Theme />} />
-                <Route path="Blocked-Manage" element={<FriendBlockedManage />} />
-              </Route>
-              <Route path="*" element={<Redirect value={"Profile"} />} />
-            </Route>
+              <Route path="Auth/*" element={<Auth />} />
 
-            <Route path="Login/*" element={<Login />} >
-              <Route path="Signin" element={<Signin />} />
-              <Route path="Signup" element={<Signup />} />
-              <Route path="*" element={<Redirect value={"Signin"} />} />
-            </Route>
-            <Route path="*" element={<Redirect value={"Login"} />} />
-            
-          </Routes>
-        </ThemeProvider>
-      </ThemeContext.Provider>
+              <Route path="Home/*" element={<Chatcontent />}>
+                <Route path="Test/*" element={<FriendBlockedManage />} />
+                <Route path="Profile" element={<Profile />} />
+                <Route path="Chat" element={<Conversation />} />
+                <Route path="Friend/Invite" element={<AddFriend />} />
+                <Route path="Friend/*" element={<Friends />} >
+                  <Route path="Friends" element={<FriendContent />} />
+                  <Route path="Favorites" element={<FriendContent />} />
+                  <Route path="Request" element={<FriendContent />} />
+                  <Route path="*" element={<Redirect value={"Friends"} />} />
+                </Route>
+
+                <Route path="Settings/*" element={<Settings />} >
+                  <Route path="Account" element={<Account />} />
+                  <Route path="Chats" element={<Chats />} />
+                  <Route path="Friends" element={<Friend />} />
+                  <Route path="Language" element={<Language />} />
+                  <Route path="Theme" element={<Theme />} />
+                  <Route path="Blocked-Manage" element={<FriendBlockedManage />} />
+                </Route>
+                <Route path="*" element={<Redirect value={"Profile"} />} />
+              </Route>
+
+              <Route path="Login/*" element={<Login />} >
+                <Route path="Signin" element={<Signin />} />
+                <Route path="Signup" element={<Signup />} />
+                <Route path="*" element={<Redirect value={"Signin"} />} />
+              </Route>
+              <Route path="*" element={<Redirect value={"Login"} />} />
+
+            </Routes>
+          </ThemeProvider>
+        </ThemeContext.Provider>
+      </LanguageContext.Provider>
     </Provider>
   );
 }

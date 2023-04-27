@@ -5,7 +5,7 @@ import { SideBarStyled } from "../main-styled";
 import { SideBarHeadersStyled, SideBarOptoinStyled } from "./sideBar-styled";
 import Logo_dark from '../../../_assets/Logo-dark-2.PNG';
 import Logo_light from '../../../_assets/Logo-light.PNG';
-import profile_img from '../../../_assets/1.jpg';
+import profile_img from '../../../_assets/11.jpg';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';

@@ -7,13 +7,15 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { API_ChangePhoneNum, API_ForgotPassword } from '../../../../../_APIs/system';
 import { useSelector } from 'react-redux';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { UPDATE_USER } from '../../../../../_stores/Slices/user';
 import { useDispatch } from 'react-redux';
 import useErrorHandling from '../../../../../_methods/HandleError';
+import { LanguageContext } from '../../../../../App';
+
 const DialogChangePhone = (props) => {
     const { onOpen, onClose } = props;
     const { User_data } = useSelector((state) => ({ ...state }));
@@ -22,6 +24,9 @@ const DialogChangePhone = (props) => {
     const inputPhoneNum = useRef();
     const dispatch = useDispatch();
     const { handleErrors } = useErrorHandling();
+    const { Language } = useContext(LanguageContext);
+
+
     const validatePhoneNumber = (value) => {
         const regex = /^[0][1-9]\d{8,8}$/;
         return regex.test(value);
@@ -54,9 +59,11 @@ const DialogChangePhone = (props) => {
     return (
         <Dialog fullWidth={null} maxWidth={null} open={onOpen} onClose={onClose}>
             <DialogTitle sx={{ userSelect: 'none' }}>
-                {User_data.value.user_phone
-                    ? 'Change Phone Number'
-                    : 'Bind Your Phone Number'}
+                {
+                    User_data.value.user_phone
+                        ? Language.Setting.Account.dialog_Phone.headers_1
+                        : Language.Setting.Account.dialog_Phone.headers_2
+                }
             </DialogTitle>
             <DialogContent>
                 <DialogContentText sx={{ padding: '.5rem' }}>
@@ -64,7 +71,7 @@ const DialogChangePhone = (props) => {
                         id="outlined-error-helper-text"
                         label="Number Phone"
                         defaultValue={User_data.value.user_phone}
-                        helperText={validatePhoneNumber(phoneNumber) ? '' : "Please enter a valid phone number."}
+                        helperText={validatePhoneNumber(phoneNumber) ? '' :  Language.Setting.Account.dialog_Phone.input_helps}
                         inputRef={inputPhoneNum}
                         onChange={handleChangePhoneNumber}
                         error={!validatePhoneNumber(phoneNumber)}
@@ -88,8 +95,8 @@ const DialogChangePhone = (props) => {
                     </Fade>
                 ) : (
                     <>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button onClick={handleSendButtonClick}>Change</Button>
+                        <Button onClick={onClose}>{Language.Setting.Actions.cancel}</Button>
+                        <Button onClick={handleSendButtonClick}>{Language.Setting.Actions.change}</Button>
                     </>
                 )}
             </DialogActions>

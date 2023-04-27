@@ -5,8 +5,8 @@ import { btnReset } from "../../styles/variables";
 export const StyledModalBox = styled(Box)`
   position: absolute;
   width: 90%;
-  height: 90%;
-  max-height: 90%;
+  height: 95%;
+  max-height: 80%;
   max-width: 90%;
   top: 50%;
   left: 50%;
@@ -28,6 +28,7 @@ export const StyledBTN = styled.button`
     font-weight: 500;
 
     border-radius: 8px;
+    cursor: pointer;
 `;
 export const StyledAddEditFieldBTN = styled.button`
     ${btnReset};

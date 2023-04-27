@@ -7,12 +7,14 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import { API_Register } from '../../_APIs/user';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
+import { LanguageContext } from '../../App.js';
 
 const Signup = () => {
   const [useFormdata, setFormdata] = useState({});
   const Navigate = useNavigate();
   const Submit_btn = useRef();
   const [resOnload, setResOnload] = useState(false);
+  const { Language } = useContext(LanguageContext);
 
   function handleChange(event) {
     if (event.target.type === 'checkbox') {
@@ -54,34 +56,34 @@ const Signup = () => {
   return (
     <>
       <div className="formField">
-        <label className="formFieldLabel" htmlFor="Username">Username</label>
-        <input type="text" id="Username" className="formFieldInput" placeholder="Username" onChange={handleChange} />
+        <label className="formFieldLabel" htmlFor="Username">{Language.SignUp.username}</label>
+        <input type="text" id="Username" className="formFieldInput" placeholder={Language.SignUp.username} onChange={handleChange} />
       </div>
 
       <div className="formField">
-        <label className="formFieldLabel" htmlFor="Password">Password</label>
-        <input type="Password" id="Password" className="formFieldInput" placeholder="Password" onChange={handleChange} />
+        <label className="formFieldLabel" htmlFor="Password">{Language.SignUp.password}</label>
+        <input type="Password" id="Password" className="formFieldInput" placeholder={Language.SignUp.password} onChange={handleChange} />
       </div>
 
       <div className="formField">
-        <label className="formFieldLabel" htmlFor="Confirm Password">Confirm Password</label>
-        <input type="Password" id="ConfirmPassword" className="formFieldInput" placeholder="Confirm Password" onChange={handleChange} />
+        <label className="formFieldLabel" htmlFor="Confirm Password">{Language.SignUp.confirmPSW}</label>
+        <input type="Password" id="ConfirmPassword" className="formFieldInput" placeholder={Language.SignUp.confirmPSW} onChange={handleChange} />
       </div>
 
       <div className="formField">
-        <label className="formFieldLabel" htmlFor="Email">E-mail</label>
-        <input type="email" id="Email" className="formFieldInput" placeholder="E-mail" onChange={handleChange} />
+        <label className="formFieldLabel" htmlFor="Email">{Language.SignUp.email}</label>
+        <input type="email" id="Email" className="formFieldInput" placeholder={Language.SignUp.email} onChange={handleChange} />
 
         <br /><br /><label className="formFieldCheckboxLabel">
-          <input className="formFieldCheckbox" type="checkbox" name="hasAgreed" onChange={handleChange} />{" "} I agree all statements in{" "}
-          <a href="null" className="formFieldTermsLink"> terms of service </a>
+          <input className="formFieldCheckbox" type="checkbox" name="hasAgreed" onChange={handleChange} />{" "} {Language.SignUp.termsLink} {" "}
+          <a href="null" className="formFieldTermsLink">{Language.SignUp.termsLink}</a>
         </label>
       </div>
 
       <div className="formField google-login">
         {
           !resOnload ?
-            <button className="formFieldButton" ref={Submit_btn} onClick={onSubmit}>Sign Up</button>
+            <button className="formFieldButton" ref={Submit_btn} onClick={onSubmit}>{Language.SignUp.signup}</button>
             :
             <button className="formFieldButton" disabled={true} ref={Submit_btn} >
               <Fade
@@ -96,7 +98,7 @@ const Signup = () => {
             </button>
 
         }
-        <label className="email_or_google">or</label>
+        <label className="email_or_google">{Language.Login.or}</label>
         <GoogleLogin className='Google-button' buttonText='Sign Up with Google' />
       </div>
     </>

@@ -55,7 +55,6 @@ const Conversation = () => {
                         </SSearchIcon>
                 }
             </SSearch>
-
             {
                 Chat_data_conversation.conversation_Pin.map((data) => {
                     try {

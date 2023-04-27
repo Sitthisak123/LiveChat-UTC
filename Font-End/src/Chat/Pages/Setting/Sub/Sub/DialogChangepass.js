@@ -7,15 +7,17 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { API_ForgotPassword } from '../../../../../_APIs/system';
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
+import { LanguageContext } from '../../../../../App';
 
 const DialogChangePassword = (props) => {
     const { onOpen, onClose } = props;
     const { User_data } = useSelector((state) => ({ ...state }));
     const [onLoad, setOnLoad] = useState(false);
     const [hasSend, setHasSend] = useState(false);
+    const { Language } = useContext(LanguageContext);
 
     const handleChangePassword = () => {
         setOnLoad(true);
@@ -36,14 +38,14 @@ const DialogChangePassword = (props) => {
             open={onOpen}
             onClose={onClose}
         >
-            <DialogTitle sx={{ userSelect: 'none' }}>{hasSend? "Please check your inbox":"Change Password"}</DialogTitle>
+            <DialogTitle sx={{ userSelect: 'none' }}>{hasSend? Language.Setting.Account.dialog_ChangePSW.headers_2 : Language.Setting.Account.dialog_ChangePSW.headers_1}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     {
                         hasSend ?
-                            "We have sent a link to your email. Please check your inbox"
+                        Language.Setting.Account.dialog_ChangePSW.info_2
                             :
-                            "We will send a link to your email to reset your password. Please check your inbox"
+                        Language.Setting.Account.dialog_ChangePSW.info_1
 
                     }
                 </DialogContentText>
@@ -63,7 +65,7 @@ const DialogChangePassword = (props) => {
             <DialogActions>
                 {
                     hasSend ?
-                        <Button onClick={onClose}>OK</Button>
+                        <Button onClick={onClose}>{Language.Setting.Actions.ok}</Button>
                         :
                         onLoad ?
                             <Fade
@@ -77,8 +79,8 @@ const DialogChangePassword = (props) => {
                             </Fade>
                             :
                             <>
-                                <Button onClick={onClose}>Cancel</Button>
-                                <Button onClick={handleChangePassword}>Send</Button>
+                                <Button onClick={onClose}>{Language.Setting.Actions.cancel}</Button>
+                                <Button onClick={handleChangePassword}>{Language.Setting.Actions.send}</Button>
                             </>
                 }
             </DialogActions>

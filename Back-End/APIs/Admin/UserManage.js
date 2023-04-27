@@ -45,6 +45,11 @@ router.post("/Delete-User", verify_TOKEN, async (req, res) => {
     try {
         const { user_id } = req.body;
         console.log(user_id);
+        const deleteUser = await prisma.user.delete({
+            where: {
+                user_id: user_id,
+            }
+        });
         res.status(200).send({ text: "User has Deteled" });
     } catch (err) {
         console.log(err);

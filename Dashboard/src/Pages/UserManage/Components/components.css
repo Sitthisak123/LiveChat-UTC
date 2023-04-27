@@ -1,10 +1,11 @@
 .add-btn-frame{
-    border: 1px solid blue;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: .5rem 1rem;
-    gap: 1rem;
+    padding: .45rem 1rem;
+    gap: .8rem;
+    margin-bottom: .2rem;
+    background-color: rgba(0, 0, 0, 0.15);
 }
 .add-frame-field-namez{
     padding: .6rem;
@@ -33,7 +34,6 @@
     background-color: transparent;
     border: none;
 
-    border: 1px solid blue;
 }
 .add-frame-data > .previous-data{
     width: 45%;
@@ -46,9 +46,15 @@
     display: flex;
     align-items: center;
     padding: .5rem;
-
-    border: 1px solid blue;
+    background-color: rgba(25, 25, 25, .08);
+    cursor: pointer;
 }
+
+.add-frame-action:hover{
+
+    background-color: rgba(25, 25, 25, .2);
+}
+
 .add-frame-data-icon{
     font-size: 3rem !important;
 }

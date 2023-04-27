@@ -23,13 +23,7 @@ import {
 import EditField from './Components/EditField';
 import AddEditField from './Components/AddEditField';
 import DialogBan from './Components/dialog-Ban';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
 function customCheckbox() {
     return {
@@ -264,13 +258,15 @@ const UserDataTable = () => {
     }
 
     const handleDelete = (user_id) => {
-        alert('handleDelete');
+        // alert('handleDelete');
         API_Delete_User(admin_Store.admin_data.admin_TOKEN).post('', { user_id }).then((response) => {
-            alert(response.data.text)
+            console.log(response.data.text);
         }).catch((error) => {
             const data = error.response.data;
             console.log(data);
-        })
+        });
+        HandleGetALlUser();
+        handleCloseModal();
     }
 
     const handleCloseModal = () => {
@@ -300,7 +296,7 @@ const UserDataTable = () => {
             field: 'user_image', headerName: 'Image', width: 80,
             renderCell: (params) => {
                 return (
-                    <Avatar alt={`${params.row.user_name}`} src={`http://localhost:9001/user/image/${params.row.user_id}/${params.row.user_profile_img}`} />
+                    <Avatar alt={`${params.row.user_name}`} src={`${process.env.REACT_APP_IMG_URL}${params.row.user_id}/${params.row.user_profile_img}`} />
                 )
             }
         },
@@ -309,7 +305,7 @@ const UserDataTable = () => {
         { field: 'user_username', headerName: 'Username', width: 140 },
         { field: 'user_name', headerName: 'Name', width: 180, },
         { field: 'user_email', headerName: 'Email', width: 190, },
-        { field: 'user_password', headerName: 'Password', width: 150, },
+        // { field: 'user_password', headerName: 'Password', width: 150, },
         { field: 'user_phone', headerName: 'Phone', width: 130, },
         {
             field: 'actions', headerName: 'Actions',
@@ -317,8 +313,8 @@ const UserDataTable = () => {
             renderCell: (params) => {
                 return (
                     <div>
-                        <button onClick={() => handleEdit(params.row)}>Edit</button>
-                        <button onClick={() => handleDelete(params.row.user_id)}>Delete</button>
+                        <button className='acton-edit-btn' onClick={() => handleEdit(params.row)}><EditNoteIcon /><p>Edit</p></button>
+                        {/* <button onClick={() => handleDelete(params.row.user_id)}>Delete</button> */}
                     </div>
                 );
             },
@@ -374,7 +370,7 @@ const UserDataTable = () => {
                         <div className='modal-profile'>
                             <Avatar
                                 alt={`${EditModal.user.user_name}`}
-                                src={`http://localhost:9001/user/image/${EditModal.user.user_id}/${EditModal.user.user_profile_img}`}
+                                src={`${process.env.REACT_APP_IMG_URL}${EditModal.user.user_id}/${EditModal.user.user_profile_img}`}
                                 sx={{ width: '8rem', height: '8rem', fontSize: '4rem' }}
                             />
                             <p className='modal-profile-name'>{EditModal.user.user_name}</p>
@@ -453,11 +449,11 @@ const UserDataTable = () => {
 
                             }
                         </div>
-                    </div>
+                    </div> 
                 </StyledModalBox>
             </Modal>
 
-            <DialogBan dialogs={dialogs} setDialogs={setDialogs} UID={EditModal.user.user_id}/>
+            <DialogBan dialogs={dialogs} setDialogs={setDialogs} UID={EditModal.user.user_id} />
 
             {/* <Dialog
                 open={dialogs.ban}

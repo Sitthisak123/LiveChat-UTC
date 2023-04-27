@@ -7,13 +7,14 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { API_ChangeEmail, API_VerifyChangeEmail } from '../../../../../_APIs/system';
 import { useSelector } from 'react-redux';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import Fade from '@mui/material/Fade';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { UPDATE_USER } from '../../../../../_stores/Slices/user';
 import { useDispatch } from 'react-redux';
 import useErrorHandling from '../../../../../_methods/HandleError';
+import { LanguageContext } from '../../../../../App';
 
 const DialogChangeEmail = (props) => {
     const { onOpen, onClose } = props;
@@ -26,6 +27,8 @@ const DialogChangeEmail = (props) => {
     const [verifyCode, setVerifyCode] = useState('');
     const emailInput_ref = useRef();
     const verfiInput_ref = useRef();
+    const { Language } = useContext(LanguageContext);
+
     const handleSendButtonClick = () => {
         setOnLoad(true);
         API_ChangeEmail(User_data.value.user_TOKEN).put('', { newEmail: Email })
@@ -64,7 +67,7 @@ const DialogChangeEmail = (props) => {
     return (
         <Dialog fullWidth={null} maxWidth={null} open={onOpen} onClose={null}>
             <DialogTitle sx={{ userSelect: 'none' }}>
-                {hasSent ? "Verify new Email" : "Change Email"}
+                {hasSent ? Language.Setting.Account.dialog_Email.headers_2 : Language.Setting.Account.dialog_Email.headers_1}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText sx={{ padding: '.5rem' }}>
@@ -72,14 +75,14 @@ const DialogChangeEmail = (props) => {
                         hasSent ?
                             <TextField
                                 inputRef={verfiInput_ref}
-                                label="Your verification COde"
-                                helperText={`check your inbox: "${Email}", code Will Expire in 5minute`}
+                                label={Language.Setting.Account.dialog_Email.placeholder_2}
+                                helperText={`${Language.Setting.Account.dialog_Email.input_helps_left}"${Email}${Language.Setting.Account.dialog_Email.input_helps_right}`}
                                 onChange={(event) => setVerifyCode(event.target.value)}
                             />
                             :
                             <TextField
                                 inputRef={emailInput_ref}
-                                label="Your new Email"
+                                label={Language.Setting.Account.dialog_Email.placeholder_1}
                                 helperText={""}
                                 onChange={(event) => setEmail(event.target.value)}
                             />
@@ -103,12 +106,12 @@ const DialogChangeEmail = (props) => {
                     </Fade>
                 ) : (
                     <>
-                        <Button onClick={onClose}>Cancel</Button>
+                        <Button onClick={onClose}>{Language.Setting.Actions.cancel}</Button>
                         {
                             hasSent ?
-                                <Button onClick={handleVerifyButtonClick}>Apply</Button>
+                                <Button onClick={handleVerifyButtonClick}>{onClose}>{Language.Setting.Actions.apply}</Button>
                                 :
-                                <Button onClick={handleSendButtonClick}>Send</Button>
+                                <Button onClick={handleSendButtonClick}>{Language.Setting.Actions.send}</Button>
 
                         }
                     </>

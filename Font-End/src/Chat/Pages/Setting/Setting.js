@@ -25,13 +25,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
-import { useEffect, useState } from "react";
-
+import { useContext, useEffect, useState } from "react";
+import { LanguageContext } from "../../../App";
 function Settings() {
     const dispacth = useDispatch();
     const navigate = useNavigate();
     const [isDialogOpen, setisDialogOpen] = useState(false);
     const { pathname } = useLocation();
+    const { Language } = useContext(LanguageContext);
     const {
         User_data,
         Chat_data_conversation,
@@ -45,44 +46,44 @@ function Settings() {
         {
             type: 0,
             icon: <ManageAccountsIcon sx={{ fontSize: '1.5rem' }} />,
-            text: 'Account',
+            text: Language.Setting.account,
             action: () => navigate('Account'),
         },
         {
             type: 1,
             icon: <PeopleAltIcon sx={{ fontSize: '1.5rem' }} />,
-            text: 'Friends',
+            text: Language.Setting.friends,
             action: () => navigate('Friends'),
         },
         {
             icon: <SmsIcon sx={{ fontSize: '1.5rem' }} />,
-            text: 'Chats',
+            text: Language.Setting.chats,
             action: () => navigate('Chats'),
         },
         {
             icon: <LanguageIcon sx={{ fontSize: '1.5rem' }} />,
-            text: 'Language',
+            text: Language.Setting.language,
             action: () => navigate('Language'),
         },
         {
             icon: <ColorLensIcon sx={{ fontSize: '1.5rem' }} />,
-            text: 'Theme',
+            text: Language.Setting.theme,
             action: () => navigate('Theme'),
         },
         {   
             type: 2,
             icon: <ColorLensIcon sx={{ fontSize: '1.5rem' }} />,
-            text: 'Reset Settings',
+            text: Language.Setting.resetSetting,
             action: () => navigate('Reset'),
         },
 
     ]
     const Optiontype = [
-        "Personal info", 'General','System'
+        Language.Setting.info_1, Language.Setting.info_2,Language.Setting.info_3
     ]
     const handleLogout = () => {
         dispacth(DELETE_USER());
-        localStorage.clear();
+        localStorage.removeItem("TOKEN");
         navigate('/Auth');
     }
     useEffect(() => console.log(pathname === '/Home/Settings'))
@@ -96,7 +97,7 @@ function Settings() {
     return (
         <>
             <StyledPageHeaders style={{ marginBottom: '.5rem' }}>
-                <p>Settings</p>
+                <p>{Language.Setting.headers}</p>
             </StyledPageHeaders>
             {
                 OpionSettings.map((option) => {
@@ -124,7 +125,7 @@ function Settings() {
                 onClick={() => setisDialogOpen(true)}
             >
                 <LogoutIcon color="error" className="logouticon" sx={{ fontSize: '1.5rem' }}></LogoutIcon>
-                <p style={{ marginLeft: '.5rem', width: '100%', fontSize: '1.2rem', color: 'red' }} >Logout</p>
+                <p style={{ marginLeft: '.5rem', width: '100%', fontSize: '1.2rem', color: 'red' }} >{Language.Setting.logout}</p>
             </StyledSettingIconButton>
 
             <Dialog
@@ -133,16 +134,16 @@ function Settings() {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title" sx={{ minWidth: '220px' }}>
-                    Logout
+                    {Language.Setting.logout}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        are You Sure?
+                        {Language.Setting.dialog_Logout.info}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <StyledDangerButton onClick={handleLogout}> Yes </StyledDangerButton>
-                    <Button onClick={() => setisDialogOpen(false)} autoFocus> No </Button>
+                    <StyledDangerButton onClick={handleLogout}>  {Language.Setting.Actions.yes} </StyledDangerButton>
+                    <Button onClick={() => setisDialogOpen(false)} autoFocus> {Language.Setting.Actions.no} </Button>
                 </DialogActions>
             </Dialog>
         </>

@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import FriendCard from "../../../Friends/Components/FreindCard";
 import { useNavigate } from "react-router-dom";
 import Headbar from '../Component/Headbar.js';
+import { LanguageContext } from '../../../../../App';
+
 const FriendBlockedManage = () => {
     const { User_data, Chat_data_conversation, Chat_data_users, Chat_data_msg, Friends_relation } = useSelector((state) => ({ ...state }));
     const [userData, setUserData] = useState([]);
     const navigate = useNavigate();
+    const { Language } = useContext(LanguageContext);
+
     useEffect(() => {
         const BlockedFiltered = Friends_relation.Friend_data.filter(relation =>
             relation.fk_user_one === User_data.value.user_id && relation.relation_status === 0
