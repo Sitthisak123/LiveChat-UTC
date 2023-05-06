@@ -34,21 +34,15 @@ export const ThemeContext = createContext();
 export const LanguageContext = createContext();
 function App() {
   const initTheme = JSON.parse(localStorage.getItem('system'));
+  const init_lang = JSON.parse(localStorage.getItem('lang'));
   const currentTheme = initTheme?.theme;
   const [theme, setTheme] = useState(currentTheme === "light" || currentTheme === "dark" ? currentTheme : 'light');
   const themeStyle = theme === "light" ? lightTheme : darkTheme;
-  const [lang, setLang] = useState("th");
+  const [lang, setLang] = useState(init_lang === "en" || init_lang === "th"? init_lang: "th" );
 
   useEffect(() => {
     localStorage.setItem('system', JSON.stringify({ theme }))
   }, [theme]);
-
-  useEffect(()=>{
-    const init_lang = localStorage.getItem('lang');
-    if(init_lang === 'en' || init_lang === 'th' ){
-      setLang(init_lang);
-    }
-},[])
 
   useEffect(() => {
     localStorage.setItem('lang', JSON.stringify(lang))

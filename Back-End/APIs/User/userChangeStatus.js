@@ -212,8 +212,9 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
     if (Object.values(RelationList).includes(newRelation)) {
         let update = []
         let FriendData = {}
+        let UserData = {}
         try {
-            update = await prisma.friends_relationship.updateMany({
+            const findRelation = await prisma.friends_relationship.findFirst({
                 where: {
                     OR: [
                         {
@@ -226,6 +227,17 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
                         }
                     ]
                 },
+            })
+            console.log(findRelation)
+            update = await prisma.friends_relationship.update({
+                where:
+                {
+                    fk_user_one_fk_user_two: {
+                        fk_user_one: findRelation.fk_user_one,
+                        fk_user_two: findRelation.fk_user_two
+                    }
+
+                },
                 data: {
                     relation_status: newRelation
                 }
@@ -233,6 +245,37 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
             FriendData = await prisma.user.findFirst({
                 where: {
                     user_id: FriendID,
+                }, select:
+                {
+                    user_id: true,
+                    google_id: false,
+                    user_custom_id: false,
+                    user_username: false,
+                    user_password: false,
+                    user_email: false,
+                    user_phone: false,
+                    user_name: true,
+                    user_profile_img: true,
+                    user_cover_img: true
+
+                }
+            });
+            UserData = await prisma.user.findFirst({
+                where: {
+                    user_id: user_id,
+                }, select:
+                {
+                    user_id: true,
+                    google_id: false,
+                    user_custom_id: false,
+                    user_username: false,
+                    user_password: false,
+                    user_email: false,
+                    user_phone: false,
+                    user_name: true,
+                    user_profile_img: true,
+                    user_cover_img: true
+
                 }
             });
 
@@ -240,8 +283,9 @@ router.put('/update/relations', verify_TOKEN, async (req, res) => {
             console.log(err);
         }
         if (newRelation === RelationList.Friend && checkOnline(FriendID)) {
-            io.to(FriendID).emit('upDateRelation', { update, FriendData });
+            io.to(FriendID).emit('upDateRelation', { update, UserData });
         }
+        io.to(user_id).emit('upDateRelation', { update, FriendData });
         return res.status(200).send({ text: 'Update Status Success', newRelation: update, FriendData });
 
     } else if (newRelation === 0) {
@@ -309,6 +353,7 @@ router.put('/create/relations', verify_TOKEN, async (req, res) => {
     const { FriendID } = req.body;
     let create_relation = {};
     let FriendData = {};
+    let UserData = {};
     const io = require('./../../index.js');
 
     if (FriendID !== null && FriendID !== undefined) {
@@ -323,6 +368,37 @@ router.put('/create/relations', verify_TOKEN, async (req, res) => {
             FriendData = await prisma.user.findFirst({
                 where: {
                     user_id: FriendID,
+                }, select:
+                {
+                    user_id: true,
+                    google_id: false,
+                    user_custom_id: false,
+                    user_username: false,
+                    user_password: false,
+                    user_email: false,
+                    user_phone: false,
+                    user_name: true,
+                    user_profile_img: true,
+                    user_cover_img: true
+    
+                }
+            });
+            UserData = await prisma.user.findFirst({
+                where: {
+                    user_id: user_id,
+                }, select:
+                {
+                    user_id: true,
+                    google_id: false,
+                    user_custom_id: false,
+                    user_username: false,
+                    user_password: false,
+                    user_email: false,
+                    user_phone: false,
+                    user_name: true,
+                    user_profile_img: true,
+                    user_cover_img: true
+    
                 }
             });
             console.log(create_relation);
@@ -334,10 +410,10 @@ router.put('/create/relations', verify_TOKEN, async (req, res) => {
     }
 
     if (checkOnline(FriendID)) {
-        io.to(FriendID).emit('newRelation', {FriendData,create_relation});
+        io.to(FriendID).emit('newRelation', { FriendData: UserData, create_relation });
     }
 
-    return res.status(200).send({FriendData, create_relation});
+    return res.status(200).send({ FriendData, create_relation });
 });
 
 router.put('/update/MessageStatus', verify_TOKEN, async (req, res) => {

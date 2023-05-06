@@ -60,19 +60,27 @@ const Home = ({ children }) => {
       console.log(data)
       dispatch(CREATE_CONVERSATION(data));
     })
+
+    //////////////////////////////////////////////////////////
+
     socket.on('newRelation', (data) => {
       console.log('newRelation')
       console.log(data)
       dispatch(CREATE_ONCE_FRIENDS_STATUS(data.create_relation));
       dispatch(CREATE_CHAT_USERS(data.FriendData));
     })
+
+    //////////////////////////////////////////////////////////
+
+
     socket.on('upDateRelation', (data) => {
       console.log('upDateRelation')
       console.log(data)
       dispatch(UPDATE_FRIENDS_STATUS(data.update));
       dispatch(CREATE_CHAT_USERS(data.FriendData));
     })
-
+    
+    //////////////////////////////////////////////////////////
     socket.on('Unsend-message', (data) => {
       console.log(data)
       if (data.status === 200) {

@@ -97,6 +97,7 @@ const FriendCard = (props) => {
         API_RequestFriend(User_data.value.user_TOKEN).put('', { FriendID }).then((response) => {
             const {create_relation, FriendData } = response.data;
             dispatch(CREATE_ONCE_FRIENDS_STATUS(create_relation));
+            dispatch(CREATE_CHAT_USERS(FriendData));
         }).catch((error) => {
             handleErrors(error);
         });

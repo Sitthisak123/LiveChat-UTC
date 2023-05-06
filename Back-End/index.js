@@ -8,8 +8,8 @@ const io = new Server(server, {
     origin: [
       process.env.CLIENT_SOCKET_API,
       process.env.CLIENT_SOCKET_DASHBORD_API,
-      "localhost:3001",
-      "localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3000",
     ],
     methods: ["GET", "POST"]
   }
