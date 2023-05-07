@@ -77,3 +77,25 @@
     inset -1px -1px 8px rgba(255, 255, 255, 0.4);
   opacity: .8;
 }
+.FILE {
+  padding: .2rem .2rem;
+  border-radius: .6rem;
+  display: flex;
+  flex-direction: column;
+}
+.FILE_name{
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: .8rem;
+  background-color: rgba(0,0,0,.15);
+  border-radius: .2rem;
+}
+.FILE_open-btn{
+  padding-block: .8rem;
+  background-color: rgba(255,255,255,.2);
+  border: none;
+  cursor: pointer;
+}
+.FILE_open-btn:hover{
+  background-color: rgba(255,255,255,.6);
+}

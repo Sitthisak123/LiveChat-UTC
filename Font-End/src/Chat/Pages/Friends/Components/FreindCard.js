@@ -1,7 +1,6 @@
 import './FreindCard.css';
 import { StyledCard, StyledCardHeader, StyledBadge, StyledFriendActionIconButton } from "../../../styles";
 import { Avatar } from "@mui/material";
-import img from '../../../../_assets/1.jpg';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
@@ -65,15 +64,17 @@ const FriendCard = (props) => {
             return
         }
         API_NewChat(User_data.value.user_TOKEN).put('', { FriendID }).then((response) => {
+            console.log(response.text);
             const data = response.data;
-            const newChat = { ...data, chat_open: true }
+            const newChat = { ...data.newChat, chat_open: true }
             dispatch(CREATE_CONVERSATION(newChat));
+            setChat_state({ cid: newChat.chat_id, uid: FriendID, pageState: true });
             navigate("../../Chat");
-            setChat_state({ cid: newChat.chst_id, uid: FriendID, pageState: true });
         }).catch((error) => {
             handleErrors(error);
         });
     }
+
     const handleChangeRelations = (newRelation) => {
         API_ChangeRelations(User_data.value.user_TOKEN).put('', { newRelation, FriendID }).then((response) => {
             // alert(newRelation)
@@ -92,6 +93,7 @@ const FriendCard = (props) => {
             handleErrors(error);
         })
     }
+
     const HandleRequestFriend = () => {
         // alert(FriendID);
         API_RequestFriend(User_data.value.user_TOKEN).put('', { FriendID }).then((response) => {

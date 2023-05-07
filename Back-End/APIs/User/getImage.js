@@ -5,7 +5,6 @@ const path = require('path');
 const fs = require('fs');
 const verify_TOKEN = require('../../middleware/Auth.js');
 const { PrismaClient } = require('@prisma/client');
-const { Console } = require('console');
 const prisma = new PrismaClient()
 
 

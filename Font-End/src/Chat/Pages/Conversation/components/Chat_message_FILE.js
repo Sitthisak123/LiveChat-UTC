@@ -1,37 +1,28 @@
-/* eslint-disable eqeqeq */
 import './Chat_message.css';
 import Avatar from '@mui/material/Avatar';
-import { useDispatch, useSelector } from 'react-redux';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { useContext, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { API_ChangeMessageStatus } from '../../../../_APIs/system';
 import Fade from '@mui/material/Fade';
-import CircularProgress from '@mui/material/CircularProgress';
-import { UPDATE_CHAT_MSG, DELETE_CHAT_MSG } from '../../../../_stores/Slices/chat_msg';
-import useErrorHandling from '../../../../_methods/HandleError';
+import { useContext, useRef, useState } from 'react';
 import { SocketMethod } from '../../../../Home/Home';
-const Chat_message = (props) => {
-  const { id, from_id, name, message, timest, image } = props;
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CircularProgress from '@mui/material/CircularProgress';
+import axios from 'axios';
+
+
+const ChatmessageFILE = (props) => {
+  const { id, from_id, name, message, timest, image, msg_type } = props;
   const { User_data } = useSelector((state) => ({ ...state }));
   const my_id = User_data.value.user_id;
   const msg_ref = useRef();
+  const FILE_info = JSON.parse(message);
   const [onHover, setOnHover] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [menu, setMenu] = useState(false);
   const [onload, setOnload] = useState(false);
-  const dispatch = useDispatch();
-  const { handleErrors } = useErrorHandling();
   const { socket_UnSendMessage } = useContext(SocketMethod);
-
-  const date = new Date(timest);
-  const year = date.getFullYear();
-  const month = ('0' + (date.getMonth() + 1)).slice(-2);
-  const day = ('0' + date.getDate()).slice(-2);
-  const hour = ('0' + date.getHours()).slice(-2);
-  const minute = ('0' + date.getMinutes()).slice(-2);
-  const outputTime = `${year}/${month}/${day} ${hour}:${minute}`;
 
   const handleOpenMenu = (event) => {
     setAnchorEl(msg_ref.current);
@@ -51,6 +42,33 @@ const Chat_message = (props) => {
     const newStatusMSG = mode === 'delete' ? 1 : mode === 'unsend' ? 2 : '';
     socket_UnSendMessage({ newStatus: newStatusMSG, msg_id: id });
   }
+
+  const handleDownload = async () => {
+    try {
+
+      const response = await axios.get(`${process.env.REACT_APP_ASSESTS_URL}${FILE_info.src}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', FILE_info.originalname);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const date = new Date(timest);
+  const year = date.getFullYear();
+  const month = ('0' + (date.getMonth() + 1)).slice(-2);
+  const day = ('0' + date.getDate()).slice(-2);
+  const hour = ('0' + date.getHours()).slice(-2);
+  const minute = ('0' + date.getMinutes()).slice(-2);
+  const outputTime = `${year}/${month}/${day} ${hour}:${minute}`;
+
   const anchorSetUp = my_id == from_id ?
     {
       anchorOrigin: {
@@ -72,27 +90,26 @@ const Chat_message = (props) => {
       },
     }
 
-
   return (
-    <div key={id} className={`Chat_message_list ${my_id == from_id ? 'right' : 'left'}`}>
+    <div key={id} className={`Chat_message_list ${my_id === from_id ? 'right' : 'left'}`}>
 
       <div className='Chat_Avatar'>
-        <Avatar alt={name} src={`${process.env.REACT_APP_IMG_URL}${my_id == from_id ? my_id : from_id}/${my_id == from_id ? User_data.value.user_profile_img : image}`} />
+        <Avatar alt={name} src={`${process.env.REACT_APP_IMG_URL}${my_id === from_id ? my_id : from_id}/${my_id == from_id ? User_data.value.user_profile_img : image}`} />
       </div>
 
-      <div onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)} className={`Chat_informations ${my_id == from_id ? 'right' : 'left'}`}>
+      <div onMouseEnter={() => setOnHover(true)} onMouseLeave={() => setOnHover(false)} className={`Chat_informations ${my_id === from_id ? 'right' : 'left'}`}>
 
-        <div className='Chat_msg' ref={msg_ref} >
-          {
+        <div ref={msg_ref} className='Chat_msg FILE' >
 
-          message
-          }
-          </div>
+          <p className='FILE_name'>{FILE_info.originalname}</p>
+          <button className='FILE_open-btn' onClick={handleDownload} >Download</button>
+
+        </div>
 
         {
           onHover ?
             <div onClick={handleOpenMenu} className='chat_more_action'>
-              <MoreHorizIcon sx={{cursor: "pointer"}} />
+              <MoreHorizIcon sx={{ cursor: "pointer" }} />
             </div>
             :
             <div className='chat_more_action hide'>
@@ -115,9 +132,11 @@ const Chat_message = (props) => {
               }
             </div>
         }
-        <div className={`chat_info ${my_id == from_id ? 'right' : 'left'}`}>
+
+
+        <div className={`chat_info ${my_id === from_id ? 'right' : 'left'}`}>
           <div className='chat_info_time'>{outputTime}</div>
-          <div className='chat_info_name'>{my_id == from_id ? 'You' : ''}</div>
+          <div className='chat_info_name'>{my_id === from_id ? 'You' : ''}</div>
         </div>
       </div>
 
@@ -141,7 +160,8 @@ const Chat_message = (props) => {
         }
         <MenuItem onClick={() => handleChangeMSGStatus('delete')} disableRipple>Delete</MenuItem>
       </Menu>
+
     </div>
   )
 }
-export default Chat_message;
+export default ChatmessageFILE;

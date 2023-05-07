@@ -51,3 +51,23 @@ export const API_NewChat = (TOKEN) => {
     headers: { 'access-token-key': TOKEN }
   });
 };
+export const API_UploadMSGFile= (TOKEN, CID) => {
+  return axios.create({
+    baseURL: `http://${host_adr}/API/user/upload/MSGFile`,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'access-token-key': TOKEN,
+      'UniqueKey_Chat_id': CID,
+    }
+  });
+}
+export const API_UploadIMGFile= (TOKEN,CID) => {
+  return axios.create({
+    baseURL: `http://${host_adr}/API/user/upload/IMGFile`,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'access-token-key': TOKEN,
+      'UniqueKey_Chat_id': CID,
+    }
+  });
+}
