@@ -83,7 +83,7 @@ const Signup = () => {
       <div className="formField google-login">
         {
           !resOnload ?
-            <button className="formFieldButton" ref={Submit_btn} onClick={onSubmit}>{Language.SignUp.signup}</button>
+            <button className="formFieldButton submit-btn" ref={Submit_btn} onClick={onSubmit}>{Language.SignUp.signup}</button>
             :
             <button className="formFieldButton" disabled={true} ref={Submit_btn} >
               <Fade

@@ -53,16 +53,15 @@ const Signin = () => {
       <div className="formField">
         <label className="formFieldLabel" htmlFor="Password">{Language.SignIn.password}</label>
         <input type="Password" id="Password" className="formFieldInput" placeholder={Language.SignIn.password} onChange={handleChange} />
-
         <br /><br /><label className="formFieldCheckboxLabel">
-          <a href="../Services/ForgotPassword" className="formFieldTermsLink" >{Language.SignIn.forgotPSW}</a>
+          <a href="../Services/ForgotPassword" className="formFieldTermsLink forgotPSW" >{Language.SignIn.forgotPSW}</a>
         </label>
       </div>
 
       <div className="formField google-login">
         {
           !loginOnload ?
-            <button className="formFieldButton" onClick={onSubmit}>{Language.SignIn.signin}</button>
+            <button className="formFieldButton submit-btn" onClick={onSubmit}>{Language.SignIn.signin}</button>
             :
             <button className="formFieldButton">
               <Fade

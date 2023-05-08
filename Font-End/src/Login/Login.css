@@ -44,7 +44,8 @@
 
  .Form-login,
  .email_or_google {
-   background-color: #12130f;
+   /* background-color: #23172f; */
+   background-color: rgba(35,23,47,.95);
    border-radius: 10px;
  }
 
@@ -57,10 +58,8 @@
  }
 
  .formField {
-   margin-bottom: 40px;
-
+   margin-bottom: 30px;
    position: relative;
-
  }
 
  .formFieldLabel {
@@ -72,14 +71,14 @@
 
  .formFieldInput {
    width: 85%;
-   background-color: transparent;
+   background-color: rgba(0,0,0,.15);
    border: none;
    color: white;
    outline: none;
    border-bottom: 1px solid #445366;
    font-size: 1rem;
    font-weight: 300;
-   padding-bottom: 10px;
+   padding:.45rem;
    margin-top: 10px;
  }
 
@@ -174,11 +173,6 @@
    margin-top: 10%;
  }
 
- /*Debug*/
- form.From-login>* {
-   border: .5px solid blue;
-
- }
 
  .btn-inside-formFieldInput {
    position: absolute;
@@ -192,4 +186,10 @@
  .verify-code-field {
    color: aqua;
    display: flex;
+ }
+ .forgotPSW:hover{
+   color: #d4cbeb
+ }
+ .submit-btn{
+  cursor: pointer;
  }
